@@ -8,7 +8,7 @@ class DataCustomer extends Model
 {
     protected $table = 'data_customer';
     protected $primaryKey = 'id_customer';
-    public $timestamps = false; // sesuaikan jika tabel tidak ada created_at/updated_at
+    public $timestamps = false; 
 
     protected $fillable = [
         'id_customer',
@@ -17,6 +17,11 @@ class DataCustomer extends Model
         'no_tlp',
         'password_customer',
         'foto',
+    ];
+
+    // TAMBAHKAN INI: Agar Laravel tidak salah asumsi tentang format password
+    protected $casts = [
+        'password_customer' => 'string',
     ];
 
     public function akun()

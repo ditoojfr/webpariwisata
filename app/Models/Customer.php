@@ -12,7 +12,7 @@ class Customer extends Authenticatable
 
     protected $table = 'akun_customer';
     protected $primaryKey = 'id_customer';
-    public $timestamps    = false;
+    public $timestamps = false;
 
     protected $fillable = [
         'nama_customer',
@@ -23,25 +23,29 @@ class Customer extends Authenticatable
 
     protected $hidden = ['password_customer'];
 
+    // PENTING: Tambahkan ini agar Laravel tidak mencoba 
+    // memproses password_customer sebagai objek tersembunyi/hash otomatis
+    protected $casts = [
+        'password_customer' => 'string', 
+    ];
+
     // Override getAuthPassword agar Laravel tahu field password-nya
     public function getAuthPassword()
     {
         return $this->password_customer;
     }
 
-    // Relasi ke transaksi
+    // Relasi lainnya...
     public function transaksi()
     {
         return $this->hasMany(Transaksi::class, 'id_customer', 'id_customer');
     }
 
-    // Relasi ke riwayat
     public function riwayat()
     {
         return $this->hasMany(RiwayatTransaksi::class, 'id_customer', 'id_customer');
     }
 
-    // Relasi ke data profil
     public function dataCustomer()
     {
         return $this->hasOne(DataCustomer::class, 'id_customer', 'id_customer');

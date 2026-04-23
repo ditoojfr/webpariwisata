@@ -99,7 +99,6 @@
 </head>
 <body>
 <div class="wrap">
-  <!-- NAVBAR -->
   <nav class="nav">
     <a class="logo" href="{{ route('beranda') }}">
       <img src="{{ asset('images/logo-abirupa.png') }}" alt="Nganjuk Abirupa" />
@@ -116,7 +115,6 @@
     </div>
   </nav>
 
-  <!-- HERO -->
   <div class="hero">
     <div class="text">
       <h1>Selamat Datang di Nganjuk Abirupa</h1>
@@ -124,7 +122,6 @@
     </div>
   </div>
 
-  <!-- INFO -->
   <div class="info-card">
     <div class="info-top">
       <div>
@@ -141,7 +138,6 @@
     </div>
   </div>
 
-  <!-- WISATA POPULER -->
   <section class="section">
     <h2>Wisata Populer</h2>
     <small>Let's enjoy heaven on Nganjuk</small>
@@ -159,7 +155,6 @@
     </div>
   </section>
 
-  <!-- SEMUA DESTINASI -->
   <section class="section">
     <h2>Destinasi Wisata Nganjuk</h2>
     <div class="grid destinasi">
@@ -197,7 +192,6 @@
   <div class="footer">© 2025 Nganjuk Abirupa – Disparbudpar Nganjuk. All rights reserved.</div>
 </div>
 
-<!-- MODAL DETAIL WISATA -->
 <div class="modal" id="detailModal">
   <div class="modal-card">
     <div class="left-col">
@@ -264,7 +258,6 @@
   </div>
 </div>
 
-<!-- PICKER PENGUNJUNG -->
 <div class="picker-overlay" id="picker">
   <div class="picker-card">
     <div class="picker-title">Pilih Pengunjung</div>
@@ -291,7 +284,6 @@
   </div>
 </div>
 
-<!-- MODAL QRIS -->
 <div class="modal" id="qrisModal">
   <div class="modal-card" style="max-width:420px;display:block;padding:0;">
     <div style="background:linear-gradient(135deg,#f0f9ff,#e6f7ee);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #dbeafe;">
@@ -324,7 +316,6 @@
   </div>
 </div>
 
-<!-- MODAL SUKSES -->
 <div class="modal" id="successModal">
   <div class="modal-card" style="max-width:360px;display:block;padding:20px;text-align:center;">
     <div style="width:60px;height:60px;background:#3fb27f;border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;">
@@ -336,19 +327,28 @@
   </div>
 </div>
 
+@php
+    // KITA PINDAHKAN LOGIKA PHP KE SINI AGAR TIDAK ERROR SAAT DI-PARSE OLEH BLADE
+    $destinasiJson = $destinasi->keyBy(function($d) {
+        return 'wisata_' . $d->id_wisata;
+    })->map(function($d) {
+        return [
+            'id'            => $d->id_wisata,
+            'title'         => $d->nama_wisata,
+            'lokasi'        => $d->lokasi,
+            'foto'          => asset('storage/destinasi/' . $d->gambar),
+            'harga_dewasa'  => (int)$d->tiket_dewasa,
+            'harga_anak'    => (int)$d->tiket_anak,
+            'harga_asuransi'=> (int)($d->biaya_asuransi ?? 500),
+            'deskripsi'     => $d->deskripsi ?? '',
+            'fasilitas'     => $d->fasilitas ?? '',
+        ];
+    });
+@endphp
+
 <script>
-  // Data destinasi dari Laravel (JSON)
-  const DESTINASI = @json($destinasi->keyBy(fn($d) => 'wisata_' . $d->id_wisata)->map(fn($d) => [
-    'id'           => $d->id_wisata,
-    'title'        => $d->nama_wisata,
-    'lokasi'       => $d->lokasi,
-    'foto'         => asset('storage/destinasi/' . $d->gambar),
-    'harga_dewasa' => (int)$d->tiket_dewasa,
-    'harga_anak'   => (int)$d->tiket_anak,
-    'harga_asuransi'=> (int)($d->biaya_asuransi ?? 500),
-    'deskripsi'    => $d->deskripsi ?? '',
-    'fasilitas'    => $d->fasilitas ?? '',
-  ]));
+  // Menggunakan json_encode biasa yang dijamin aman oleh Blade
+  const DESTINASI = {!! json_encode($destinasiJson) !!};
 
   const ID_CUSTOMER = {{ session('id_customer', 0) }};
   const rupiah = n => "Rp " + (n|0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
