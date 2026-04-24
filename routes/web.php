@@ -7,6 +7,7 @@ use App\Http\Controllers\WisataController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\InformasiController;
 
 // ── Redirect root ke login ────────────────────────────────────────────────────
 Route::get('/', fn() => redirect('/login'));
@@ -29,6 +30,9 @@ Route::post('/auth/google/token',    [AuthController::class, 'handleGoogleToken'
 Route::middleware('user')->group(function () {
     Route::get('/beranda',    [BerandaController::class, 'index'])->name('beranda');
     Route::get('/riwayat',    [RiwayatController::class, 'index'])->name('riwayat');
+
+    Route::get('/informasi-harga', [InformasiController::class, 'harga'])->name('informasi.harga');
+    Route::get('/pesan-tiket', [InformasiController::class, 'pesan'])->name('informasi.pesan');
 
     Route::get('/profil',     [ProfilController::class, 'show'])->name('profil');
     Route::post('/profil',    [ProfilController::class, 'update']);
