@@ -255,9 +255,9 @@
                         <span class="price-value">Rp 500</span>
                     </div>
                     <div class="price-total">
-    <span class="label">🕐 Jam Buka</span>
-    <span class="amount">08:00 - 17:00</span>
-</div>
+                        <span class="label">Total Mulai Dari</span>
+                        <span class="amount">Rp 5.500</span>
+                    </div>
                 </div>
             </div>
         </div>
