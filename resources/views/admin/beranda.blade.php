@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard Nganjuk</title>
+<title>Dashboard Admin</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
@@ -17,10 +17,9 @@
     box-sizing: border-box;
 }
 
-/* BODY */
 body {
     font-family: 'Poppins', sans-serif;
-    background: #f4f6f9;
+    background: #f3f5f7;
 }
 
 /* LAYOUT */
@@ -30,29 +29,28 @@ body {
 
 /* SIDEBAR */
 .sidebar {
-    width: 260px;
+    width: 270px;
     height: 100vh;
-    background: #eef7f1;
-    padding: 20px;
+    background: #e9f3ec;
+    padding: 25px;
 }
 
 .logo {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     color: #2e7d32;
     margin-bottom: 40px;
 }
 
 .menu a {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    margin-bottom: 12px;
-    border-radius: 15px;
+    display: block;
+    padding: 16px;
+    margin-bottom: 15px;
+    border-radius: 20px;
     text-decoration: none;
-    color: #333;
     font-weight: 600;
-    background: #fff;
+    color: #333;
+    background: #f1f1f1;
 }
 
 .menu a.active {
@@ -63,48 +61,46 @@ body {
 /* MAIN */
 .main {
     flex: 1;
-    padding: 25px;
+    padding: 30px;
 }
 
-/* CARD ATAS */
+/* CARD */
 .cards {
     display: flex;
-    gap: 25px;
-    margin-bottom: 25px;
+    gap: 30px;
+    margin-bottom: 35px;
 }
 
-/* CARD ICON STYLE */
 .card {
-    width: 230px;
+    width: 250px;
     height: 260px;
-    background: #f9fafb;
-    border-radius: 30px;
+    background: #f8fafc;
+    border-radius: 28px;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 
     box-shadow:
-        12px 12px 30px rgba(0,0,0,0.08),
-        -12px -12px 30px rgba(255,255,255,0.9);
+        8px 8px 20px rgba(0,0,0,0.05),
+        -8px -8px 20px rgba(255,255,255,0.9);
 
     transition: 0.3s;
 }
 
 .card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-6px);
 }
 
 .card img {
     width: 130px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .card h3 {
-    font-size: 18px;
+    font-size: 17px;
     color: #444;
-    text-align: center;
 }
 
 .card .value {
@@ -117,13 +113,12 @@ body {
 .grid {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 20px;
+    gap: 25px;
 }
 
-/* BOX */
 .box {
-    background: white;
-    border-radius: 15px;
+    background: #fff;
+    border-radius: 20px;
     padding: 20px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
@@ -136,28 +131,12 @@ table {
 
 th {
     background: #a5d6a7;
-    padding: 10px;
+    padding: 12px;
 }
 
 td {
-    padding: 10px;
+    padding: 12px;
     border-bottom: 1px solid #eee;
-}
-
-/* RESPONSIVE */
-@media(max-width: 768px){
-    .container {
-        flex-direction: column;
-    }
-
-    .cards {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 </style>
@@ -181,23 +160,23 @@ td {
     <!-- MAIN -->
     <div class="main">
 
-        <!-- CARD ICON -->
+        <!-- CARD -->
         <div class="cards">
 
             <div class="card">
-                <img src="pendapatan.png" alt="">
+                <img src="{{ asset('images/icon/pendapatan.png') }}">
                 <h3>Total Pendapatan</h3>
                 <div class="value">Rp 1.000.000</div>
             </div>
 
             <div class="card">
-                <img src="tiket.png" alt="">
+                <img src="{{ asset('images/icon/tiket-hari-i-ni.png') }}">
                 <h3>Tiket Hari Ini</h3>
                 <div class="value">20 Tiket</div>
             </div>
 
             <div class="card">
-                <img src="transaksi.png" alt="">
+                <img src="{{ asset('images/icon/transaksi.png') }}">
                 <h3>Transaksi Hari Ini</h3>
                 <div class="value">10 Transaksi</div>
             </div>
@@ -207,22 +186,20 @@ td {
         <!-- GRID -->
         <div class="grid">
 
-            <!-- CHART -->
             <div class="box">
                 <h3>Pendapatan</h3>
                 <canvas id="chart"></canvas>
             </div>
 
-            <!-- DATE -->
             <div class="box">
                 <h3>Pilih Tanggal</h3>
-                <input type="date" style="padding:10px; width:100%;">
+                <input type="date" style="width:100%;padding:10px;border-radius:10px;border:1px solid #ccc;">
             </div>
 
         </div>
 
         <!-- TABLE -->
-        <div class="box" style="margin-top:20px;">
+        <div class="box" style="margin-top:25px;">
             <h3>Tabel Pendapatan Hari Ini</h3>
 
             <table>
@@ -242,14 +219,6 @@ td {
                     <td>50000</td>
                 </tr>
 
-                <tr>
-                    <td>2</td>
-                    <td>TRX002</td>
-                    <td>Siti</td>
-                    <td>Roro Kuning</td>
-                    <td>75000</td>
-                </tr>
-
             </table>
         </div>
 
@@ -258,21 +227,17 @@ td {
 </div>
 
 <script>
-
-/* CHART */
 new Chart(document.getElementById("chart"), {
     type: "line",
     data: {
-        labels: ["11 Apr", "12 Apr", "13 Apr", "14 Apr", "15 Apr", "16 Apr", "17 Apr"],
+        labels: ["11", "12", "13", "14", "15", "16", "17"],
         datasets: [{
-            label: "Pendapatan",
-            data: [10000, 20000, 30000, 40000, 50000, 50000, 100000],
+            data: [10000,20000,30000,40000,50000,50000,100000],
             fill: true,
             tension: 0.4
         }]
     }
 });
-
 </script>
 
 </body>
