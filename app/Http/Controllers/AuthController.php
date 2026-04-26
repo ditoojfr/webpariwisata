@@ -10,13 +10,14 @@ class AuthController extends Controller
 {
     // Tampilkan halaman login admin
     public function showLogin()
-    {
-        // Kalau sudah login sebagai admin, langsung ke panel admin
-        if (session('role') === 'admin') {
-            return redirect('/admin/beranda');
-        }
-        return view('auth.login');
+{
+    if (session('role') === 'admin') {
+        // Gunakan redirect()->to() bukan redirect() biasa
+        session()->save(); // paksa session tersimpan sebelum redirect
+return redirect()->to('/admin/beranda');
     }
+    return view('auth.login');
+}
 
     // Proses login admin — selalu return JSON
     public function login(Request $request)
@@ -51,8 +52,12 @@ class AuthController extends Controller
         }
 
         // Dukung plain text lama DAN bcrypt baru
-        $passwordField = $admin->password ?? $admin->password_admin ?? '';
-        $valid = Hash::check($password, $passwordField) || $password === $passwordField;
+        // Ambil password dari kolom yang benar
+        $passwordField = $admin->password ?? '';
+
+        // Cek password: dukung plain text DULU, baru bcrypt
+        $valid = ($password === $passwordField)
+            || (strlen($passwordField) > 0 && Hash::check($password, $passwordField));
 
         if (!$valid) {
             return response()->json([
@@ -71,7 +76,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success'  => true,
-            'redirect' => '/admin/beranda',
+            'redirect' => url('/admin/beranda'),
         ]);
     }
 

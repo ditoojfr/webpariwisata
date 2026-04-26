@@ -27,7 +27,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 // ── Halaman Admin (perlu login sebagai admin) ─────────────────────────────────
 Route::prefix('admin')->middleware('admin')->group(function () {
-    Route::get('/beranda',              [WisataController::class, 'index'])->name('admin.beranda');
+    Route::get('/beranda', [WisataController::class, 'index'])->name('admin.beranda');
 
     Route::get('/wisata/tambah',        [WisataController::class, 'create'])->name('admin.wisata.create');
     Route::post('/wisata',              [WisataController::class, 'store'])->name('admin.wisata.store');
