@@ -10,37 +10,20 @@ use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\InformasiController;
 
 // ── Redirect root ke login ────────────────────────────────────────────────────
-Route::get('/', fn() => redirect('/login'));
+Route::get('/',          fn() => redirect('/beranda'));
+Route::get('/beranda',   [BerandaController::class, 'index'])->name('beranda');
+Route::get('/riwayat',   [RiwayatController::class, 'index'])->name('riwayat');
+Route::get('/informasi-harga', [InformasiController::class, 'harga'])->name('informasi.harga');
+Route::get('/pesan-tiket', [InformasiController::class, 'pesan'])->name('informasi.pesan');
 
-// ── Auth (halaman publik, tidak perlu login) ──────────────────────────────────
-Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login',   [AuthController::class, 'login']);          // ← harus POST, return JSON
+// Transaksi — publik, siapa pun bisa pesan tiket
+Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register',[AuthController::class, 'register']);       // ← harus POST, return JSON
+// ── Login ADMIN saja ──────────────────────────────────────────────────────────
+Route::get('/login',  [AuthController::class, 'showLogin'])->name('admin.login');
+Route::post('/login', [AuthController::class, 'login'])->name('admin.login.post');
+Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
-Route::get('/logout',   [AuthController::class, 'logout'])->name('logout');
-
-// Google OAuth
-Route::get('/auth/google',           [AuthController::class, 'redirectToGoogle']);
-Route::get('/auth/google/callback',  [AuthController::class, 'handleGoogleCallback']);
-Route::post('/auth/google/token',    [AuthController::class, 'handleGoogleToken']); // ← dari JS blade
-
-// ── Halaman User (perlu login sebagai user) ───────────────────────────────────
-Route::middleware('user')->group(function () {
-    Route::get('/beranda',    [BerandaController::class, 'index'])->name('beranda');
-    Route::get('/riwayat',    [RiwayatController::class, 'index'])->name('riwayat');
-
-    Route::get('/informasi-harga', [InformasiController::class, 'harga'])->name('informasi.harga');
-    Route::get('/pesan-tiket', [InformasiController::class, 'pesan'])->name('informasi.pesan');
-
-    Route::get('/profil',     [ProfilController::class, 'show'])->name('profil');
-    Route::post('/profil',    [ProfilController::class, 'update']);
-    Route::delete('/profil',  [ProfilController::class, 'destroy']);
-
-    // Transaksi (AJAX dari beranda)
-    Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
-});
 
 // ── Halaman Admin (perlu login sebagai admin) ─────────────────────────────────
 Route::prefix('admin')->middleware('admin')->group(function () {
