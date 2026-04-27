@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nganjuk Abirupa - Kelola Wisata dan Pengalaman Anda</title>
     
@@ -1502,7 +1503,7 @@
             <button class="modal-close" onclick="closeModal()">&times;</button>
             <h2>Masuk ke Akun</h2>
             <p class="subtitle">Silakan login untuk mengakses fitur lengkap</p>
-            <form method="POST" action="">
+            <form id="formLoginBeranda" action="#">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
@@ -1527,6 +1528,39 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <script>
+        document.getElementById('formLoginBeranda').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email    = this.querySelector('input[type="email"], input[name="email"]').value.trim();
+            const password = this.querySelector('input[type="password"], input[name="password"]').value;
+            const CSRF     = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
+
+            const btn = this.querySelector('button[type="submit"], input[type="submit"]');
+            if (btn) { btn.disabled = true; btn.textContent = 'Memproses...'; }
+
+            try {
+                const res  = await fetch('{{ route("admin.login.post") }}', {
+                    method : 'POST',
+                    headers: {
+                        'Content-Type'    : 'application/json',
+                        'Accept'          : 'application/json',
+                        'X-CSRF-TOKEN'    : CSRF,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.replace(data.redirect);
+                } else {
+                    alert('❌ ' + (data.message || 'Login gagal.'));
+                    if (btn) { btn.disabled = false; btn.textContent = 'Login'; }
+                }
+            } catch(err) {
+                alert('❌ Gagal menghubungi server.');
+                if (btn) { btn.disabled = false; btn.textContent = 'Login'; }
+            }
+        });
         // ===== INIT AOS ANIMATION =====
         AOS.init({
             duration: 800,

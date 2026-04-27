@@ -95,10 +95,6 @@
       <div class="header">
         <h1>Login Nganjuk Abirupa</h1>
         <p>Masuk ke akunmu untuk melanjutkan perjalanan wisatamu</p>
-        <div class="tabs" id="roleTabs">
-          <div class="tab" data-role="user">User</div>
-          <div class="tab active" data-role="admin">Admin</div>
-        </div>
       </div>
 
       <div class="card">
@@ -147,9 +143,7 @@
             </div>
           </div>
 
-          <div class="below" id="registerLink">
-            Belum punya akun? <a href="{{ route('register') }}">Buat Akun</a>
-          </div>
+          
         </form>
       </div>
     </main>
@@ -158,27 +152,6 @@
   <script>
     // ── 1. Ambil CSRF token dari meta tag ──────────────────────────────────
     const CSRF = document.querySelector('meta[name="csrf-token"]').content;
-
-    // ── 2. Tab switcher User / Admin ───────────────────────────────────────
-    const roleField    = document.getElementById('roleField');
-    const registerLink = document.getElementById('registerLink');
-    const googleSection= document.getElementById('googleSection');
-
-    function setRole(role) {
-      document.querySelectorAll('.tab').forEach(t =>
-        t.classList.toggle('active', t.dataset.role === role)
-      );
-      roleField.value = role;
-      localStorage.setItem('abirupa_role', role);
-      const isAdmin = role === 'admin';
-      registerLink.style.display  = isAdmin ? 'none' : 'block';
-      googleSection.style.display = isAdmin ? 'none' : 'block';
-    }
-
-    document.querySelectorAll('.tab').forEach(t =>
-      t.addEventListener('click', () => setRole(t.dataset.role))
-    );
-    setRole(localStorage.getItem('abirupa_role') === 'user' ? 'user' : 'admin');
 
     // ── 3. Toggle tampilkan / sembunyikan password ─────────────────────────
     document.getElementById('togglePassword').addEventListener('click', () => {
@@ -213,7 +186,7 @@
       btn.innerHTML = '<span class="spinner"></span> Memproses...';
 
       try {
-        const res = await fetch('{{ route("login") }}', {
+        const res = await fetch('{{ route("admin.login.post") }}', {
           method : 'POST',
           headers: {
             // Tiga header ini WAJIB agar Laravel:

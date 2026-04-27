@@ -9,7 +9,8 @@ class BerandaController extends Controller
 {
     public function index()
     {
-        $destinasi = Wisata::orderBy('id_wisata', 'asc')->get();
+        $destinasi = \App\Models\Wisata::orderBy('id_wisata', 'asc')->get();
+        return view('beranda', compact('destinasi'));
 
         // Siapkan data dalam format array sederhana agar mudah dibaca di Blade
         $wisataJson = $destinasi->map(function($d) {
