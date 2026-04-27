@@ -26,40 +26,33 @@
         body { font-family: 'Poppins', sans-serif; color: var(--text-dark); background: var(--bg-light); overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
 
-       /* ============ NAVBAR (FLOATING CAPSULE) ============ */
-.navbar {
-    position: fixed;
-    top: 20px;          /* Jarak dari atas (biar melayang) */
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1000;      /* Pastikan di atas elemen lain */
-    
-    /* ✅ KUNCI: Background harus TRANSPARAN (hapus warna putih) */
-    background: transparent !important;
-    box-shadow: none !important; /* Hapus bayangan luar */
-    border: none !important;
-    
-    padding: 0;
-    transition: all 0.3s ease;
-}
+        /* ============ NAVBAR ============ */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
 
-.navbar-container {
-    max-width: 1000px;  /* Ukuran kapsul (sesuaikan kalau mau lebih lebar/sempit) */
-    margin: 0 auto;     /* Tengah-tengah */
-    
-    /* ✅ KUNCI: Background abu-abu ditaruh DI SINI (di kapsulnya) */
-    background: var(--nav-bg); 
-    
-    border-radius: 50px; /* Bentuk kapsul */
-    padding: 12px 30px;  /* Padding dalam kapsul */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    
-    /* Bayangan hanya pada kapsulnya */
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
-}
+        .navbar-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--nav-bg);
+            border-radius: 50px;
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
         .navbar-logo img { height: 40px; width: auto; }
         .navbar-menu-container { flex: 1; display: flex; justify-content: center; }
         .navbar-menu { display: flex; gap: 50px; align-items: center; list-style: none; }
@@ -270,9 +263,7 @@
             .hamburger { display: flex; }
         }
 
-                /* ============ ANIMATIONS & EFFECTS ============ */
-        
-        /* 1. Floating Animation untuk Framed Cards */
+        /* ============ ANIMATIONS & EFFECTS ============ */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-3px); }
@@ -280,7 +271,7 @@
         
         .framed-item {
             animation: float 3s ease-in-out infinite;
-            animation-delay: calc(var(--i, 0) * 0.2s); /* Staggered delay */
+            animation-delay: calc(var(--i, 0) * 0.2s);
         }
         
         .framed-item:nth-child(1) { --i: 1; }
@@ -288,7 +279,6 @@
         .framed-item:nth-child(3) { --i: 3; }
         .framed-item:nth-child(4) { --i: 4; }
         
-        /* 2. Efek Timbul (3D) saat Hover */
         .framed-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.1);
@@ -303,7 +293,6 @@
             transform: scale(1.02);
         }
         
-        /* 3. Button Glow Effect */
         .btn-submit {
             position: relative;
             overflow: hidden;
@@ -332,13 +321,11 @@
             box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
         }
         
-        /* 4. Input Focus Glow */
         .form-group input:focus {
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
             border-color: var(--primary-green);
         }
         
-        /* 5. Counter Button Press Effect */
         .counter-controls button:active {
             transform: scale(0.9);
             background: var(--primary-green);
@@ -346,7 +333,6 @@
             transition: all 0.1s ease;
         }
         
-        /* 6. Dropdown List Item Hover */
         .select-list li {
             position: relative;
             overflow: hidden;
@@ -366,7 +352,6 @@
             transform: scaleY(1);
         }
         
-        /* 7. Card Select Button Hover */
         .select-btn:hover {
             background: #dcfce7;
             transform: translateY(-2px);
@@ -374,7 +359,6 @@
             transition: all 0.3s ease;
         }
         
-        /* 8. Summary Box Pulse Effect */
         .summary-box {
             position: relative;
         }
@@ -388,7 +372,6 @@
             50% { opacity: 0.9; }
         }
         
-        /* 9. Page Load Animation */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -412,141 +395,328 @@
             animation: fadeInUp 0.6s ease-out 0.4s backwards;
         }
         
-        /* 10. Navbar Scroll Effect */
         .navbar.scrolled {
             background: rgba(225, 230, 236, 0.98);
             backdrop-filter: blur(10px);
             box-shadow: 0 8px 30px rgba(0,0,0,0.12);
         }
 
-        /* ============ HOVER EFFECT UNTUK CARD ============ */
+        .pill-list.green li {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: default;
+            transform: translateY(0);
+        }
 
-/* Efek hover untuk card hijau (Syarat & Ketentuan) */
-.pill-list.green li {
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy effect */
-    cursor: default;
-    transform: translateY(0); /* Reset position */
-}
+        .pill-list.green li:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(22, 101, 52, 0.25);
+            background: #bbf7d0;
+        }
 
-.pill-list.green li:hover {
-    transform: translateY(-10px) scale(1.02);  /* Naik 10px + membesar 2% */
-    box-shadow: 0 15px 35px rgba(22, 101, 52, 0.25);  /* Bayangan lebih besar */
-    background: #bbf7d0;
-}
+        .pill-list.dark li {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: default;
+            transform: translateY(0);
+        }
 
-/* Efek hover untuk card hitam (Tips Berkunjung) */
-.pill-list.dark li {
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy effect */
-    cursor: default;
-    transform: translateY(0);
-}
+        .pill-list.dark li:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: #334155;
+        }
 
-.pill-list.dark li:hover {
-    transform: translateY(-10px) scale(1.02);  /* Naik 10px + membesar 2% */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);  /* Bayangan lebih kuat */
-    background: #334155;
-}
+        .pill-list li::before {
+            transition: transform 0.4s ease;
+        }
 
-/* Icon membesar lebih banyak */
-.pill-list li::before {
-    transition: transform 0.4s ease;
-}
+        .pill-list li:hover::before {
+            transform: scale(1.3);
+        }
 
-.pill-list li:hover::before {
-    transform: scale(1.3);  /* Icon membesar 30% */
-}
+        .select-btn {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+            transform: translateY(0);
+        }
 
-/* ============ HOVER EFFECT UNTUK TOMBOL & DROPDOWN ============ */
+        .select-btn:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(76, 175, 80, 0.3);
+            background: #dcfce7;
+            border-color: var(--dark-green);
+        }
 
-/* 1. Efek hover untuk dropdown "Pilih Destinasi Wisata" */
-.select-btn {
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    cursor: pointer;
-    transform: translateY(0);
-}
+        .select-btn:active {
+            transform: translateY(-4px);
+        }
 
-.select-btn:hover {
-    transform: translateY(-8px);  /* Naik 8px */
-    box-shadow: 0 15px 30px rgba(76, 175, 80, 0.3);  /* Bayangan hijau */
-    background: #dcfce7;  /* Hijau lebih terang */
-    border-color: var(--dark-green);  /* Border lebih gelap */
-}
+        .btn-submit {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateY(0);
+            position: relative;
+            overflow: hidden;
+        }
 
-.select-btn:active {
-    transform: translateY(-4px);  /* Turun sedikit saat klik */
-}
+        .btn-submit:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(76, 175, 80, 0.4);
+            background: var(--dark-green);
+        }
 
-/* 2. Efek hover untuk tombol "Pesan Sekarang" */
-.btn-submit {
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    transform: translateY(0);
-    position: relative;
-    overflow: hidden;
-}
+        .btn-submit:active {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.3);
+        }
 
-.btn-submit:hover {
-    transform: translateY(-10px);  /* Naik 10px */
-    box-shadow: 0 20px 40px rgba(76, 175, 80, 0.4);  /* Bayangan besar */
-    background: var(--dark-green);  /* Hijau lebih gelap */
-}
+        .counter-box {
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
 
-.btn-submit:active {
-    transform: translateY(-5px);  /* Turun sedikit saat klik */
-    box-shadow: 0 10px 25px rgba(76, 175, 80, 0.3);
-}
+        .counter-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
 
-/* Efek shine/glow pada tombol Pesan Sekarang */
-.btn-submit::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s ease;
-}
+        .counter-controls button {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-.btn-submit:hover::before {
-    left: 100%;  /* Efek cahaya melintas */
-}
+        .counter-controls button:hover {
+            transform: scale(1.15);
+            background: var(--primary-green);
+            color: white;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
 
-/* 3. Efek hover untuk counter box (Dewasa & Anak) */
-.counter-box {
-    transition: all 0.3s ease;
-    transform: translateY(0);
-}
+        .counter-controls button:active {
+            transform: scale(0.95);
+        }
 
-.counter-box:hover {
-    transform: translateY(-5px);  /* Naik 5px */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-}
+        .form-group input {
+            transition: all 0.3s ease;
+        }
 
-/* 4. Efek untuk tombol + dan - */
-.counter-controls button {
-    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+        .form-group input:focus {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
+        }
 
-.counter-controls button:hover {
-    transform: scale(1.15);  /* Membesar 15% */
-    background: var(--primary-green);
-    color: white;
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
-}
+        /* ============ PAYMENT MODAL ============ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
 
-.counter-controls button:active {
-    transform: scale(0.95);  /* Mengecil saat klik */
-}
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
-/* 5. Efek untuk input form */
-.form-group input {
-    transition: all 0.3s ease;
-}
+        .modal-container {
+            background: white;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
 
-.form-group input:focus {
-    transform: translateY(-3px);  /* Naik sedikit saat focus */
-    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
-}
+        .modal-overlay.active .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            background: white;
+            color: var(--text-dark);
+            padding: 25px 20px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        .modal-header p {
+            font-size: 14px;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 15px;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 15px;
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .order-details {
+            background: #f0fdf4;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            gap: 10px;
+        }
+
+        .order-item:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .order-item .label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .order-item .label svg {
+            width: 18px;
+            height: 18px;
+            color: var(--primary-green);
+        }
+
+        .order-item .value {
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: right;
+        }
+
+        .order-item.total {
+            border-top: 2px solid var(--primary-green);
+            padding-top: 12px;
+            margin-top: 12px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .order-item.total .label {
+            color: var(--primary-green);
+        }
+
+        .order-item.total .value {
+            color: var(--dark-green);
+            font-size: 18px;
+        }
+
+        .countdown-box {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .countdown-box .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .countdown-box .time {
+            color: #dc2626;
+            font-weight: 700;
+            font-size: 24px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .countdown-box .text {
+            font-size: 13px;
+            color: var(--text-gray);
+            margin-top: 5px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-gray);
+        }
+
+        .btn-cancel:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            transform: translateY(-2px);
+        }
+
+        .btn-paid {
+            flex: 1;
+            padding: 14px;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-paid:hover {
+            background: var(--dark-green);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -561,12 +731,16 @@
                 <ul class="navbar-menu" id="navMenu">
                     <li><a href="{{ route('beranda') }}">Beranda</a></li>
                     <li class="dropdown">
-                        <a href="#" class="active">Informasi Tiket ▾</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
-                            <li><a href="{{ route('informasi.pesan') }}" style="color: var(--primary-green); font-weight: 700;">Pesan Tiket Wisata</a></li>
-                        </ul>
-                    </li>
+    <!-- Trigger Dropdown -->
+    <a href="#" class="dropdown-toggle">Informasi Tiket ▾</a>
+    
+    <!-- Isi Dropdown (3 Menu) -->
+    <ul class="dropdown-menu">
+        <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
+        <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
+        <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
+    </ul>
+</li>
                     <li><a href="{{ route('riwayat') }}">Riwayat</a></li>
                 </ul>
             </div>
@@ -699,6 +873,75 @@
         </div>
     </footer>
 
+    <!-- PAYMENT MODAL -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Pembayaran QRIS</h3>
+                <p>Scan QR code dengan aplikasi pembayaran Anda</p>
+            </div>
+            
+            <div class="modal-body">
+                <div class="qr-section">
+                    <div class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=QRIS_NGANJUK_ABIRUPA" alt="QRIS Code">
+                    </div>
+                </div>
+
+                <div class="order-details">
+    <!-- ✅ BAGIAN DESTINASI (DIPERBARUI: Tanpa tulisan & icon, rata kiri) -->
+    <div class="order-item" style="justify-content: flex-start; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid #d1fae5;">
+        <span class="value" id="modal-destinasi" style="font-weight: 600; font-size: 15px; color: var(--text-dark);">-</span>
+    </div>
+
+    <!-- Tanggal -->
+    <div class="order-item">
+        <span class="label">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--primary-green);">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
+            Tanggal
+        </span>
+        <span class="value" id="modal-tanggal">-</span>
+    </div>
+
+    <!-- Pengunjung -->
+    <div class="order-item">
+        <span class="label">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--primary-green);">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            Pengunjung
+        </span>
+        <span class="value" id="modal-pengunjung">-</span>
+    </div>
+
+    <!-- Total -->
+    <div class="order-item total">
+        <span class="label">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:18px;height:18px;color:var(--primary-green);">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Total
+        </span>
+        <span class="value" id="modal-total">Rp 0</span>
+    </div>
+</div>
+
+                <div class="countdown-box">
+                    <div class="icon">⏰</div>
+                    <div class="time" id="countdownTimer">12:00</div>
+                    <div class="text">Selesaikan pembayaran sebelum</div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-cancel" onclick="closePaymentModal()">Batalkan</button>
+                    <button class="btn-paid" onclick="confirmPayment()">Saya sudah bayar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // === DROPDOWN WISATA ===
         function toggleSelect() {
@@ -710,16 +953,13 @@
             document.getElementById('select-text').style.color = 'var(--text-dark)';
             document.querySelector('.select-list').classList.remove('active');
             
-            // Update hints
             document.getElementById('adult-price-hint').textContent = `(Rp${formatNumber(adultPrice)} / orang)`;
             document.getElementById('child-price-hint').textContent = `(Rp${formatNumber(childPrice)} / orang)`;
             
-            // Save current prices to global variables for calculation
             window.currentPrices = { adult: adultPrice, child: childPrice, insurance: insurance };
             calculateTotal();
         }
 
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.custom-select')) {
                 document.querySelector('.select-list').classList.remove('active');
@@ -728,7 +968,6 @@
 
         // === COUNTER & CALCULATION ===
         let counts = { adult: 0, child: 0 };
-        // Default prices (Sedudo)
         window.currentPrices = { adult: 10000, child: 8000, insurance: 1000 };
 
         function updateCount(type, change) {
@@ -766,12 +1005,88 @@
                 alert('Jumlah pengunjung minimal 1 orang!');
                 return;
             }
-            alert('Pemesanan berhasil! (Simulasi)');
-            // Di sini nanti bisa redirect ke halaman pembayaran atau simpan ke database
+            openPaymentModal();
         }
-    </script>
 
-        <script>
+        // === PAYMENT MODAL FUNCTIONS ===
+        function openPaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            const wisata = document.getElementById('select-text').textContent;
+            const tanggalInput = document.querySelector('input[name="tanggal"]').value;
+            const total = document.getElementById('total-price').textContent;
+            const dewasa = counts.adult;
+            const anak = counts.child;
+
+            let tanggalFormatted = '-';
+            if (tanggalInput) {
+                const date = new Date(tanggalInput);
+                const options = { day: 'numeric', month: 'long', year: 'numeric' };
+                tanggalFormatted = date.toLocaleDateString('id-ID', options);
+            }
+
+            document.getElementById('modal-destinasi').textContent = wisata;
+            document.getElementById('modal-tanggal').textContent = tanggalFormatted;
+            document.getElementById('modal-pengunjung').textContent = `${dewasa} Dewasa, ${anak} Anak`;
+            document.getElementById('modal-total').textContent = total;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            startCountdown(12);
+        }
+
+        function closePaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            clearInterval(window.countdownInterval);
+        }
+
+        function startCountdown(minutes) {
+            let totalSeconds = minutes * 60;
+            const timerElement = document.getElementById('countdownTimer');
+
+            window.countdownInterval = setInterval(() => {
+                const mins = Math.floor(totalSeconds / 60);
+                const secs = totalSeconds % 60;
+                
+                timerElement.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                
+                if (totalSeconds <= 0) {
+                    clearInterval(window.countdownInterval);
+                    timerElement.textContent = '00:00';
+                    alert('Waktu pembayaran telah habis. Silakan pesan ulang.');
+                    closePaymentModal();
+                }
+                
+                totalSeconds--;
+            }, 1000);
+        }
+
+        function confirmPayment() {
+    // Langsung simpan data dan redirect tanpa konfirmasi
+    const tiketData = {
+        nomor: '#NGJ-' + Date.now().toString().slice(-8),
+        telepon: document.querySelector('input[name="telepon"]').value,
+        waktu: new Date().toLocaleString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }) + ' WIB',
+        destinasi: document.getElementById('select-text').textContent,
+        tanggal: document.querySelector('input[name="tanggal"]').value,
+        pengunjung: `${counts.adult} Dewasa, ${counts.child} Anak`,
+        total: document.getElementById('total-price').textContent
+    };
+    
+    localStorage.setItem('tiketData', JSON.stringify(tiketData));
+    
+    // Langsung redirect ke halaman tiket
+    window.location.href = '{{ route("tiket") }}';
+}
+
         // === Navbar Scroll Effect ===
         window.addEventListener('scroll', () => {
             const navbar = document.querySelector('.navbar');
@@ -811,7 +1126,6 @@
             });
         });
 
-        // Add ripple keyframes dynamically
         const style = document.createElement('style');
         style.textContent = `
             @keyframes ripple {

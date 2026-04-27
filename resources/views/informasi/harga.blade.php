@@ -105,12 +105,16 @@
                 <ul class="navbar-menu" id="navMenu">
                     <li><a href="{{ route('beranda') }}">Beranda</a></li>
                     <li class="dropdown">
-                        <a href="#" class="active">Informasi Tiket ▾</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ route('informasi.harga') }}" style="color: var(--primary-green); font-weight: 700;">Harga Tiket</a></li>
-                            <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
-                        </ul>
-                    </li>
+    <!-- Trigger Dropdown -->
+    <a href="#" class="dropdown-toggle">Informasi Tiket ▾</a>
+    
+    <!-- Isi Dropdown (3 Menu) -->
+    <ul class="dropdown-menu">
+        <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
+        <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
+        <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
+    </ul>
+</li>
                     <li><a href="{{ route('riwayat') }}">Riwayat</a></li>
                 </ul>
             </div>
