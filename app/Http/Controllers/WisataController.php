@@ -3,66 +3,103 @@
 namespace App\Http\Controllers;
 
 use App\Models\Wisata;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class WisataController extends Controller
 {
-    // Tampilkan semua wisata (admin beranda)
+    // Helper: ambil wisata milik admin yang login
+    private function getWisataAdmin()
+    {
+        $admin = DB::table('data_admin')
+            ->where('id_admin', session('user_id'))
+            ->first();
+
+        if (!$admin || !$admin->id_wisata) return null;
+
+        return Wisata::find($admin->id_wisata);
+    }
+
+    // Beranda admin — tampilkan wisata + statistik
     public function index()
     {
-        $destinasi = Wisata::orderBy('id_wisata', 'asc')->get();
-        return view('admin.beranda', compact('destinasi'));
-    }
+        $wisata = $this->getWisataAdmin();
 
-    // Form tambah wisata
-    public function create()
-    {
-        return view('admin.tambah-wisata');
-    }
+        // Default kosong kalau tidak ada wisata
+        $totalPendapatan  = 0;
+        $tiketHariIni     = 0;
+        $transaksiHariIni = 0;
+        $transaksi        = collect();
+        $chartLabels      = [];
+        $chartData        = [];
 
-    // Simpan wisata baru
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama_wisata' => 'required|string|max:255',
-            'lokasi'      => 'required|string',
-            'gambar'      => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
-        ]);
+        if ($wisata) {
+            $today = Carbon::today();
 
-        $gambarNama = null;
-        if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $gambarNama = uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/destinasi', $gambarNama);
+            // Total pendapatan semua waktu
+            $totalPendapatan = Transaksi::where('id_wisata', $wisata->id_wisata)
+                ->sum('harga_total');
+
+            // Tiket hari ini
+            $tiketHariIni = Transaksi::where('id_wisata', $wisata->id_wisata)
+                ->whereDate('tanggal_pesan', $today)
+                ->sum('jml_tiket');
+
+            // Jumlah transaksi hari ini
+            $transaksiHariIni = Transaksi::where('id_wisata', $wisata->id_wisata)
+                ->whereDate('tanggal_pesan', $today)
+                ->count();
+
+            // Semua transaksi wisata ini (terbaru dulu)
+            $transaksi = Transaksi::where('id_wisata', $wisata->id_wisata)
+                ->orderBy('tanggal_pesan', 'desc')
+                ->get();
+
+            // Data chart 7 hari terakhir
+            for ($i = 6; $i >= 0; $i--) {
+                $tanggal       = Carbon::today()->subDays($i);
+                $chartLabels[] = $tanggal->format('d M');
+                $chartData[]   = Transaksi::where('id_wisata', $wisata->id_wisata)
+                    ->whereDate('tanggal_pesan', $tanggal)
+                    ->sum('harga_total');
+            }
         }
 
-        Wisata::create([
-            'nama_wisata'    => $request->nama_wisata,
-            'lokasi'         => $request->lokasi,
-            'tiket_dewasa'   => $request->harga_dewasa ?? 0,
-            'tiket_anak'     => $request->harga_anak ?? 0,
-            'biaya_asuransi' => $request->biaya_asuransi ?? 500,
-            'fasilitas'      => $request->fasilitas ?? '',
-            'deskripsi'      => $request->deskripsi ?? '',
-            'nama_admin'     => session('admin_name'),
-            'gambar'         => $gambarNama,
-        ]);
-
-        return redirect('/admin/beranda')->with('success', 'Destinasi berhasil ditambahkan.');
+        return view('admin.beranda', compact(
+            'wisata',
+            'totalPendapatan',
+            'tiketHariIni',
+            'transaksiHariIni',
+            'transaksi',
+            'chartLabels',
+            'chartData'
+        ));
     }
 
-    // Form edit wisata
-    public function edit($id)
+    // Form edit wisata miliknya
+    public function edit($id = null)
     {
-        $wisata = Wisata::findOrFail($id);
+        $wisata = $this->getWisataAdmin();
+
+        if (!$wisata) {
+            return redirect()->route('admin.beranda')
+                ->with('error', 'Kamu belum memiliki wisata yang dipegang.');
+        }
+
         return view('admin.edit-wisata', compact('wisata'));
     }
 
-    // Update wisata
-    public function update(Request $request, $id)
+    // Simpan update wisata
+    public function update(Request $request, $id = null)
     {
-        $wisata = Wisata::findOrFail($id);
+        $wisata = $this->getWisataAdmin();
+
+        if (!$wisata) {
+            return response()->json(['success' => false, 'message' => 'Wisata tidak ditemukan.']);
+        }
 
         $data = [
             'nama_wisata'    => $request->nama_wisata,
@@ -72,38 +109,20 @@ class WisataController extends Controller
             'biaya_asuransi' => $request->biaya_asuransi,
             'fasilitas'      => $request->fasilitas,
             'deskripsi'      => $request->deskripsi,
-            'nama_admin'     => $request->nama_admin,
         ];
 
-        // Ganti gambar jika ada file baru
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
             if ($wisata->gambar) {
                 Storage::delete('public/destinasi/' . $wisata->gambar);
             }
-            $file = $request->file('gambar');
-            $gambarNama = uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/destinasi', $gambarNama);
-            $data['gambar'] = $gambarNama;
+            $file     = $request->file('gambar');
+            $namaFile = uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/destinasi', $namaFile);
+            $data['gambar'] = $namaFile;
         }
 
         $wisata->update($data);
 
-        return response()->json(['success' => true, 'message' => 'Data wisata berhasil diperbarui.']);
-    }
-
-    // Hapus wisata
-    public function destroy($id)
-    {
-        $wisata = Wisata::findOrFail($id);
-
-        // Hapus file gambar dari storage
-        if ($wisata->gambar) {
-            Storage::delete('public/destinasi/' . $wisata->gambar);
-        }
-
-        $wisata->delete();
-
-        return redirect('/admin/beranda')->with('success', 'Destinasi berhasil dihapus.');
+        return response()->json(['success' => true, 'message' => 'Wisata berhasil diperbarui.']);
     }
 }

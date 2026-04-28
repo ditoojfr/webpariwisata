@@ -22,29 +22,18 @@ Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaks
 // ── Login ADMIN saja ──────────────────────────────────────────────────────────
 Route::get('/login',  [AuthController::class, 'showLogin'])->name('admin.login');
 Route::post('/login', [AuthController::class, 'login'])->name('admin.login.post');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 
 
 // ── Halaman Admin (perlu login sebagai admin) ─────────────────────────────────
 Route::prefix('admin')->middleware('admin')->group(function () {
-    Route::get('/beranda', [WisataController::class, 'index'])->name('admin.beranda');
+    Route::get('/beranda',        [WisataController::class,  'index'])->name('admin.beranda');
 
-    Route::get('/admin/edit-wisata', function () {
-    return view('admin.edit-wisata');
-    })->name('admin.edit');
-    
-    Route::get('/admin/profil', function () {
-    return view('admin.profil');
-    })->name('admin.profil');
+    // Tidak pakai {id} — wisata diambil otomatis dari session admin
+    Route::get('/wisata/edit',    [WisataController::class,  'edit'])->name('admin.edit');
+    Route::post('/wisata/update', [WisataController::class,  'update'])->name('admin.wisata.update');
 
-    Route::get('/wisata/tambah',        [WisataController::class, 'create'])->name('admin.wisata.create');
-    Route::post('/wisata',              [WisataController::class, 'store'])->name('admin.wisata.store');
-
-    Route::get('/wisata/{id}/edit',     [WisataController::class, 'edit'])->name('admin.wisata.edit');
-    Route::post('/wisata/{id}',         [WisataController::class, 'update'])->name('admin.wisata.update');
-
-    Route::get('/wisata/{id}/hapus',    [WisataController::class, 'destroy'])->name('admin.wisata.destroy');
-
-    Route::get('/riwayat',              [RiwayatController::class, 'adminIndex'])->name('admin.riwayat');
-    // Route::get('/profil',               [ProfilController::class, 'adminShow'])->name('admin.profil');
+    Route::get('/riwayat',        [RiwayatController::class, 'adminIndex'])->name('admin.riwayat');
+    Route::get('/profil',         [ProfilController::class,  'adminShow'])->name('admin.profil');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 });
