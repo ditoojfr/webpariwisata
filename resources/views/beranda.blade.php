@@ -1145,7 +1145,7 @@
     <div class="navbar-container">
         <!-- Logo -->
         <a href="#" class="navbar-logo">
-            <img src="{{ asset('images/logo-abirupa.png') }}" alt="Nganjuk Abirupa">
+            <img src="{{ asset('images/logogedi.png') }}" alt="Nganjuk Abirupa">
         </a>
 
         <!-- Menu Container (Centered) -->
@@ -1359,36 +1359,7 @@
 
                 <div class="right-column">
                     <div class="handshake-illustration" data-aos="fade-left" data-aos-duration="800">
-                        <svg width="280" height="250" viewBox="0 0 280 250" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Person 1 -->
-                            <circle cx="90" cy="50" r="20" fill="#4CAF50" opacity="0.2" stroke="#4CAF50" stroke-width="2"/>
-                            <circle cx="90" cy="50" r="12" fill="#4CAF50" opacity="0.3"/>
-                            <path d="M90 70 L90 120" stroke="#4CAF50" stroke-width="3"/>
-                            <path d="M90 120 L75 170" stroke="#4CAF50" stroke-width="3"/>
-                            <path d="M90 120 L105 170" stroke="#4CAF50" stroke-width="3"/>
-                            <path d="M90 85 L120 100" stroke="#4CAF50" stroke-width="3"/>
-                            <path d="M75 170 L65 200" stroke="#4CAF50" stroke-width="2"/>
-                            <path d="M105 170 L115 200" stroke="#4CAF50" stroke-width="2"/>
-                            <!-- Person 2 -->
-                            <circle cx="190" cy="50" r="20" fill="#26A69A" opacity="0.2" stroke="#26A69A" stroke-width="2"/>
-                            <circle cx="190" cy="50" r="12" fill="#26A69A" opacity="0.3"/>
-                            <path d="M190 70 L190 120" stroke="#26A69A" stroke-width="3"/>
-                            <path d="M190 120 L175 170" stroke="#26A69A" stroke-width="3"/>
-                            <path d="M190 120 L205 170" stroke="#26A69A" stroke-width="3"/>
-                            <path d="M190 85 L160 100" stroke="#26A69A" stroke-width="3"/>
-                            <path d="M175 170 L165 200" stroke="#26A69A" stroke-width="2"/>
-                            <path d="M205 170 L215 200" stroke="#26A69A" stroke-width="2"/>
-                            <!-- Handshake -->
-                            <path d="M120 100 L160 100" stroke="#FF9800" stroke-width="4" stroke-linecap="round"/>
-                            <circle cx="140" cy="100" r="5" fill="#FF9800"/>
-                            <!-- Background -->
-                            <rect x="40" y="190" width="200" height="40" rx="5" fill="#4CAF50" opacity="0.1"/>
-                            <circle cx="30" cy="150" r="15" fill="#4CAF50" opacity="0.2"/>
-                            <circle cx="250" cy="150" r="15" fill="#4CAF50" opacity="0.2"/>
-                            <path d="M120 20 Q125 15 130 20" fill="none" stroke="#4CAF50" stroke-width="1.5"/>
-                            <path d="M140 25 Q145 20 150 25" fill="none" stroke="#4CAF50" stroke-width="1.5"/>
-                            <path d="M160 18 Q165 13 170 18" fill="none" stroke="#4CAF50" stroke-width="1.5"/>
-                        </svg>
+                        <img src="{{ asset('images/icon/saliman.png') }}" alt="Ilustrasi Bersalaman">
                     </div>
                 </div>
             </div>
@@ -1400,26 +1371,7 @@
         <div class="container">
             <div class="app-content">
                 <div class="phone-mockup" data-aos="zoom-in" data-aos-duration="1000">
-                    <svg width="250" height="500" viewBox="0 0 250 500" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="25" y="10" width="200" height="480" rx="30" fill="#1a1a1a" stroke="#333" stroke-width="3"/>
-                        <rect x="35" y="25" width="180" height="450" rx="20" fill="#4CAF50"/>
-                        <rect x="90" y="15" width="70" height="25" rx="12" fill="#1a1a1a"/>
-                        <circle cx="125" cy="27" r="5" fill="#333"/>
-                        <rect x="45" y="60" width="160" height="400" rx="10" fill="white"/>
-                        <rect x="80" y="80" width="90" height="40" rx="10" fill="#4CAF50" opacity="0.1"/>
-                        <text x="125" y="105" text-anchor="middle" fill="#4CAF50" font-size="14" font-weight="bold">Nganjuk Abirupa</text>
-                        <text x="125" y="140" text-anchor="middle" fill="#333" font-size="10">Selamat Datang</text>
-                        <text x="125" y="155" text-anchor="middle" fill="#333" font-size="10">Di Nganjuk Abirupa!</text>
-                        <rect x="60" y="175" width="130" height="35" rx="8" fill="#f5f5f5"/>
-                        <text x="75" y="197" fill="#999" font-size="9">Nama Pengguna</text>
-                        <rect x="60" y="220" width="130" height="35" rx="8" fill="#f5f5f5"/>
-                        <text x="75" y="242" fill="#999" font-size="9">Kata Sandi</text>
-                        <rect x="60" y="275" width="130" height="35" rx="17" fill="#4CAF50"/>
-                        <text x="125" y="297" text-anchor="middle" fill="white" font-size="11" font-weight="bold">Login</text>
-                        <rect x="60" y="320" width="130" height="35" rx="17" fill="white" stroke="#ddd" stroke-width="1"/>
-                        <text x="125" y="342" text-anchor="middle" fill="#666" font-size="10">G Login</text>
-                        <text x="125" y="385" text-anchor="middle" fill="#999" font-size="8">Belum punya akun? Register</text>
-                    </svg>
+                    <img src="{{ asset('images/icon/hape.png') }}" alt="Mockup Aplikasi Nganjuk Abirupa">
                 </div>
                 <div class="app-text" data-aos="zoom-in" data-aos-delay="200" data-aos-duration="1000">
                     <h3>Temukan Hal yang sama dengan Versi Berbeda</h3>
