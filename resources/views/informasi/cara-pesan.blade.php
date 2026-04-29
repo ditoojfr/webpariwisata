@@ -128,6 +128,7 @@
             display: none;
         }
         
+        /* Panah dropdown dari CSS (HANYA 1 PANAH) */
         .dropdown-toggle::after {
             content: '';
             display: inline-block;
@@ -138,6 +139,11 @@
             border-top: 5px solid currentColor;
             border-right: 5px solid transparent;
             border-left: 5px solid transparent;
+            transition: transform 0.2s;
+        }
+        
+        .dropdown:hover .dropdown-toggle::after {
+            transform: rotate(180deg);
         }
         
         .btn-login {
@@ -387,7 +393,8 @@
                 
                 <!-- Dropdown Informasi Tiket -->
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle">Informasi Tiket ▾</a>
+                    <!-- ✅ HAPUS KARAKTER ▾, PANAH HANYA DARI CSS -->
+                    <a href="#" class="dropdown-toggle">Informasi Tiket</a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
                         <li><a href="{{ route('informasi.cara-pesan') }}" class="active">Cara Pesan Tiket</a></li>
