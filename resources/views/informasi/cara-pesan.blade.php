@@ -158,7 +158,7 @@
         }
         .btn-login:hover { background: var(--primary-green); color: white; }
 
-        /* ============ PAGE HEADER ============ */
+        /* PAGE HEADER */
         .page-header {
             margin-top: 120px;
             text-align: center;
