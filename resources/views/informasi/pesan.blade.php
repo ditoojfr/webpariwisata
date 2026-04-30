@@ -815,7 +815,7 @@
                         <div class="visitor-counters">
                             <div class="counter-box">
                                 <span class="label">Dewasa</span>
-                                <span class="price-hint" id="adult-price-hint">(Rp10.000 / orang)</span>
+                                <span class="price-hint" id="adult-price-hint">(-)</span>
                                 <div class="counter-controls">
                                     <button type="button" onclick="updateCount('adult', -1)">-</button>
                                     <span id="adult-count">0</span>
@@ -824,7 +824,7 @@
                             </div>
                             <div class="counter-box">
                                 <span class="label">Anak</span>
-                                <span class="price-hint" id="child-price-hint">(Rp8.000 / orang)</span>
+                                <span class="price-hint" id="child-price-hint">(-)</span>
                                 <div class="counter-controls">
                                     <button type="button" onclick="updateCount('child', -1)">-</button>
                                     <span id="child-count">0</span>
@@ -1041,11 +1041,24 @@
             }
         });
 
+       
         // === COUNTER & CALCULATION ===
         let counts = { adult: 0, child: 0 };
-        window.currentPrices = { adult: 10000, child: 8000, insurance: 1000 };
+        
+        // 1. Ubah harga default jadi 0 semua
+        window.currentPrices = { adult: 0, child: 0, insurance: 0 };
 
         function updateCount(type, change) {
+            // 2. Cek apakah user sudah pilih wisata atau belum
+            const destinasi = document.getElementById('select-text').textContent;
+            
+            if (destinasi === 'Pilih salah satu wisata') {
+                // Munculkan peringatan dan hentikan fungsi
+                alert('Pilih destinasi wisata terlebih dahulu ya!');
+                return; 
+            }
+
+            // Kalau sudah pilih wisata, baru jalankan penambahan/pengurangan
             if (counts[type] + change >= 0) {
                 counts[type] += change;
                 document.getElementById(type + '-count').textContent = counts[type];
