@@ -7,6 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
 *{
@@ -25,32 +26,25 @@ body{
     min-height:100vh;
 }
 
-/* ===== SIDEBAR ===== */
-.sidebar{
-    width:220px; /* Diperkecil dari 280px */
-    background:#eef2ef;
-    min-height:100vh;
-    padding:20px 15px; /* Diperkecil */
-    position:fixed;
-    left:0;
-    top:0;
-    transition: all 0.3s ease;
-    z-index: 1000;
+/* SIDEBAR */
+.sidebar {
+    width: 220px; background: #eef2ef; min-height: 100vh;
+    padding: 20px 15px; position: fixed; left: 0; top: 0;
+    transition: all 0.3s ease; z-index: 1000;
 }
-
-.logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px; /* Diperkecil */
-    padding:10px;
+.logo { display: flex; justify-content: center; margin-bottom: 30px; }
+.logo img { width: 100px; }
+.menu { display: flex; flex-direction: column; gap: 10px; }
+.menu a {
+    text-decoration: none; padding: 12px 18px; border-radius: 15px;
+    font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 12px;
+    color: #333; background: white; transition: all 0.3s ease;
 }
-
-.logo img {
-    width: 100px; /* Diperkecil dari 140px */
-    height:auto;
-}
-
+.menu a i { font-size: 16px; width: 20px; text-align: center; }
+.menu a.active { background: #52C396; color: white; box-shadow: 0 3px 10px rgba(82,195,150,0.3); }
+.menu a:hover:not(.active) { transform: translateX(5px); background: #dff5ec; }
+.menu a.logout { background: #fee2e2; color: #dc2626; margin-top: 10px; }
+.menu a.logout:hover { background: #fecaca; transform: translateX(5px); }
 /* MENU */
 .menu{
     display:flex;
@@ -563,6 +557,7 @@ textarea{
         <a href="{{ route('admin.profil') }}">
             <i class="fas fa-user"></i> Profil
         </a>
+        <a href="#" class="logout" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 </div>
 
@@ -573,34 +568,59 @@ textarea{
     <div class="form-box">
         <h3>Form Edit Wisata</h3>
 
-        <form id="editWisataForm" enctype="multipart/form-data">
-            
+        <form id="editWisataForm" action="{{ route('admin.wisata.update') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
             <div class="form-group">
                 <label>Nama Wisata</label>
-                <input type="text" name="nama_wisata" placeholder="Masukkan nama wisata" required>
+               <input type="text" 
+       name="nama_wisata" 
+       value="{{ old('nama_wisata', $wisata->nama_wisata ?? '') }}" 
+       placeholder="Masukkan nama wisata" 
+       required>
             </div>
 
             <div class="form-group">
-                <label>Lokasi</label>
-                <input type="text" name="lokasi" placeholder="Masukkan lokasi wisata" required>
+                 <label>Lokasi</label>
+                <input type="text" 
+       name="lokasi" 
+       value="{{ old('lokasi', $wisata->lokasi ?? '') }}" 
+       placeholder="Masukkan lokasi wisata" 
+       required>
             </div>
+<!-- HARGA TIKET DEWASA -->
+<div class="form-group">
+    <label>Harga Tiket Dewasa</label>
+    <input type="number" 
+       name="tiket_dewasa" 
+       value="{{ old('tiket_dewasa', $wisata->tiket_dewasa ?? 0) }}" 
+       required>
+</div>
 
-            <div class="form-group">
-                <label>Harga Tiket Dewasa</label>
-                <input type="number" name="harga_dewasa" placeholder="Rp 0" required>
-                <div class="hint">Masukkan harga dalam rupiah (contoh: 50000)</div>
-            </div>
+<!-- HARGA TIKET ANAK -->
+<div class="form-group">
+    <label>Harga Tiket Anak</label>
+    <input type="number" 
+       name="tiket_anak" 
+       value="{{ old('tiket_anak', $wisata->tiket_anak ?? 0) }}" 
+       required>
+</div>
 
-            <div class="form-group">
-                <label>Harga Tiket Anak</label>
-                <input type="number" name="harga_anak" placeholder="Rp 0" required>
-                <div class="hint">Masukkan harga dalam rupiah (contoh: 30000)</div>
-            </div>
+<!-- DESKRIPSI (Sesuaikan dengan kolom DB) -->
+<div class="form-group">
+    <label>Deskripsi Wisata</label>
+   <textarea name="deskripsi" 
+          placeholder="Deskripsikan wisata ini..."
+          required>{{ old('deskripsi', $wisata->deskripsi ?? '') }}</textarea>
 
-            <div class="form-group">
-                <label>Deskripsi</label>
-                <textarea name="deskripsi" placeholder="Deskripsikan wisata ini..." required></textarea>
-            </div>
+</div>
+
+<!-- FASILITAS (Jika ada field ini di form) -->
+<div class="form-group">
+    <label>Fasilitas</label>
+    <textarea name="fasilitas" 
+          placeholder="Fasilitas yang tersedia...">{{ old('fasilitas', $wisata->fasilitas ?? '') }}</textarea>
+</div>
 
             <!-- GAMBAR UTAMA WISATA -->
             <div class="form-group">
@@ -642,13 +662,13 @@ textarea{
                 </div>
                 <div class="hint">Gambar-gambar ini akan ditampilkan di halaman beranda untuk menarik pengunjung</div>
             </div>
-
-            <div class="btn-container">
-                <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Simpan Perubahan
-                </button>
-            </div>
+<!-- PASTIKAN ADA: action, method, enctype, csrf, method PUT -->
+    
+    <!-- Input fields -->
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save"></i> Simpan Perubahan
+    </button>
+</form>
 
         </form>
     </div>
@@ -784,6 +804,24 @@ window.addEventListener('resize', function(){
         overlay.classList.remove('active');
     }
 });
+function confirmLogout(event) {
+    event.preventDefault();
+    
+    Swal.fire({
+        title: 'Yakin ingin logout?',
+        text: "Anda akan keluar dari sistem",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#52C396',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Logout!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "{{ route('admin.logout') }}";
+        }
+    })
+}
 </script>
 
 </body>

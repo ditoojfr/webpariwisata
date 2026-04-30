@@ -9,13 +9,18 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        // Cek session role
         if (session('role') !== 'admin') {
-            // abort(403) lebih aman daripada redirect yang bisa carry POST
+            
+            // Jika request JSON (API)
             if ($request->expectsJson()) {
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
-            return response()->redirectTo('/login');
+            
+            // Redirect ke route login admin
+            return redirect()->route('admin.login'); 
         }
+        
         return $next($request);
     }
 }

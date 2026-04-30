@@ -31,9 +31,10 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // Tidak pakai {id} — wisata diambil otomatis dari session admin
     Route::get('/wisata/edit',    [WisataController::class,  'edit'])->name('admin.edit');
-    Route::post('/wisata/update', [WisataController::class,  'update'])->name('admin.wisata.update');
-
+    Route::put('/wisata/update', [WisataController::class, 'update'])->name('admin.wisata.update');
     Route::get('/riwayat',        [RiwayatController::class, 'adminIndex'])->name('admin.riwayat');
     Route::get('/profil',         [ProfilController::class,  'adminShow'])->name('admin.profil');
+    Route::put('/profil/update', [ProfilController::class, 'adminUpdate'])->name('admin.profil.update');
+    Route::delete('/profil/delete', [ProfilController::class, 'adminDelete'])->name('admin.profil.delete'); 
     Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 });

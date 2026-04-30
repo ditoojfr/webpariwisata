@@ -6,7 +6,7 @@
     <title>Profil - Admin Nganjuk Abirupa</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         :root {
             --primary: #52C396;
@@ -25,28 +25,25 @@
 
         .container { display: flex; min-height: 100vh; }
 
-        /* SIDEBAR */
-        .sidebar {
-            width: 240px;
-            background: #eef2ef;
-            padding: 30px 20px;
-            position: fixed;
-            height: 100vh;
-        }
-        .logo { text-align: center; margin-bottom: 40px; }
-        .logo img { width: 120px; }
-        .menu a {
-            display: flex; align-items: center; gap: 15px;
-            text-decoration: none; color: #333;
-            padding: 15px 20px; border-radius: 15px;
-            margin-bottom: 10px; font-weight: 600;
-            transition: 0.3s;
-        }
-        .menu a:hover, .menu a.active {
-            background: var(--primary); color: white;
-            box-shadow: 0 5px 15px rgba(82, 195, 150, 0.3);
-        }
-
+      /* SIDEBAR */
+.sidebar {
+    width: 220px; background: #eef2ef; min-height: 100vh;
+    padding: 20px 15px; position: fixed; left: 0; top: 0;
+    transition: all 0.3s ease; z-index: 1000;
+}
+.logo { display: flex; justify-content: center; margin-bottom: 30px; }
+.logo img { width: 100px; }
+.menu { display: flex; flex-direction: column; gap: 10px; }
+.menu a {
+    text-decoration: none; padding: 12px 18px; border-radius: 15px;
+    font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 12px;
+    color: #333; background: white; transition: all 0.3s ease;
+}
+.menu a i { font-size: 16px; width: 20px; text-align: center; }
+.menu a.active { background: #52C396; color: white; box-shadow: 0 3px 10px rgba(82,195,150,0.3); }
+.menu a:hover:not(.active) { transform: translateX(5px); background: #dff5ec; }
+.menu a.logout { background: #fee2e2; color: #dc2626; margin-top: 10px; }
+.menu a.logout:hover { background: #fecaca; transform: translateX(5px); }
         /* MAIN CONTENT */
         .main {
             flex: 1;
@@ -268,6 +265,7 @@
             <a href="{{ route('admin.profil') }}" class="active">
                 <i class="fas fa-user"></i> Profil
             </a>
+           <a href="#" class="logout" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
         </div>
     </div>
 
@@ -277,67 +275,91 @@
         <div class="profile-container">
             
             <!-- LEFT SIDEBAR - Profile Actions -->
-            <div class="profile-sidebar">
-                <div class="profile-avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-                <div class="profile-name" id="displayName">Subakir</div>
-                
-                <button class="btn btn-edit" onclick="editProfile()">
-                    <i class="fas fa-edit"></i> Edit
-                </button>
-                
-                <button class="btn btn-delete" onclick="deleteAccount()">
-                    <i class="fas fa-trash"></i> Hapus Akun
-                </button>
-                
-                <button class="btn btn-logout" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </button>
-            </div>
+<div class="profile-sidebar">
+    <div class="profile-avatar">
+        @if($user && $user->foto_profile)
+            <img src="{{ asset('storage/' . $user->foto_profile) }}" 
+                 alt="Foto Profil" 
+                 style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+        @else
+            <i class="fas fa-user"></i>
+        @endif
+    </div>
+    
+    <!-- Tampilkan nama terbaru dari database -->
+    <div class="profile-name" id="displayName">{{ $user->name }}</div>
+    
+    <button class="btn btn-edit" onclick="editProfile()">
+        <i class="fas fa-edit"></i> Edit
+    </button>
+    
+    <button class="btn btn-delete" onclick="deleteAccount()">
+        <i class="fas fa-trash"></i> Hapus Akun
+    </button>
+</div>
 
             <!-- RIGHT SIDE - Profile Form -->
-            <div class="profile-form">
-                <h2>Profile</h2>
-                
-                <form id="profileForm" onsubmit="saveChanges(event)">
-                    <div class="form-group">
-                        <label for="nama">Nama</label>
-                        <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap">
-                    </div>
+            <<!-- RIGHT SIDE - Profile Form -->
+<div class="profile-form">
+    <h2>Profile</h2>
+    
+    @if(session('success'))
+        <div style="background: #d1fae5; color: #065f46; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+            {{ session('success') }}
+        </div>
+    @endif
+    
+    <form id="profileForm" action="{{ route('admin.profil.update') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        
+        <div class="form-group">
+            <label for="nama">Nama</label>
+            <!-- Isi dengan data terbaru dari database -->
+            <input type="text" id="nama" name="nama" 
+                   value="{{ old('nama', $user->name) }}" 
+                   placeholder="Masukkan nama lengkap" required>
+        </div>
 
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Masukkan email">
-                    </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <!-- Isi dengan email terbaru -->
+            <input type="email" id="email" name="email" 
+                   value="{{ old('email', $user->email) }}" 
+                   placeholder="Masukkan email" required>
+        </div>
 
-                    <div class="form-group">
-                        <label for="telepon">No Telp</label>
-                        <input type="tel" id="telepon" name="telepon" placeholder="Masukkan nomor telepon">
-                    </div>
+        <div class="form-group">
+            <label for="telepon">No Telp</label>
+            <!-- Isi dengan telepon terbaru (nullable) -->
+            <input type="tel" id="telepon" name="telepon" 
+                   value="{{ old('telepon', $user->telepon) }}" 
+                   placeholder="Masukkan nomor telepon">
+        </div>
 
-                    <div class="form-group">
-                        <label for="foto">Foto Profil</label>
-                        <input type="file" id="foto" name="foto" accept="image/*">
-                    </div>
+        <div class="form-group">
+            <label for="foto">Foto Profil</label>
+            <input type="file" id="foto" name="foto" accept="image/*">
+        </div>
 
-                    <div class="form-actions">
-                        <button type="submit" class="btn-save">
-                            <i class="fas fa-save"></i> Simpan Perubahan
-                        </button>
-                        <button type="button" class="btn-cancel" onclick="cancelChanges()">
-                            Batal
-                        </button>
-                    </div>
-                </form>
-            </div>
-
+        <div class="form-actions">
+            <button type="submit" class="btn-save" id="submitBtn">
+                <i class="fas fa-save"></i> Simpan Perubahan
+            </button>
+            <button type="button" class="btn-cancel" onclick="window.location.reload()">
+                Batal
+            </button>
+        </div>
+    </form>
+</div>
         </div>
     </div>
 
 </div>
-
 <script>
+    // ===== BUTTON FUNCTIONS =====
+    
+    // Edit Profile - Scroll to form and focus
     // ===== BUTTON FUNCTIONS =====
     
     // Edit Profile - Scroll to form and focus
@@ -354,80 +376,54 @@
 
     // Delete Account - Confirmation
     function deleteAccount() {
-        if(confirm('⚠️ PERINGATAN!\n\nApakah Anda yakin ingin menghapus akun ini?\nTindakan ini tidak dapat dibatalkan dan semua data akan hilang permanen.\n\nKetik "HAPUS" untuk konfirmasi:')) {
-            // Simulasi delete
-            alert('Akun berhasil dihapus.\nAnda akan dialihkan ke halaman login.');
-            window.location.href = '/login'; // Ganti dengan route login Anda
-        }
-    }
-
-    // Logout - Redirect to homepage
-    function logout() {
-    if(confirm('Apakah Anda yakin ingin logout?')) {
-        alert('Berhasil logout!');
-        
-        // ✅ Redirect ke beranda user (halaman publik)
-        window.location.href = '/beranda';
-        
-        // Atau jika file .blade.php:
-        // window.location.href = '{{ route("beranda") }}';
-    }
-}
-    
-
-    // Save Changes
-    function saveChanges(event) {
-        event.preventDefault();
-        
-        // Get form data
-        const formData = {
-            nama: document.getElementById('nama').value,
-            email: document.getElementById('email').value,
-            telepon: document.getElementById('telepon').value,
-            foto: document.getElementById('foto').files[0]
-        };
-
-        // Validasi
-        if(!formData.nama || !formData.email) {
-            alert('Mohon lengkapi nama dan email!');
-            return;
-        }
-
-        // Simulasi simpan
-        console.log('Data yang disimpan:', formData);
-        
-        // Update display name
-        if(formData.nama) {
-            document.getElementById('displayName').textContent = formData.nama;
-        }
-
-        alert('✅ Perubahan berhasil disimpan!');
-        
-        // Reset form
-        document.getElementById('profileForm').reset();
+        Swal.fire({
+            title: '⚠️ PERINGATAN!',
+            text: 'Apakah Anda yakin ingin menghapus akun ini?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ff4757',
+            cancelButtonColor: '#d1d8e0',
+            confirmButtonText: 'Ya, Hapus Akun!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form delete
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = "{{ route('admin.profil.delete') }}";
+                form.innerHTML = `
+                    @csrf
+                    @method('DELETE')
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
     }
 
     // Cancel Changes
     function cancelChanges() {
-        if(confirm('Batalkan perubahan?')) {
-            document.getElementById('profileForm').reset();
-        }
+        window.location.reload();
     }
-
-    // Load existing data (simulasi)
-    window.addEventListener('DOMContentLoaded', function() {
-        // Contoh load data dari database
-        const existingData = {
-            nama: 'Subakir',
-            email: 'subakir@example.com',
-            telepon: '08123456789'
-        };
-
-        document.getElementById('nama').value = existingData.nama;
-        document.getElementById('email').value = existingData.email;
-        document.getElementById('telepon').value = existingData.telepon;
-    });
+    
+    function confirmLogout(event) {
+        event.preventDefault();
+        
+        Swal.fire({
+            title: 'Yakin ingin logout?',
+            text: "Anda akan keluar dari sistem",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#52C396',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Logout!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('admin.logout') }}";
+            }
+        })
+    }
 </script>
-
 </body>
 </html>

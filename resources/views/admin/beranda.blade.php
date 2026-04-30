@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Poppins', sans-serif; background: #f5f6f8; color: #333; }
@@ -147,9 +148,8 @@ td { border-bottom: 1px solid #eee; }
         @if($wisata)
         <a href="{{ route('admin.edit') }}"><i class="fas fa-edit"></i> Edit Wisata</a>
         @endif
-        <a href="{{ route('admin.riwayat') }}"><i class="fas fa-list"></i> Riwayat</a>
         <a href="{{ route('admin.profil') }}"><i class="fas fa-user"></i> Profil</a>
-        <a href="{{ route('admin.logout') }}" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <a href="#" class="logout" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 </div>
 
@@ -287,6 +287,24 @@ td { border-bottom: 1px solid #eee; }
 function toggleSidebar() {
     document.getElementById('sidebar').classList.toggle('active');
     document.querySelector('.overlay').classList.toggle('active');
+}
+function confirmLogout(event) {
+    event.preventDefault();
+    
+    Swal.fire({
+        title: 'Yakin ingin logout?',
+        text: "Anda akan keluar dari sistem",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#52C396',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Logout!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "{{ route('admin.logout') }}";
+        }
+    })
 }
 
 // Chart data dari Laravel
