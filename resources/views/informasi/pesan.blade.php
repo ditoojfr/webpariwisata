@@ -178,7 +178,19 @@
             transition: border-color 0.3s;
         }
         .form-group input:focus { outline: none; border-color: var(--primary-green); }
-        
+        input[type="date"]::-webkit-datetime-edit-day-field:focus,
+        input[type="date"]::-webkit-datetime-edit-month-field:focus,
+        input[type="date"]::-webkit-datetime-edit-year-field:focus {
+            background-color: #ffffff !important; 
+            color: var(--primary-green) !important;
+            outline: none !important;
+        }
+
+        input[type="date"]::selection {
+            background-color: #ffffff !important;
+            color: var(--primary-green) !important;
+        }
+
         .visitor-counters {
             display: flex;
             gap: 20px;
@@ -808,7 +820,8 @@
                         </div>
                         <div class="form-group">
                             <label>Tanggal Kunjungan *</label>
-                            <input type="date" name="tanggal" required>
+                            <!-- Tambahkan onclick="this.showPicker()" -->
+                            <input type="date" name="tanggal" required onclick="this.showPicker()" style="cursor: pointer;">
                         </div>
 
                         <label style="font-weight: 600; display: block; margin-bottom: 10px;">Jumlah Pengunjung *</label>
