@@ -171,10 +171,13 @@ td { border-bottom: 1px solid #eee; }
     {{-- WISATA MILIK ADMIN --}}
     @if($wisata)
     <div class="wisata-card">
-        <img class="wisata-img"
-             src="{{ asset('storage/destinasi/' . $wisata->gambar) }}"
-             alt="{{ $wisata->nama_wisata }}"
-             onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
+<img class="wisata-img"
+     src="{{ $wisata->gambar && file_exists(public_path('images/destinasi/' . $wisata->gambar)) 
+            ? asset('images/destinasi/' . $wisata->gambar) 
+            : asset('images/icon/Generic_avatar.png') }}"
+     alt="{{ $wisata->nama_wisata }}"
+     onerror="this.src='{{ asset('images/icon/Generic_avatar.png') }}'">
+     
         <div class="wisata-info">
             <h3>{{ $wisata->nama_wisata }}</h3>
             <div class="lokasi">📍 {{ $wisata->lokasi }}</div>

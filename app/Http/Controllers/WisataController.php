@@ -102,23 +102,16 @@ class WisataController extends Controller
 }
 
     // Update data wisata
-   public function update(Request $request)
+public function update(Request $request)
 {
-    // 1. Ambil admin dari session
     $admin = DB::table('data_admin')->where('id_admin', session('user_id'))->first();
     
     if (!$admin || !$admin->id_wisata) {
         return back()->with('error', 'Anda tidak memiliki wisata untuk diedit.');
     }
 
-    // 2. Cari data wisata
     $wisata = DB::table('data_wisata')->where('id_wisata', $admin->id_wisata)->first();
     
-    if (!$wisata) {
-        return back()->with('error', 'Data wisata tidak ditemukan.');
-    }
-
-    // 3. Validasi input
     $validated = $request->validate([
         'nama_wisata' => 'required|string|max:255',
         'lokasi' => 'required|string',
@@ -130,7 +123,6 @@ class WisataController extends Controller
         'gambar_utama' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
     ]);
 
-    // 4. Siapkan data update
     $data = [
         'nama_wisata' => $request->nama_wisata,
         'lokasi' => $request->lokasi,
@@ -141,25 +133,23 @@ class WisataController extends Controller
         'deskripsi' => $request->deskripsi,
     ];
 
-    // 5. Handle upload GAMBAR UTAMA
     if ($request->hasFile('gambar_utama')) {
-        // Hapus gambar lama
-        if ($wisata->gambar && Storage::disk('public')->exists('destinasi/' . $wisata->gambar)) {
-            Storage::disk('public')->delete('destinasi/' . $wisata->gambar);
+        // Hapus gambar lama jika ada di folder public
+        if ($wisata->gambar && file_exists(public_path('images/destinasi/' . $wisata->gambar))) {
+            unlink(public_path('images/destinasi/' . $wisata->gambar));
         }
         
-        // Simpan gambar baru
+        // Simpan gambar baru LANGSUNG ke folder public/images/destinasi
         $file = $request->file('gambar_utama');
         $namaFile = uniqid() . '.' . $file->getClientOriginalExtension();
-        $file->storeAs('public/destinasi', $namaFile);
+        $file->move(public_path('images/destinasi'), $namaFile); 
         $data['gambar'] = $namaFile;
     }
 
-    // 6. UPDATE KE DATABASE
     DB::table('data_wisata')
         ->where('id_wisata', $admin->id_wisata)
         ->update($data);
 
-    return back()->with('success', '✅ Data wisata berhasil diperbarui!');
+    return redirect()->route('admin.beranda')->with('success', '✅ Data wisata berhasil diperbarui!');
 }
 }

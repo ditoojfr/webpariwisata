@@ -606,6 +606,11 @@ textarea{
        required>
 </div>
 
+<div class="form-group">
+    <label>Biaya Asuransi</label>
+    <input type="number" name="biaya_asuransi" value="{{ old('biaya_asuransi', $wisata->biaya_asuransi ?? 0) }}">
+</div>
+
 <!-- DESKRIPSI (Sesuaikan dengan kolom DB) -->
 <div class="form-group">
     <label>Deskripsi Wisata</label>
@@ -630,7 +635,7 @@ textarea{
                         <i class="fas fa-cloud-upload-alt"></i>
                         <p><span class="highlight">Klik atau drag</span> untuk upload gambar</p>
                         <p style="font-size:11px;color:#999;">Format: JPG, PNG, Max 5MB</p>
-                        <input type="file" name="gambar_utama" id="gambarUtama" accept="image/*" required>
+                        <input type="file" name="gambar_utama" id="gambarUtama" accept="image/*">
                     </div>
                     
                     <!-- Preview Gambar Utama -->
@@ -773,17 +778,16 @@ gambarEvent.addEventListener('change', function(e){
 
 // ===== FORM SUBMIT =====
 document.getElementById('editWisataForm').addEventListener('submit', function(e){
-    e.preventDefault();
+    // e.preventDefault(); <--- HAPUS ATAU COMMENT BARIS INI
     
     // Validasi
-    if(!gambarUtama.files.length){
-        alert('Silakan upload gambar utama wisata!');
-        return;
+    if(!gambarUtama.files.length && !document.getElementById('imgPreview').src){
+        // Jika tidak ada gambar baru dan tidak ada gambar lama
+        // alert('Silakan upload gambar utama wisata!');
+        // return;
     }
     
-    // Simulasi submit
-    alert('Data berhasil disimpan!');
-    // Di sini Anda bisa tambahkan AJAX untuk submit ke server
+    // HAPUS BARIS INI JUGA: alert('Data berhasil disimpan!');
 });
 
 // ===== RESET FORM =====
