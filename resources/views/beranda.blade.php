@@ -1184,7 +1184,7 @@
 
     <!-- ============ HERO SECTION ============ -->
 <section class="hero" id="beranda">
-    <img src="{{ asset('images/fotoberanda.jpg') }}" 
+    <img src="{{ asset('images/fotoberanda.png') }}" 
          alt="Wisata Nganjuk" class="hero-image">
     <div class="hero-overlay">
         <div class="hero-text" data-aos="fade-down" data-aos-duration="1000">
