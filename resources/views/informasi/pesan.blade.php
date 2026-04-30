@@ -774,19 +774,15 @@
                     </ul>
                 </div>
 
-                <div class="info-box">
+                <div class="info-box" id="infoWisataArea" style="display: none;">
                     <h3 style="font-size: 16px; margin-bottom: 15px;">Syarat & Ketentuan Umum :</h3>
-                    <ul class="pill-list green">
-                        <li>Jam Operasional Buka setiap hari mulai pukul 07.00 hingga 16.00 WIB</li>
-                        <li>Dilarang keras membuang sampah sembarangan di area air terjun</li>
-                        <li>Pengunjung dihimbau berhati-hati saat mandi dibawah air terjun yang memiliki tinggi 105 meter</li>
-                        <li>Pada momen tertentu seperti bulan suro, terdapat upacara adat Siraman Sedudo, yang membuat kawasan ini digunakan untuk ruwat bumi.</li>
+                    <!-- Tambahkan id="syarat-list" dan kosongkan isinya -->
+                    <ul class="pill-list green" id="syarat-list">
                     </ul>
 
                     <h3 style="font-size: 16px; margin-bottom: 15px; margin-top: 25px;">Tips Berkunjung :</h3>
-                    <ul class="pill-list dark">
-                        <li>Waktu Terbaik: Hari kerja (Senin-Jumat) jika menyukai ketenangan, atau akhir pekan untuk suasana ramai.</li>
-                        <li>Aksesibilitas: Terletak di Desa Ngliman, Kecamatan Sawahan, sekitar 30 km dari pusat kota Nganjuk.</li>
+                    <!-- Tambahkan id="tips-list" dan kosongkan isinya -->
+                    <ul class="pill-list dark" id="tips-list">
                     </ul>
                 </div>
             </div>
@@ -948,11 +944,90 @@
             document.querySelector('.select-list').classList.toggle('active');
         }
 
+        // === DATABASE MINI INFO WISATA ===
+        const dataWisata = {
+            'Air Terjun Sedudo': {
+                syarat: [
+                    'Jam Operasional Buka setiap hari mulai pukul 07.00 hingga 16.00 WIB',
+                    'Dilarang keras membuang sampah sembarangan di area air terjun',
+                    'Pengunjung dihimbau berhati-hati saat mandi dibawah air terjun yang memiliki tinggi 105 meter',
+                    'Pada momen tertentu seperti bulan suro, terdapat upacara adat Siraman Sedudo'
+                ],
+                tips: [
+                    'Waktu Terbaik: Hari kerja (Senin-Jumat) jika menyukai ketenangan.',
+                    'Aksesibilitas: Terletak di Desa Ngliman, Kecamatan Sawahan, sekitar 30 km dari pusat kota Nganjuk.'
+                ]
+            },
+            'Goa Margo Tresno': {
+                syarat: [
+                    'Jam Operasional Buka setiap hari mulai pukul 08.00 hingga 15.00 WIB',
+                    'Wajib membawa penerangan (senter/HP) karena kondisi dalam goa gelap',
+                    'Dilarang merusak atau mencoret-coret dinding goa (vandalisme)',
+                    'Disarankan didampingi oleh juru kunci atau pemandu lokal'
+                ],
+                tips: [
+                    'Gunakan alas kaki yang tidak licin karena bebatuan di area goa cenderung lembab.',
+                    'Aksesibilitas: Terletak di Desa Sugihwaras, Kecamatan Ngluyu.'
+                ]
+            },
+            'Air Terjun Roro Kuning': {
+                syarat: [
+                    'Jam Operasional Buka setiap hari mulai pukul 07.30 hingga 16.00 WIB',
+                    'Patuhi batas aman berenang yang sudah ditentukan oleh petugas',
+                    'Dilarang membawa senjata tajam atau minuman keras'
+                ],
+                tips: [
+                    'Bawa baju ganti jika berniat bermain air.',
+                    'Terdapat fasilitas monumen Panglima Sudirman yang bisa dikunjungi di sekitar area.'
+                ]
+            },
+            // Default jika data wisata belum lengkap
+            'default': {
+                syarat: [
+                    'Jam Operasional Buka setiap hari sesuai ketentuan masing-masing lokasi',
+                    'Ikuti arahan dari petugas wisata setempat',
+                    'Jaga kebersihan lingkungan wisata'
+                ],
+                tips: [
+                    'Bawa perlengkapan secukupnya.',
+                    'Patuhi protokol kesehatan yang berlaku.'
+                ]
+            }
+        };
+
+        // === FUNGSI SELECT OPTION YANG DIPERBARUI ===
         function selectOption(name, adultPrice, childPrice, insurance) {
             document.getElementById('select-text').textContent = name;
             document.getElementById('select-text').style.color = 'var(--text-dark)';
             document.querySelector('.select-list').classList.remove('active');
             
+            // 1. Munculkan kotak info
+            const infoArea = document.getElementById('infoWisataArea');
+            infoArea.style.display = 'block';
+            infoArea.style.animation = 'fadeInUp 0.5s ease-out forwards';
+            
+            // 2. Ambil elemen list HTML
+            const syaratList = document.getElementById('syarat-list');
+            const tipsList = document.getElementById('tips-list');
+            
+            // 3. Bersihkan list sebelumnya (reset)
+            syaratList.innerHTML = '';
+            tipsList.innerHTML = '';
+            
+            // 4. Cari data yang sesuai dengan nama wisata (kalau ga ketemu, pakai default)
+            const info = dataWisata[name] || dataWisata['default'];
+            
+            // 5. Render (Suntikkan) syarat ke HTML
+            info.syarat.forEach(item => {
+                syaratList.innerHTML += `<li>${item}</li>`;
+            });
+            
+            // 6. Render (Suntikkan) tips ke HTML
+            info.tips.forEach(item => {
+                tipsList.innerHTML += `<li>${item}</li>`;
+            });
+            
+            // --- UPDATE HARGA & TOTAL (KODE LAMA) ---
             document.getElementById('adult-price-hint').textContent = `(Rp${formatNumber(adultPrice)} / orang)`;
             document.getElementById('child-price-hint').textContent = `(Rp${formatNumber(childPrice)} / orang)`;
             
