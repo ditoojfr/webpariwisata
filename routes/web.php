@@ -37,5 +37,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::put('/profil/update', [ProfilController::class, 'adminUpdate'])->name('admin.profil.update');
     Route::delete('/profil/delete', [ProfilController::class, 'adminDelete'])->name('admin.profil.delete'); 
     Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
-    Route::delete('/admin/wisata/event/{id}', [App\Http\Controllers\WisataController::class, 'hapusEvent'])->name('admin.event.hapus');
+    // Pastikan baris ini ada di dalam group admin
+Route::delete('/galeri/{id}', [WisataController::class, 'hapusEvent'])->name('admin.galeri.destroy');
 });

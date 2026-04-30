@@ -217,45 +217,43 @@ td { border-bottom: 1px solid #eee; }
                     @if(isset($galeri) && count($galeri) > 0)
                         <div style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin;">
                             @foreach($galeri as $g)
-                                    @php
-                                        $badge = '';
-                                        if ($g->tgl_selesai) {
-                                            $sekarang = \Carbon\Carbon::now()->startOfDay();
-                                            $selesai = \Carbon\Carbon::parse($g->tgl_selesai)->startOfDay();
-                                            
-                                            // 1. CEK DULU: Apakah event belum mulai?
-                                            if ($g->tgl_mulai && $sekarang->lessThan(\Carbon\Carbon::parse($g->tgl_mulai)->startOfDay())) {
-                                                
-                                                // Badge biru untuk event yang akan datang
-                                                $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #3b82f6; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Segera Hadir</div>';
-                                                
-                                            } else {
-                                                // 2. KALAU SUDAH MULAI: Cek sisa harinya
-                                                $sisaHari = $sekarang->diffInDays($selesai, false);
-
-                                                if ($sisaHari < 0) {
-                                                    $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Berakhir</div>';
-                                                } elseif ($sisaHari <= 3) {
-                                                    $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #f59e0b; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Sisa ' . $sisaHari . ' Hari</div>';
-                                                } else {
-                                                    $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #10b981; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Aktif</div>';
-                                                }
-                                            }
+                            @php
+                                $badge = '';
+                                if ($g->tgl_selesai) {
+                                    $sekarang = \Carbon\Carbon::now()->startOfDay();
+                                    $selesai = \Carbon\Carbon::parse($g->tgl_selesai)->startOfDay();
+                                    
+                                    if ($g->tgl_mulai && $sekarang->lessThan(\Carbon\Carbon::parse($g->tgl_mulai)->startOfDay())) {
+                                        $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #3b82f6; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Segera Hadir</div>';
+                                    } else {
+                                        $sisaHari = $sekarang->diffInDays($selesai, false);
+                                        if ($sisaHari < 0) {
+                                            $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Berakhir</div>';
+                                        } elseif ($sisaHari <= 3) {
+                                            $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #f59e0b; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Sisa ' . $sisaHari . ' Hari</div>';
+                                        } else {
+                                            $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #10b981; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Aktif</div>';
                                         }
-                                    @endphp
+                                    }
+                                }
+                            @endphp
 
-                                <div style="flex-shrink: 0; width: 220px; display: flex; flex-direction: column;">
-                                    <div style="position: relative; width: 100%; height: 140px; margin-bottom: 10px; border-radius: 12px; overflow: hidden; border: 2px solid #52C396;">
-                                        <img src="{{ asset('images/destinasi/' . $g->gambar_poster) }}" style="width: 100%; height: 100%; object-fit: cover;">
-                                        {!! $badge !!}
-                                    </div>
-                                    <div style="background: white; border-radius: 10px; padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">
-                                        <p style="font-size: 12px; margin: 0; color: #334155; font-weight: 700;">
-                                            {{ \Carbon\Carbon::parse($g->tgl_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($g->tgl_selesai)->format('d M Y') }}
-                                        </p>
-                                    </div>
+                            <div style="flex-shrink: 0; width: 220px; display: flex; flex-direction: column;">
+                                {{-- KOTAK POSTER & BADGE & TOMBOL HAPUS (Gak pake numpuk) --}}
+                                <div style="position: relative; width: 100%; height: 140px; margin-bottom: 10px; border-radius: 12px; overflow: hidden; border: 2px solid #52C396;">
+                                    <img src="{{ asset('images/destinasi/' . $g->gambar_poster) }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    {!! $badge !!}
+                                    
                                 </div>
-                            @endforeach
+                                
+                                {{-- KOTAK TANGGAL --}}
+                                <div style="background: white; border-radius: 10px; padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">
+                                    <p style="font-size: 12px; margin: 0; color: #334155; font-weight: 700;">
+                                        {{ \Carbon\Carbon::parse($g->tgl_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($g->tgl_selesai)->format('d M Y') }}
+                                    </p>
+                                </div>
+                            </div>
+                        @endforeach
                         </div>
                     @else
                         <div style="text-align: center; padding: 20px; color: #94a3b8; border: 1px dashed #cbd5e1; border-radius: 12px; background: white;">

@@ -215,58 +215,54 @@ textarea{ resize:vertical; min-height:80px; }
             </div>
 
             <!-- GALERI EVENT / AKTIVITAS -->
-            <div class="form-group" style="margin-top: 30px;">
-                <label style="font-weight: 700; font-size: 14px; margin-bottom: 10px; display: block; border-top: 1px solid #eee; padding-top: 20px;">Galeri Event / Aktivitas</label>
-                
-                {{-- AREA PREVIEW & HAPUS EVENT YANG SUDAH ADA --}}
-                @if(isset($galeri) && count($galeri) > 0)
-                    <div style="background: #fff; border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                        <p style="font-size: 12px; color: #64748b; margin-top: 0; margin-bottom: 10px; font-weight: 600;">Event yang sedang berjalan:</p>
-                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                            @foreach($galeri as $g)
+           @foreach($galeri as $g)
     @php
         $badge = '';
         if ($g->tgl_selesai) {
             $sekarang = \Carbon\Carbon::now()->startOfDay();
             $selesai = \Carbon\Carbon::parse($g->tgl_selesai)->startOfDay();
-            $sisaHari = $sekarang->diffInDays($selesai, false);
-
-            if ($sisaHari < 0) {
-                $badge = '<div style="position: absolute; top: 5px; right: 5px; background: #ef4444; color: white; font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: bold; z-index: 10;">Berakhir</div>';
-            } elseif ($sisaHari <= 3) {
-                $badge = '<div style="position: absolute; top: 5px; right: 5px; background: #f59e0b; color: white; font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: bold; z-index: 10;">Sisa ' . $sisaHari . ' Hari</div>';
+            
+            if ($g->tgl_mulai && $sekarang->lessThan(\Carbon\Carbon::parse($g->tgl_mulai)->startOfDay())) {
+                $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #3b82f6; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Segera Hadir</div>';
             } else {
-                $badge = '<div style="position: absolute; top: 5px; right: 5px; background: #10b981; color: white; font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: bold; z-index: 10;">Aktif</div>';
+                $sisaHari = $sekarang->diffInDays($selesai, false);
+                if ($sisaHari < 0) {
+                    $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Berakhir</div>';
+                } elseif ($sisaHari <= 3) {
+                    $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #f59e0b; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Sisa ' . $sisaHari . ' Hari</div>';
+                } else {
+                    $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #10b981; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Aktif</div>';
+                }
             }
         }
-        @endphp
+    @endphp
 
-                <div style="flex-shrink: 0; width: 140px;">
-                    {{-- Foto dengan Badge --}}
-                    <div style="position: relative; margin-bottom: 5px;">
-                        <img src="{{ asset('images/destinasi/' . $g->gambar_poster) }}" 
-                            alt="Poster Event" 
-                            style="width: 100%; height: 90px; object-fit: cover; border-radius: 8px; border: 1.5px solid #52C396;">
-                        {!! $badge !!}
-                    </div>
+    {{-- 1. Main Container (Satu kolom ke bawah) --}}
+    
+        <div style="flex-shrink: 0; width: 220px; display: flex; flex-direction: column; margin-bottom: 20px;">
+        
+        {{-- 2. Kotak Gambar & Tombol Hapus --}}
+        <div style="position: relative; width: 100%; height: 140px; margin-bottom: 10px; border-radius: 12px; overflow: hidden; border: 2px solid #52C396;">
+            <img src="{{ asset('images/destinasi/' . $g->gambar_poster) }}" style="width: 100%; height: 100%; object-fit: cover;">
+            {!! $badge !!}
+            
+            {{-- Tombol Hapus --}}
+            <a href="javascript:void(0)" 
+               onclick="eksekusiHapus(event, '{{ $g->id_galeri }}')" 
+               style="position: absolute; top: 8px; left: 8px; z-index: 50; background: #ef4444; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                <i class="fas fa-trash-alt" style="font-size: 12px;"></i>
+            </a>
+        </div>
+        
+        {{-- 3. Kotak Tanggal (Sekarang di dalam Main Container, di bawah gambar) --}}
+        <div style="background: white; border-radius: 10px; padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">
+            <p style="font-size: 12px; margin: 0; color: #334155; font-weight: 700;">
+                {{ \Carbon\Carbon::parse($g->tgl_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($g->tgl_selesai)->format('d M Y') }}
+            </p>
+        </div>
 
-                    {{-- Teks Tanggal di Bawah Foto --}}
-                    <div style="text-align: center;">
-                        <p style="font-size: 10px; margin: 0; color: #475569; font-weight: 600; line-height: 1.2;">
-                            @if($g->tgl_mulai && $g->tgl_selesai)
-                                {{ \Carbon\Carbon::parse($g->tgl_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($g->tgl_selesai)->format('d M Y') }}
-                            @elseif($g->tgl_selesai)
-                                S/d {{ \Carbon\Carbon::parse($g->tgl_selesai)->format('d M Y') }}
-                            @else
-                                <span style="color: #94a3b8; font-style: italic;">Tanpa Batas</span>
-                            @endif
-                        </p>
-                    </div>
-                </div>
-            @endforeach
-                        </div>
-                    </div>
-                @endif
+    </div> {{-- Penutup Main Container --}}
+@endforeach
 
                 {{-- AREA 2: FORM TAMBAH EVENT BARU (DINAMIS) --}}
             <div id="dynamic-event-container">
@@ -304,12 +300,6 @@ textarea{ resize:vertical; min-height:80px; }
         </form>
     </div> 
 </div> 
-
-{{-- FORM BAYANGAN UNTUK HAPUS EVENT (Aman di luar form utama) --}}
-<form id="form-hapus-poster" method="POST" style="display: none;">
-    @csrf
-    @method('DELETE')
-</form>
 
 </div> <!-- Penutup div.container -->
 
@@ -416,6 +406,35 @@ function tambahFormEvent() {
     `;
     container.insertAdjacentHTML('beforeend', htmlForm);
 }
+
+// Fungsi Hapus Event Galeri
+function eksekusiHapus(event, id) {
+    event.preventDefault();
+    
+    Swal.fire({
+        title: 'Hapus poster ini?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Ambil form global yang ada di luar loop tadi
+            let formHapus = document.getElementById('form-hapus-poster-global');
+            
+            // Set action URL-nya secara dinamis sesuai ID poster yang diklik
+            formHapus.action = "/admin/galeri/" + id; 
+            
+            formHapus.submit();
+        }
+    });
+}
 </script>
+{{-- TARUH DI LUAR SEMUA LOOPING DAN DI LUAR FORM UPDATE UTAMA --}}
+<form id="form-hapus-poster-global" action="" method="POST" style="display: none;">
+    @csrf
+    @method('DELETE')
+</form>
 </body>
 </html>
