@@ -83,18 +83,22 @@
         /* Kamu bisa adjust angka ini (misal 22% jadi 23%) kalau masih geser dikit */
         .field-destinasi { 
             top: 25%; 
+            right: 20px; 
         }
         
         .field-nama { 
             top: 40%; 
+            right: 20px;
         }
         
         .field-tanggal { 
             top: 55%; 
+            right: 20px;
         }
         
         .field-pengunjung { 
             top: 70%; 
+            right: 20px;
         }
 
         /* BUTTONS */
