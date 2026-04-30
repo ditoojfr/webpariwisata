@@ -19,7 +19,7 @@
             --light-green: #81C784;
             --bg-light: #f5faf5;
             --text-dark: #333;
-            --text-gray: #666;
+            --text-gray: #4b5563; /* Ini yang kita ubah jadi lebih gelap */
             --nav-bg: #e1e6ec;
             --nav-text: #4b5563;
             --nav-active: #101827;
@@ -48,13 +48,16 @@
         .navbar-container {
             max-width: 1000px;
             margin: 0 auto;
-            background: var(--nav-bg);
+            /* UBAH BACKGROUND & TAMBAH BACKDROP FILTER: */
+            background: rgba(225, 230, 236, 0.85); 
+            backdrop-filter: blur(10px);
             border-radius: 50px;
             padding: 12px 30px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            /* PERTEGAS SHADOW SEDIKIT: */
+            box-shadow: 0 4px 30px rgba(0,0,0,0.08); 
         }
 
         .navbar-logo img { height: 40px; }
@@ -159,14 +162,32 @@
         .btn-login:hover { background: var(--primary-green); color: white; }
 
         /* PAGE HEADER */
+
+        @keyframes headerSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-60px); /* Mulai dari posisi agak ke atas */
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0); /* Turun ke posisi normal */
+            }
+        }
+
         .page-header {
-            margin-top: 120px;
+            margin-top: 0; 
             text-align: center;
-            padding: 40px 20px;
+            padding: 140px 20px 80px 20px; 
             background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
             color: white;
             border-radius: 0 0 50px 50px;
+            /* WAJIB DITAMBAHKAN AGAR EFEK LENGKUNGAN BERHASIL */
+            position: relative; 
+
+            animation: headerSlideDown 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
+
+        
 
         .page-header h1 {
             font-size: 36px;
@@ -203,6 +224,8 @@
             opacity: 0;
             transform: translateY(30px);
             border-left: 5px solid var(--primary-green);
+            position: relative;
+            z-index: 2;
         }
 
         .step-card.visible {
@@ -228,6 +251,24 @@
             font-weight: 800;
             flex-shrink: 0;
             box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 40px; /* Mulai dari tengah lingkaran pertama */
+            bottom: 80px; 
+            left: 60px; /* Menyesuaikan posisi tengah lingkaran (20px padding + 40px jari-jari) */
+            width: 0;
+            border-left: 2px dashed var(--light-green);
+            z-index: 0; /* Berada di belakang card */
+        }
+
+        @media (max-width: 768px) {
+            .steps-container::before {
+                left: 50px; /* Disesuaikan dengan ukuran step-number mobile */
+                top: 30px;
+            }
         }
 
         .step-content {
@@ -272,6 +313,16 @@
             color: var(--primary-green);
         }
 
+        .info-icon-bg {
+            background: #c6f6d5;
+            color: var(--dark-green);
+            padding: 8px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         /* ============ INFO BOX ============ */
         .info-box {
             max-width: 1000px;
@@ -283,7 +334,7 @@
         }
 
         .info-box h4 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 700;
             color: var(--dark-green);
             margin-bottom: 15px;
@@ -514,9 +565,12 @@
     <!-- INFO BOX -->
     <div class="info-box" data-aos="fade-up">
         <h4>
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+            <!-- ICON DIBUNGKUS CLASS BARU -->
+            <span class="info-icon-bg">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </span>
             Informasi Penting:
         </h4>
         <ul>
