@@ -10,7 +10,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Poppins', sans-serif; background: #f5f6f8; color: #333; }
@@ -51,7 +50,7 @@ body { font-family: 'Poppins', sans-serif; background: #f5f6f8; color: #333; }
     box-shadow: 0 3px 10px rgba(0,0,0,.06); margin-bottom: 24px;
     display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;
 }
-.wisata-img { width: 260px; height: 180px; object-fit: cover; border-radius: 14px; flex-shrink: 0; }
+.wisata-img { width: 100%; height: 180px; object-fit: cover; border-radius: 14px; }
 .wisata-info { flex: 1; min-width: 200px; }
 .wisata-info h3 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
 .wisata-info .lokasi { color: #6b7280; font-size: 13px; margin-bottom: 14px; }
@@ -119,6 +118,15 @@ td { border-bottom: 1px solid #eee; }
     padding: 12px 18px; border-radius: 12px; margin-bottom: 20px; font-weight: 600;
 }
 
+/* KIRI KOLOM WISATA */
+.wisata-media-col { 
+    width: 260px; 
+    flex-shrink: 0; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+
 @media (max-width: 1024px) { .content-grid { grid-template-columns: 1fr; } }
 @media (max-width: 768px) {
     .sidebar { transform: translateX(-100%); }
@@ -128,7 +136,8 @@ td { border-bottom: 1px solid #eee; }
     .overlay.active { display: block; }
     .cards-container { grid-template-columns: 1fr; }
     .wisata-card { flex-direction: column; }
-    .wisata-img { width: 100%; height: 200px; }
+    .wisata-media-col { width: 100%; }
+    .wisata-img { height: 200px; width: 100%; }
 }
 </style>
 </head>
@@ -138,152 +147,218 @@ td { border-bottom: 1px solid #eee; }
 <div class="overlay" onclick="toggleSidebar()"></div>
 
 <div class="container">
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-    <div class="logo">
-        <img src="{{ asset('images/logo-abirupa.png') }}" alt="Logo">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="{{ asset('images/logo-abirupa.png') }}" alt="Logo">
+        </div>
+        <div class="menu">
+            <a href="{{ route('admin.beranda') }}" class="active"><i class="fas fa-home"></i> Beranda</a>
+            @if($wisata)
+            <a href="{{ route('admin.edit') }}"><i class="fas fa-edit"></i> Edit Wisata</a>
+            @endif
+            <a href="{{ route('admin.profil') }}"><i class="fas fa-user"></i> Profil</a>
+            <a href="#" class="logout" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
     </div>
-    <div class="menu">
-        <a href="{{ route('admin.beranda') }}" class="active"><i class="fas fa-home"></i> Beranda</a>
-        @if($wisata)
-        <a href="{{ route('admin.edit') }}"><i class="fas fa-edit"></i> Edit Wisata</a>
+
+    <!-- MAIN -->
+    <div class="main">
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div>
+                <h2>Dashboard Admin</h2>
+                <div class="admin-info">Halo, <span>{{ session('user_name') }}</span> 👋</div>
+            </div>
+        </div>
+
+        @if(session('success'))
+            <div class="alert-success">✅ {{ session('success') }}</div>
         @endif
-        <a href="{{ route('admin.profil') }}"><i class="fas fa-user"></i> Profil</a>
-        <a href="#" class="logout" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </div>
-</div>
 
-<!-- MAIN -->
-<div class="main">
+        {{-- TAMPILAN WISATA --}}
+        @if($wisata)
+            <div class="wisata-card">
+                
+                {{-- KOLOM KIRI (Hanya Foto Utama) --}}
+                <div class="wisata-media-col">
+                    <img class="wisata-img"
+                         src="{{ $wisata->gambar && file_exists(public_path('images/destinasi/' . $wisata->gambar)) 
+                                ? asset('images/destinasi/' . $wisata->gambar) 
+                                : asset('images/icon/Generic_avatar.png') }}"
+                         alt="{{ $wisata->nama_wisata }}"
+                         onerror="this.src='{{ asset('images/icon/Generic_avatar.png') }}'">
+                </div>
 
-    <!-- TOP BAR -->
-    <div class="topbar">
-        <div>
-            <h2>Dashboard Admin</h2>
-            <div class="admin-info">Halo, <span>{{ session('user_name') }}</span> 👋</div>
-        </div>
-    </div>
+                {{-- KOLOM KANAN (Info Teks) --}}
+                <div class="wisata-info">
+                    <h3>{{ $wisata->nama_wisata }}</h3>
+                    <div class="lokasi">📍 {{ $wisata->lokasi }}</div>
+                    
+                    <div class="harga-pills">
+                        <span class="pill pill-green">Dewasa: Rp {{ number_format($wisata->tiket_dewasa, 0, ',', '.') }}</span>
+                        <span class="pill pill-green">Anak: Rp {{ number_format($wisata->tiket_anak, 0, ',', '.') }}</span>
+                        <span class="pill pill-amber">Asuransi: Rp {{ number_format($wisata->biaya_asuransi ?? 500, 0, ',', '.') }}/org</span>
+                    </div>
+                    
+                    <div class="wisata-desc">{{ $wisata->deskripsi ?: 'Belum ada deskripsi.' }}</div>
+                    
+                    <div style="margin-top: 20px;">
+                        <a href="{{ route('admin.edit') }}" class="btn-edit">✏️ Edit Wisata Saya</a>
+                    </div>
+                </div>
 
-    @if(session('success'))
-        <div class="alert-success">✅ {{ session('success') }}</div>
-    @endif
+                {{-- GALERI EVENT (Sekarang di luar kolom kiri, jadi bisa melar 100%) --}}
+                <div class="event-wrapper" style="width: 100%; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-top: 10px;">
+                    <div class="event-header" style="font-weight: 800; font-size: 16px; margin-bottom: 15px; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-calendar-check" style="color: #52C396; font-size: 18px;"></i> Galeri Event & Aktivitas
+                    </div>
+                    
+                    @if(isset($galeri) && count($galeri) > 0)
+                        <div style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin;">
+                            @foreach($galeri as $g)
+                                    @php
+                                        $badge = '';
+                                        if ($g->tgl_selesai) {
+                                            $sekarang = \Carbon\Carbon::now()->startOfDay();
+                                            $selesai = \Carbon\Carbon::parse($g->tgl_selesai)->startOfDay();
+                                            
+                                            // 1. CEK DULU: Apakah event belum mulai?
+                                            if ($g->tgl_mulai && $sekarang->lessThan(\Carbon\Carbon::parse($g->tgl_mulai)->startOfDay())) {
+                                                
+                                                // Badge biru untuk event yang akan datang
+                                                $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #3b82f6; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Segera Hadir</div>';
+                                                
+                                            } else {
+                                                // 2. KALAU SUDAH MULAI: Cek sisa harinya
+                                                $sisaHari = $sekarang->diffInDays($selesai, false);
 
-    {{-- WISATA MILIK ADMIN --}}
-    @if($wisata)
-    <div class="wisata-card">
-<img class="wisata-img"
-     src="{{ $wisata->gambar && file_exists(public_path('images/destinasi/' . $wisata->gambar)) 
-            ? asset('images/destinasi/' . $wisata->gambar) 
-            : asset('images/icon/Generic_avatar.png') }}"
-     alt="{{ $wisata->nama_wisata }}"
-     onerror="this.src='{{ asset('images/icon/Generic_avatar.png') }}'">
-     
-        <div class="wisata-info">
-            <h3>{{ $wisata->nama_wisata }}</h3>
-            <div class="lokasi">📍 {{ $wisata->lokasi }}</div>
-            <div class="harga-pills">
-                <span class="pill pill-green">Dewasa: Rp {{ number_format($wisata->tiket_dewasa, 0, ',', '.') }}</span>
-                <span class="pill pill-green">Anak: Rp {{ number_format($wisata->tiket_anak, 0, ',', '.') }}</span>
-                <span class="pill pill-amber">Asuransi: Rp {{ number_format($wisata->biaya_asuransi ?? 500, 0, ',', '.') }}/org</span>
+                                                if ($sisaHari < 0) {
+                                                    $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Berakhir</div>';
+                                                } elseif ($sisaHari <= 3) {
+                                                    $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #f59e0b; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Sisa ' . $sisaHari . ' Hari</div>';
+                                                } else {
+                                                    $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #10b981; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Aktif</div>';
+                                                }
+                                            }
+                                        }
+                                    @endphp
+
+                                <div style="flex-shrink: 0; width: 220px; display: flex; flex-direction: column;">
+                                    <div style="position: relative; width: 100%; height: 140px; margin-bottom: 10px; border-radius: 12px; overflow: hidden; border: 2px solid #52C396;">
+                                        <img src="{{ asset('images/destinasi/' . $g->gambar_poster) }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                        {!! $badge !!}
+                                    </div>
+                                    <div style="background: white; border-radius: 10px; padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">
+                                        <p style="font-size: 12px; margin: 0; color: #334155; font-weight: 700;">
+                                            {{ \Carbon\Carbon::parse($g->tgl_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($g->tgl_selesai)->format('d M Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div style="text-align: center; padding: 20px; color: #94a3b8; border: 1px dashed #cbd5e1; border-radius: 12px; background: white;">
+                            <i class="fas fa-calendar-times" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                            <p style="font-size: 12px; font-style: italic; margin: 0;">Belum ada event yang berjalan.</p>
+                        </div>
+                    @endif
+                </div>
             </div>
-            <div class="wisata-desc">{{ $wisata->deskripsi ?: 'Belum ada deskripsi.' }}</div>
-            <a href="{{ route('admin.edit') }}" class="btn-edit">✏️ Edit Wisata Saya</a>
-        </div>
-    </div>
-    @else
-    <div style="text-align:center;padding:60px;background:white;border-radius:18px;margin-bottom:24px;color:#9ca3af;">
-        <p style="font-size:40px;margin-bottom:12px;">🏔️</p>
-        <p style="font-size:16px;font-weight:600;color:#475569;">Belum ada wisata yang dipegang</p>
-        <p style="font-size:13px;margin-top:8px;">Hubungi super admin untuk assign wisata ke akun ini.</p>
-    </div>
-    @endif
+        @else
+            <div style="text-align:center;padding:60px;background:white;border-radius:18px;margin-bottom:24px;color:#9ca3af;">
+                <p style="font-size:40px;margin-bottom:12px;">🏔️</p>
+                <p style="font-size:16px;font-weight:600;color:#475569;">Belum ada wisata yang dipegang</p>
+                <p style="font-size:13px;margin-top:8px;">Hubungi super admin untuk assign wisata ke akun ini.</p>
+            </div>
+        @endif
 
-    {{-- STATISTIK CARDS --}}
-    <div class="cards-container">
-        <div class="card">
-            <div class="card-icon pendapatan"><i class="fas fa-wallet"></i></div>
-            <div class="card-content">
-                <h4>Total Pendapatan</h4>
-                <p>Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</p>
+        {{-- STATISTIK CARDS --}}
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon pendapatan"><i class="fas fa-wallet"></i></div>
+                <div class="card-content">
+                    <h4>Total Pendapatan</h4>
+                    <p>Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon tiket"><i class="fas fa-ticket-alt"></i></div>
+                <div class="card-content">
+                    <h4>Tiket Hari Ini</h4>
+                    <p>{{ $tiketHariIni ?? 0 }} Tiket</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon transaksi"><i class="fas fa-check-circle"></i></div>
+                <div class="card-content">
+                    <h4>Transaksi Hari Ini</h4>
+                    <p>{{ $transaksiHariIni ?? 0 }} Transaksi</p>
+                </div>
             </div>
         </div>
-        <div class="card">
-            <div class="card-icon tiket"><i class="fas fa-ticket-alt"></i></div>
-            <div class="card-content">
-                <h4>Tiket Hari Ini</h4>
-                <p>{{ $tiketHariIni ?? 0 }} Tiket</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-icon transaksi"><i class="fas fa-check-circle"></i></div>
-            <div class="card-content">
-                <h4>Transaksi Hari Ini</h4>
-                <p>{{ $transaksiHariIni ?? 0 }} Transaksi</p>
-            </div>
-        </div>
-    </div>
 
-    {{-- CHART & DATE --}}
-    <div class="content-grid">
-        <div class="chart-box">
-            <div class="chart-header">
-                <h3>Pendapatan 7 Hari Terakhir</h3>
+        {{-- CHART & DATE --}}
+        <div class="content-grid">
+            <div class="chart-box">
+                <div class="chart-header">
+                    <h3>Pendapatan 7 Hari Terakhir</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart"></canvas>
+                </div>
             </div>
-            <div class="chart-container">
-                <canvas id="chart"></canvas>
+            <div class="date-box">
+                <h3 style="margin-bottom:14px;">Filter Tanggal</h3>
+                <div class="date-display">
+                    <i class="fas fa-calendar-alt" style="color:#2196f3;"></i>
+                    <span id="selectedDate">{{ now()->translatedFormat('d F Y') }}</span>
+                </div>
+                <input type="date" id="filterDate" value="{{ now()->format('Y-m-d') }}"
+                    style="width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;font-family:'Poppins',sans-serif;font-size:13px;">
             </div>
         </div>
-        <div class="date-box">
-            <h3 style="margin-bottom:14px;">Filter Tanggal</h3>
-            <div class="date-display">
-                <i class="fas fa-calendar-alt" style="color:#2196f3;"></i>
-                <span id="selectedDate">{{ now()->translatedFormat('d F Y') }}</span>
-            </div>
-            <input type="date" id="filterDate" value="{{ now()->format('Y-m-d') }}"
-                style="width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;font-family:'Poppins',sans-serif;font-size:13px;">
-        </div>
-    </div>
 
-    {{-- TABEL TRANSAKSI --}}
-    <div class="table-box">
-        <div class="table-header">
-            <h3>Tabel Transaksi Wisata Ini</h3>
+        {{-- TABEL TRANSAKSI --}}
+        <div class="table-box">
+            <div class="table-header">
+                <h3>Tabel Transaksi Wisata Ini</h3>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>ID Pesan</th>
+                            <th>Customer</th>
+                            <th>Tanggal</th>
+                            <th>Jumlah Tiket</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @forelse($transaksi ?? [] as $i => $t)
+                        <tr>
+                            <td>{{ $i + 1 }}</td>
+                            <td>#{{ str_pad($t->id_pemesanan, 4, '0', STR_PAD_LEFT) }}</td>
+                            <td>{{ $t->nama_customer }}</td>
+                            <td>{{ \Carbon\Carbon::parse($t->tanggal_pesan)->format('d M Y') }}</td>
+                            <td>{{ $t->jml_tiket }} tiket</td>
+                            <td>Rp {{ number_format($t->harga_total, 0, ',', '.') }}</td>
+                            <td><span class="status-badge status-sukses">Selesai</span></td>
+                        </tr>
+                        @empty
+                        <tr class="empty-row">
+                            <td colspan="7">Belum ada transaksi untuk wisata ini.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>ID Pesan</th>
-                        <th>Customer</th>
-                        <th>Tanggal</th>
-                        <th>Jumlah Tiket</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    @forelse($transaksi ?? [] as $i => $t)
-                    <tr>
-                        <td>{{ $i + 1 }}</td>
-                        <td>#{{ str_pad($t->id_pemesanan, 4, '0', STR_PAD_LEFT) }}</td>
-                        <td>{{ $t->nama_customer }}</td>
-                        <td>{{ \Carbon\Carbon::parse($t->tanggal_pesan)->format('d M Y') }}</td>
-                        <td>{{ $t->jml_tiket }} tiket</td>
-                        <td>Rp {{ number_format($t->harga_total, 0, ',', '.') }}</td>
-                        <td><span class="status-badge status-sukses">Selesai</span></td>
-                    </tr>
-                    @empty
-                    <tr class="empty-row">
-                        <td colspan="7">Belum ada transaksi untuk wisata ini.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
 
-</div>
+    </div>
 </div>
 
 <script>
