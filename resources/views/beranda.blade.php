@@ -1268,58 +1268,20 @@
 
         <!-- Container Scroll Horizontal -->
         <div class="destinations-scroll">
-            
-            <!-- Card 1: Sedudo -->
-            <div class="destination-card" data-aos="fade-up" data-aos-delay="100">
+            @forelse($destinasi as $index => $d)
+            <a href="{{ route('wisata.detail', $d->id_wisata) }}" class="destination-card" data-aos="fade-up" data-aos-delay="{{ ($index % 5 + 1) * 100 }}" style="text-decoration:none; color:inherit;">
                 <div class="card-image">
-                    <!-- Pastikan path gambarnya benar -->
-                    <img src="{{ asset('images/destinasi/69292fe7119ca.png') }}" alt="Air Terjun Sedudo">
+                    <img src="{{ asset('images/destinasi/' . $d->gambar) }}"
+                         alt="{{ $d->nama_wisata }}"
+                         onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
                 </div>
                 <div class="card-text">
-                    <h3>AIR TERJUN SEDUDO</h3>
+                    <h3>{{ strtoupper($d->nama_wisata) }}</h3>
                 </div>
-            </div>
-
-            <!-- Card 2: Goa Margo Tresna -->
-            <div class="destination-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="card-image">
-                    <img src="{{ asset('images/destinasi/foto3.png') }}" alt="Goa Margo Tresna">
-                </div>
-                <div class="card-text">
-                    <h3>GOA MARGO TRESNA</h3>
-                </div>
-            </div>
-
-            <!-- Card 3: Air Terjun Roro Kuning -->
-            <div class="destination-card" data-aos="fade-up" data-aos-delay="300">
-                <div class="card-image">
-                    <img src="{{ asset('images/destinasi/692a78f986298.png') }}" alt="Air Terjun Roro Kuning">
-                </div>
-                <div class="card-text">
-                    <h3>AIR TERJUN RORO KUNING</h3>
-                </div>
-            </div>
-
-            <!-- Card 4: Taman Rekreasi Anjuk Ladang -->
-            <div class="destination-card" data-aos="fade-up" data-aos-delay="400">
-                <div class="card-image">
-                    <img src="{{ asset('images/destinasi/692932f3b0a3a.png') }}" alt="Wisata Keempat">
-                </div>
-                <div class="card-text">
-                    <h3>TAMAN REKREASI ANJUK LADANG</h3>
-                </div>
-            </div>
-
-            <!-- Card 5: Kolam Renang Sri Tanjung -->
-            <div class="destination-card" data-aos="fade-up" data-aos-delay="500">
-                <div class="card-image">
-<img src="{{ asset('images/destinasi/foto6.png') }}" alt="Kolam Renang Sri Tanjung">
-</div>
-<div class="card-text">
-    <h3>KOLAM RENANG SRI TANJUNG</h3>
-                </div>
-            </div>
-
+            </a>
+            @empty
+            <p style="text-align:center; color:#999; padding: 40px;">Belum ada destinasi wisata.</p>
+            @endforelse
         </div>
     </div>
 </section>
@@ -1621,13 +1583,7 @@
             alert('<?php echo $login_message; ?>');
         <?php endif; ?>
 
-        // ===== CARD CLICK =====
-        document.querySelectorAll('.destination-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const dest = card.querySelector('h3').textContent;
-                alert('Anda memilih: ' + dest + '\n\nFitur detail segera hadir!');
-            });
-        });
+
 
         document.querySelector('.btn-download').addEventListener('click', (e) => {
             e.preventDefault();

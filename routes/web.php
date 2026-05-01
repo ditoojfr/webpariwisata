@@ -12,6 +12,7 @@ use App\Http\Controllers\InformasiController;
 // ── Redirect root ke login ────────────────────────────────────────────────────
 Route::get('/',          fn() => redirect('/beranda'));
 Route::get('/beranda',   [BerandaController::class, 'index'])->name('beranda');
+Route::get('/wisata/{id}', [BerandaController::class, 'detail'])->name('wisata.detail');
 Route::get('/riwayat',   [RiwayatController::class, 'index'])->name('riwayat');
 Route::get('/informasi-harga', [InformasiController::class, 'harga'])->name('informasi.harga');
 Route::get('/pesan-tiket', [InformasiController::class, 'pesan'])->name('informasi.pesan');

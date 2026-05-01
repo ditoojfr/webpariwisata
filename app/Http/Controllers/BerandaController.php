@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Wisata;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BerandaController extends Controller
 {
     public function index()
     {
-        $destinasi = \App\Models\Wisata::orderBy('id_wisata', 'asc')->get();
-        return view('beranda', compact('destinasi'));
+        $destinasi = Wisata::orderBy('id_wisata', 'asc')->get();
 
-        // Siapkan data dalam format array sederhana agar mudah dibaca di Blade
         $wisataJson = $destinasi->map(function($d) {
             return [
                 'id'             => $d->id_wisata,
@@ -28,5 +27,16 @@ class BerandaController extends Controller
         })->keyBy('id')->toArray();
 
         return view('beranda', compact('destinasi', 'wisataJson'));
+    }
+
+    public function detail($id)
+    {
+        $wisata = Wisata::findOrFail($id);
+
+        $galeri = DB::table('galeri_event')
+                    ->where('id_wisata', $wisata->id_wisata)
+                    ->get();
+
+        return view('wisata.detail', compact('wisata', 'galeri'));
     }
 }
