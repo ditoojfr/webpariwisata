@@ -1158,7 +1158,9 @@
     <a href="#" class="dropdown-toggle">Informasi Tiket ▾</a>
     <ul class="dropdown-menu">
         <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
+        <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
         <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
+        
     </ul>
 </li>
     
@@ -1298,7 +1300,7 @@
                 </div>
             </div>
 
-            <!-- Card 4: Wisata Lain (Contoh) -->
+            <!-- Card 4: Taman Rekreasi Anjuk Ladang -->
             <div class="destination-card" data-aos="fade-up" data-aos-delay="400">
                 <div class="card-image">
                     <img src="{{ asset('images/destinasi/692932f3b0a3a.png') }}" alt="Wisata Keempat">
@@ -1308,13 +1310,13 @@
                 </div>
             </div>
 
-            <!-- Card 5: Wisata Lain (Contoh) -->
+            <!-- Card 5: Kolam Renang Sri Tanjung -->
             <div class="destination-card" data-aos="fade-up" data-aos-delay="500">
                 <div class="card-image">
-                    <img src="{{ asset('images/destinasi/foto6.png') }}" alt="Wisata Kelima">
-                </div>
-                <div class="card-text">
-                    <h3>Sri Tanjung Wisata Tirta</h3>
+<img src="{{ asset('images/destinasi/foto6.png') }}" alt="Kolam Renang Sri Tanjung">
+</div>
+<div class="card-text">
+    <h3>KOLAM RENANG SRI TANJUNG</h3>
                 </div>
             </div>
 

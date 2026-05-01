@@ -12,7 +12,8 @@ class Transaksi extends Model
 
     protected $fillable = [
         'nama_customer',
-        'tlp_costumer',    // sengaja typo sesuai nama kolom di DB
+        'tlp_costumer',    
+        'email', 
         'tanggal_pesan',
         'jml_tiket',
         'harga_total',

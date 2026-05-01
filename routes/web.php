@@ -15,6 +15,12 @@ Route::get('/beranda',   [BerandaController::class, 'index'])->name('beranda');
 Route::get('/riwayat',   [RiwayatController::class, 'index'])->name('riwayat');
 Route::get('/informasi-harga', [InformasiController::class, 'harga'])->name('informasi.harga');
 Route::get('/pesan-tiket', [InformasiController::class, 'pesan'])->name('informasi.pesan');
+Route::get('/cara-pesan', function () {
+    return view('informasi.cara-pesan');
+})->name('informasi.cara-pesan');
+Route::get('/tiket', function () {
+    return view('tiket');
+})->name('tiket');
 
 // Transaksi — publik, siapa pun bisa pesan tiket
 Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
