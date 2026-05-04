@@ -1166,81 +1166,85 @@
         }
 
        function confirmPayment() {
-    // 1. Siapkan data yang akan dikirim
-    const formData = {
-        nama_customer: document.querySelector('input[name="nama"]').value,
-        tlp_customer: document.querySelector('input[name="telepon"]').value,
-        email: document.querySelector('input[name="email"]').value,
-        tanggal_pesan: document.querySelector('input[name="tanggal"]').value,
-        jml_tiket: counts.adult + counts.child,
-        harga_total: parseInt(document.getElementById('total-price').textContent.replace(/[^0-9]/g, '')),
-        id_wisata: getIdWisataByName(document.getElementById('select-text').textContent),
-        id_customer: null, // Guest user
-        _token: document.querySelector('meta[name="csrf-token"]').content // CSRF Token
-    };
-
-    // Debug: Log data yang akan dikirim
-    console.log('Mengirim data:', formData);
-
-    // 2. Tampilkan loading
-    const btnPaid = document.querySelector('.btn-paid');
-    const originalText = btnPaid.innerHTML;
-    btnPaid.disabled = true;
-    btnPaid.innerHTML = '⏳ Memproses...';
-
-    // 3. Kirim ke Laravel via Fetch API
-    fetch('/transaksi', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': formData._token
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // ✅ Berhasil! Simpan ke localStorage & redirect
-            const tiketData = {
-                nomor: data.id_pemesanan || '#NGJ-' + Date.now().toString().slice(-8),
-                telepon: formData.tlp_customer,
-                waktu: new Date().toLocaleString('id-ID'),
-                destinasi: formData.nama_customer,
-                tanggal: formData.tanggal_pesan,
-                pengunjung: `${counts.adult} Dewasa, ${counts.child} Anak`,
-                total: document.getElementById('total-price').textContent
+            // 1. Siapkan data yang akan dikirim
+            const formData = {
+                nama_customer: document.querySelector('input[name="nama"]').value,
+                tlp_customer: document.querySelector('input[name="telepon"]').value,
+                email: document.querySelector('input[name="email"]').value,
+                tanggal_pesan: document.querySelector('input[name="tanggal"]').value,
+                jml_tiket: counts.adult + counts.child,
+                harga_total: parseInt(document.getElementById('total-price').textContent.replace(/[^0-9]/g, '')),
+                id_wisata: getIdWisataByName(document.getElementById('select-text').textContent),
+                id_customer: null,
+                _token: document.querySelector('meta[name="csrf-token"]').content
             };
-            
-            localStorage.setItem('tiketData', JSON.stringify(tiketData));
-            alert('✅ ' + data.message);
-            window.location.href = '{{ route("tiket") }}';
-        } else {
-            // ❌ Gagal
-            alert('❌ Gagal: ' + data.message);
-            btnPaid.disabled = false;
-            btnPaid.innerHTML = originalText;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('⚠️ Terjadi kesalahan koneksi. Silakan coba lagi.');
-        btnPaid.disabled = false;
-        btnPaid.innerHTML = originalText;
-    });
-}
 
-// Helper: Mapping nama wisata ke ID (sesuaikan dengan ID di database kamu)
-function getIdWisataByName(namaWisata) {
-    const mapping = {
-        'Air Terjun Sedudo': 12,
-        'Goa Margo Tresno': 13,
-        'Air Terjun Roro Kuning': 14,
-        'Taman Rekreasi Anjuk Ladang': 15,
-        'Kolam Renang Sri Tanjung': 16
-    };
-    return mapping[namaWisata] || 12; // Default ke Sedudo jika tidak ketemu
-}
+            console.log('Mengirim data:', formData);
+
+            // 2. Tampilkan loading
+            const btnPaid = document.querySelector('.btn-paid');
+            const originalText = btnPaid.innerHTML;
+            btnPaid.disabled = true;
+            btnPaid.innerHTML = '⏳ Memproses...';
+
+            // 3. Kirim ke Laravel via Fetch API
+            fetch('/transaksi', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': formData._token
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // ✅ Ambil DESTINASI dari select-text (bukan dari nama_customer)
+                    const destinasiWisata = document.getElementById('select-text').textContent;
+                    
+                    // ✅ Simpan ke localStorage dengan data yang BENAR
+                    const tiketData = {
+                        nomor: data.id_pemesanan || '#NGJ-' + Date.now().toString().slice(-8),
+                        telepon: formData.tlp_customer,
+                        email: formData.email,              // ✅ TAMBAHKAN EMAIL
+                        waktu: new Date().toLocaleString('id-ID'),
+                        destinasi: destinasiWisata,         // ✅ PERBAIKI: ambil dari select-text
+                        nama: formData.nama_customer,       // ✅ TAMBAHKAN NAMA CUSTOMER (terpisah)
+                        tanggal: formData.tanggal_pesan,
+                        pengunjung: `${counts.adult} Dewasa, ${counts.child} Anak`,
+                        total: document.getElementById('total-price').textContent
+                    };
+                    
+                    localStorage.setItem('tiketData', JSON.stringify(tiketData));
+                    alert('✅ ' + data.message);
+                    window.location.href = '{{ route("tiket") }}';
+                } else {
+                    // ❌ Gagal
+                    alert('❌ Gagal: ' + data.message);
+                    btnPaid.disabled = false;
+                    btnPaid.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('⚠️ Terjadi kesalahan koneksi. Silakan coba lagi.');
+                btnPaid.disabled = false;
+                btnPaid.innerHTML = originalText;
+            });
+        }
+
+        // Helper: Mapping nama wisata ke ID (sesuaikan dengan ID di database kamu)
+        function getIdWisataByName(namaWisata) {
+            const mapping = {
+                'Air Terjun Sedudo': 12,
+                'Goa Margo Tresno': 13,
+                'Air Terjun Roro Kuning': 14,
+                'Taman Rekreasi Anjuk Ladang': 15,
+                'Kolam Renang Sri Tanjung': 16
+            };
+            return mapping[namaWisata] || 12; // Default ke Sedudo jika tidak ketemu
+        }
     </script>
 </body>
 </html>

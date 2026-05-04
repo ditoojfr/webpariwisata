@@ -14,10 +14,11 @@ class TransaksiController extends Controller
         Log::info('Data:', $request->all());
 
         try {
-            // Validasi
+            // ✅ TAMBAHKAN EMAIL KE VALIDASI
             $validated = $request->validate([
                 'nama_customer' => 'required|string|max:255',
                 'tlp_customer'  => 'required|string|max:20',
+                'email'         => 'required|email|max:255',  // ← TAMBAHKAN INI
                 'tanggal_pesan' => 'required|date',
                 'jml_tiket'     => 'required|integer|min:1',
                 'harga_total'   => 'required|numeric|min:1000',
@@ -27,10 +28,11 @@ class TransaksiController extends Controller
 
             DB::beginTransaction();
 
-            // Siapkan data HANYA untuk kolom yang ADA
+            // ✅ TAMBAHKAN EMAIL KE INSERT DATA
             $insertData = [
                 'nama_customer' => $validated['nama_customer'],
-                'tlp_costumer'  => $validated['tlp_customer'], // Sesuai typo di DB
+                'tlp_costumer'  => $validated['tlp_customer'],
+                'email'         => $validated['email'],  // ← TAMBAHKAN INI
                 'tanggal_pesan' => $validated['tanggal_pesan'],
                 'jml_tiket'     => $validated['jml_tiket'],
                 'harga_total'   => $validated['harga_total'],
