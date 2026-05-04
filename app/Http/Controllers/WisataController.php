@@ -24,54 +24,64 @@ class WisataController extends Controller
     }
 
     // Beranda admin — tampilkan wisata + statistik
-    public function index()
+ public function index(Request $request)
 {
-    $wisata = $this->getWisataAdmin();
+    $admin = DB::table('data_admin')->where('id_admin', session('user_id'))->first();
 
-    // Default kosong kalau tidak ada wisata
-    $totalPendapatan  = 0;
-    $tiketHariIni     = 0;
+    $wisata = null;
+    $totalPendapatan = 0;
+    $tiketHariIni = 0;
     $transaksiHariIni = 0;
-    $transaksi        = collect();
-    $chartLabels      = [];
-    $chartData        = [];
-    $galeri           = []; // <-- TAMBAHAN 1: Inisialisasi default kosong
+    $transaksi = collect();
+    $chartLabels = [];
+    $chartData = [];
+    $galeri = collect();
 
-    if ($wisata) {
-        $today = Carbon::today();
+    // Ambil dan format tanggal filter
+    $filterDate = $request->input('tanggal', now()->format('Y-m-d'));
+    $filterDateCarbon = \Carbon\Carbon::parse($filterDate)->format('Y-m-d');
 
-        // Total pendapatan semua waktu
-        $totalPendapatan = Transaksi::where('id_wisata', $wisata->id_wisata)
+    if ($admin && $admin->id_wisata) {
+        $wisata = DB::table('data_wisata')->where('id_wisata', $admin->id_wisata)->first();
+
+        // ✅ Gunakan $filterDateCarbon untuk konsistensi
+        $totalPendapatan = DB::table('transaksi')
+            ->where('id_wisata', $admin->id_wisata)
+            ->whereDate('tanggal_pesan', $filterDateCarbon)
             ->sum('harga_total');
 
-        // Tiket hari ini
-        $tiketHariIni = Transaksi::where('id_wisata', $wisata->id_wisata)
-            ->whereDate('tanggal_pesan', $today)
+        $tiketHariIni = DB::table('transaksi')
+            ->where('id_wisata', $admin->id_wisata)
+            ->whereDate('tanggal_pesan', $filterDateCarbon)
             ->sum('jml_tiket');
 
-        // Jumlah transaksi hari ini
-        $transaksiHariIni = Transaksi::where('id_wisata', $wisata->id_wisata)
-            ->whereDate('tanggal_pesan', $today)
+        $transaksiHariIni = DB::table('transaksi')
+            ->where('id_wisata', $admin->id_wisata)
+            ->whereDate('tanggal_pesan', $filterDateCarbon)
             ->count();
 
-        // Semua transaksi wisata ini (terbaru dulu)
-        $transaksi = Transaksi::where('id_wisata', $wisata->id_wisata)
-            ->orderBy('tanggal_pesan', 'desc')
+        // Tabel transaksi
+        $transaksi = DB::table('transaksi')
+            ->where('id_wisata', $admin->id_wisata)
+            ->whereDate('tanggal_pesan', $filterDateCarbon)
+            ->orderBy('id_pemesanan', 'desc')
             ->get();
 
-        // Data chart 7 hari terakhir
+        // Galeri event
+        $galeri = DB::table('galeri_event')
+            ->where('id_wisata', $admin->id_wisata)
+            ->orderBy('tgl_mulai', 'desc')
+            ->get();
+
+        // Chart 7 hari
         for ($i = 6; $i >= 0; $i--) {
-            $tanggal       = Carbon::today()->subDays($i);
-            $chartLabels[] = $tanggal->format('d M');
-            $chartData[]   = Transaksi::where('id_wisata', $wisata->id_wisata)
-                ->whereDate('tanggal_pesan', $tanggal)
+            $date = now()->subDays($i)->format('Y-m-d');
+            $chartLabels[] = now()->subDays($i)->format('d M');
+            $chartData[] = DB::table('transaksi')
+                ->where('id_wisata', $admin->id_wisata)
+                ->whereDate('tanggal_pesan', $date)
                 ->sum('harga_total');
         }
-
-        // <-- TAMBAHAN 2: Tarik semua foto event berdasarkan id_wisata
-        $galeri = \Illuminate\Support\Facades\DB::table('galeri_event')
-                    ->where('id_wisata', $wisata->id_wisata)
-                    ->get();
     }
 
     return view('admin.beranda', compact(
@@ -82,7 +92,8 @@ class WisataController extends Controller
         'transaksi',
         'chartLabels',
         'chartData',
-        'galeri' // <-- TAMBAHAN 3: Lempar variabelnya ke view
+        'filterDate',
+        'galeri'
     ));
 }
     // Form edit wisata miliknya
