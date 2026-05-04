@@ -16,29 +16,21 @@
             --nav-bg:     #e1e6ec; 
             --nav-text:   #4b5563; 
             --nav-active: #101827; 
-            --bg-body:    #f9fafb; /* DIUBAH: Dari putih murni ke abu-abu sangat muda */
+            --bg-body:    #f9fafb; 
             --bg-gallery: #f4f6f9;
         }
         body { font-family: 'Poppins', sans-serif; background: var(--bg-body); color: var(--dark); overflow-x: hidden; }
 
-        /* ─── ANIMASI MASUK ALA LARAVEL (Fade & Slide Up) ─── */
+        /* ─── ANIMASI MASUK ALA LARAVEL ─── */
         @keyframes fadeSlideUp {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes fadeIn {
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
 
-        /* Terapkan animasi ke elemen utama */
         .navbar { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
         .hero-section { animation: fadeSlideUp 0.8s ease-out 0.2s forwards; opacity: 0; }
         .main-card { animation: fadeSlideUp 0.8s ease-out 0.4s forwards; opacity: 0; }
@@ -47,41 +39,47 @@
         .cta-container { animation: fadeSlideUp 0.8s ease-out 0.7s forwards; opacity: 0; }
         .gallery-section { animation: fadeIn 1s ease-out 0.8s forwards; opacity: 0; }
 
-
         /* ─── NAVBAR ─── */
         .navbar {
             position: absolute; top: 24px; left: 0; right: 0; width: 100%; z-index: 1000;
             display: flex; justify-content: center;
         }
         .navbar-container {
-            width: 100%; max-width: 1000px; margin: 0 20px; position: relative;
+            width: 90%; max-width: 1000px; position: relative; 
             background: var(--nav-bg);
-            border-radius: 50px; padding: 10px 30px; 
+            border-radius: 50px; padding: 10px 24px; 
             display: flex; align-items: center; justify-content: space-between;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .btn-back {
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #fff; color: var(--dark);
+            text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .btn-back:hover { background: var(--green); color: #fff; }
+        .btn-back svg { width: 18px; height: 18px; }
+        .nav-logo img { height: 32px; width: auto; display: block; }
         
-        .nav-logo img { height: 36px; width: auto; display: block; }
-        
-        /* Menu di tengah persis */
         .navbar-menu-container {
             position: absolute; left: 50%; transform: translateX(-50%);
             display: flex; justify-content: center;
         }
-        .nav-links { display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; }
+        .nav-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
         .nav-links a {
             text-decoration: none; color: var(--nav-text);
-            font-weight: 700; font-size: 15px;
+            font-weight: 700; font-size: 14px;
             position: relative; transition: color 0.3s;
         }
         .nav-links a:hover,
         .nav-links a.active { color: var(--nav-active); }
         .nav-links a.active::after {
-            content: ''; position: absolute; bottom: -10px; left: 0;
+            content: ''; position: absolute; bottom: -8px; left: 0;
             width: 100%; height: 3px; background: #fbbf24; border-radius: 2px;
         }
 
-        /* Dropdown */
         .dropdown-menu { display: none; } 
         .nav-links li { position: relative; }
         .nav-links li:hover .dropdown-menu { 
@@ -97,17 +95,23 @@
 
         .nav-icons { display: flex; align-items: center; }
         .btn-login {
-            padding: 8px 28px; border: 2px solid var(--green);
+            padding: 8px 24px; border: 2px solid var(--green);
             border-radius: 50px; color: var(--green);
-            font-weight: 600; font-size: 14px; cursor: pointer;
+            font-weight: 600; font-size: 13px; cursor: pointer;
             background: transparent; font-family: 'Poppins', sans-serif;
             transition: all 0.2s; display: inline-block;
         }
         .btn-login:hover { background: var(--green); color: #fff; transform: translateY(-2px); }
 
+        /* HAMBURGER MENU */
+        .hamburger {
+            display: none; flex-direction: column; gap: 4px; cursor: pointer; margin-left: 15px;
+        }
+        .hamburger span { width: 22px; height: 2.5px; background: var(--dark); border-radius: 2px; transition: 0.3s; }
+
         /* ─── HERO SECTION ─── */
         .hero-section {
-            max-width: 1200px; margin: 100px auto 0;
+            width: 100%; max-width: 1200px; margin: 100px auto 0;
             padding: 0 20px;
         }
         .hero-img-wrapper {
@@ -119,39 +123,42 @@
             width: 100%; height: 100%; object-fit: cover; object-position: center;
         }
 
-        /* ─── MAIN INFO CARD (Overlap) ─── */
+        /* ─── MAIN INFO CARD ─── */
         .main-card {
-            background: #ffffff; /* Ubah ke putih mutlak agar terpisah dari body */
-            max-width: 900px; margin: -100px auto 40px;
+            background: #ffffff; 
+            width: 90%; max-width: 900px; 
+            margin: -80px auto 30px; 
             border-radius: 24px; padding: 40px 50px;
             position: relative; z-index: 10;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             text-align: left;
         }
         .main-card h1 {
-            font-size: 32px; font-weight: 800; color: var(--dark);
-            text-transform: uppercase; margin-bottom: 8px; letter-spacing: -0.5px;
+            font-size: clamp(24px, 4vw, 32px); 
+            font-weight: 800; color: var(--dark);
+            text-transform: uppercase; margin-bottom: 12px; letter-spacing: -0.5px;
+            line-height: 1.2;
         }
         .location {
-            display: flex; align-items: center; gap: 8px;
-            color: var(--gray); font-size: 15px; font-weight: 600; margin-bottom: 24px;
+            display: flex; align-items: flex-start; gap: 8px;
+            color: var(--gray); font-size: 14px; font-weight: 600; margin-bottom: 24px;
         }
-        .location svg { width: 18px; height: 18px; color: var(--dark); }
+        .location svg { width: 18px; height: 18px; color: var(--dark); flex-shrink: 0; margin-top: 2px; }
         .description {
             font-size: 15px; line-height: 1.8; color: #555; font-weight: 500;
         }
 
-        /* ─── INFO BOXES ─── */
+        /* ─── INFO BOXES (Grid System) ─── */
         .info-container {
-            max-width: 900px; margin: 0 auto 40px;
-            display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
-            padding: 0 20px;
+            width: 90%; max-width: 900px; margin: 0 auto 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 16px;
         }
         .info-box {
-            background: #ffffff; /* Ubah ke putih mutlak agar menonjol */
+            background: #ffffff; 
             border: 1.5px solid #eaeaea;
             border-radius: 16px; padding: 20px 10px;
-            width: calc(25% - 15px); min-width: 140px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             transition: transform 0.3s ease;
@@ -161,15 +168,16 @@
         .info-label { font-size: 11px; font-weight: 600; color: var(--gray); text-transform: uppercase; margin-bottom: 4px; }
         .info-value { font-size: 14px; font-weight: 800; color: var(--dark); }
 
-        /* ─── RULES (Pills) ─── */
+        /* ─── RULES (Grid System) ─── */
         .rules-container {
-            max-width: 900px; margin: 0 auto 30px;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-            padding: 0 20px;
+            width: 90%; max-width: 900px; margin: 0 auto 30px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 16px;
         }
         .rule-pill {
             display: flex; align-items: center; gap: 12px;
-            padding: 14px 20px; border-radius: 50px;
+            padding: 14px 20px; border-radius: 12px; 
             font-size: 13px; font-weight: 600; color: #fff;
         }
         .rule-pill svg { width: 18px; height: 18px; flex-shrink: 0; }
@@ -178,10 +186,10 @@
 
         /* ─── CTA BUTTON ─── */
         .cta-container {
-            max-width: 900px; margin: 0 auto 60px; padding: 0 20px;
+            width: 90%; max-width: 900px; margin: 0 auto 60px;
         }
         .cta-btn {
-            display: block; width: 100%; padding: 18px;
+            display: flex; align-items: center; justify-content: center; width: 100%; padding: 18px;
             background: var(--green); color: #fff;
             text-align: center; font-size: 15px; font-weight: 700;
             border-radius: 50px; text-decoration: none;
@@ -190,37 +198,49 @@
         }
         .cta-btn:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(76,175,80,0.4); }
 
-        /* ─── GALLERY SECTION (UPDATED) ─── */
+        /* ─── GALLERY SECTION ─── */
         .gallery-section {
             background: var(--bg-gallery);
-            padding: 60px 20px;
+            padding: 60px 20px 80px; 
             border-top: 1px solid #e5e7eb;
         }
+        .gallery-header {
+            text-align: center; margin-bottom: 40px;
+            animation: fadeSlideUp 0.8s ease-out 0.7s forwards; opacity: 0;
+        }
+        .gallery-header h2 {
+            font-size: 28px; font-weight: 800; color: var(--dark);
+            text-transform: uppercase; letter-spacing: -0.5px;
+        }
+        .gallery-header h2 span { color: var(--green); }
+        .gallery-header p { font-size: 14.5px; color: var(--gray); margin-top: 8px; font-weight: 500; }
+
         .gallery-track {
             max-width: 1200px; margin: 0 auto;
-            display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; 
+            display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; 
             align-items: flex-start; 
+            animation: fadeIn 1s ease-out 0.9s forwards; opacity: 0;
         }
         .gallery-card {
-            background: #fff; padding: 10px; border-radius: 16px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-            width: 100%; max-width: 350px; flex: 1 1 300px; 
-            transition: transform 0.3s;
+            background: #fff; padding: 18px; border-radius: 20px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            width: 100%; max-width: 450px; flex: 1 1 300px; 
+            transition: all 0.3s ease;
         }
-        .gallery-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        
+        .gallery-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
         .gallery-card img {
-            width: 100%; 
-            height: auto; 
-            border-radius: 10px; 
-            display: block;
+            width: 100%; height: auto; 
+            border-radius: 12px; display: block;
+            border: 1px solid #f3f4f6; 
+        }
+        .gallery-empty {
+            text-align: center; padding: 40px 20px; color: var(--gray);
+            background: #fff; border-radius: 16px; border: 1px dashed #cbd5e1;
+            max-width: 600px; margin: 0 auto; font-size: 14px; font-weight: 500;
         }
 
         /* ─── FOOTER ─── */
-        footer {
-            background: var(--green); color: white;
-            text-align: center; padding: 20px; font-size: 13px; font-weight: 500;
-        }
+        footer { background: var(--green); color: white; text-align: center; padding: 20px; font-size: 13px; font-weight: 500; }
 
         /* ─── LOGIN MODAL ─── */
         .modal-overlay {
@@ -231,54 +251,78 @@
         }
         .modal-overlay.active { display: flex; }
         .modal {
-            background: white; border-radius: 20px; padding: 40px;
-            width: 90%; max-width: 420px; position: relative;
+            background: white; border-radius: 20px; padding: 30px;
+            width: 90%; max-width: 400px; position: relative;
             animation: modalSlide 0.3s ease;
         }
-        @keyframes modalSlide {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        @keyframes modalSlide { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-close {
             position: absolute; top: 15px; right: 20px; font-size: 24px;
             cursor: pointer; color: var(--gray); background: none; border: none;
             transition: color 0.3s;
         }
         .modal-close:hover { color: var(--dark); }
-        .modal h2 { font-size: 24px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
-        .modal .subtitle { color: var(--gray); font-size: 14px; margin-bottom: 30px; }
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label {
-            display: block; font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 8px;
-        }
+        .modal h2 { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+        .modal .subtitle { color: var(--gray); font-size: 13px; margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
         .form-group input {
-            width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0;
-            border-radius: 10px; font-size: 14px; font-family: 'Poppins', sans-serif;
+            width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0;
+            border-radius: 10px; font-size: 13px; font-family: 'Poppins', sans-serif;
             transition: border-color 0.3s; box-sizing: border-box;
         }
         .form-group input:focus { outline: none; border-color: var(--green); }
         .btn-submit {
-            width: 100%; padding: 14px;
+            width: 100%; padding: 12px; margin-top: 10px;
             background: linear-gradient(135deg, var(--green), #26A69A);
             color: white; border: none; border-radius: 10px;
-            font-size: 16px; font-weight: 600; cursor: pointer;
+            font-size: 15px; font-weight: 600; cursor: pointer;
             font-family: 'Poppins', sans-serif; transition: transform 0.3s, box-shadow 0.3s;
         }
-        .btn-submit:hover {
-            transform: translateY(-2px); box-shadow: 0 5px 20px rgba(76,175,80,0.4);
-        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(76,175,80,0.4); }
         .modal-footer-text { text-align: center; margin-top: 20px; font-size: 13px; color: var(--gray); }
         .modal-footer-text a { color: var(--green); text-decoration: none; font-weight: 600; }
 
         /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            .hero-section { padding: 0; }
+            .hero-img-wrapper { border-radius: 0; } 
+            .main-card { padding: 30px; }
+        }
+
         @media (max-width: 768px) {
-            .navbar-menu-container { display: none; }
+            .navbar-container { padding: 10px 16px; }
+            
+            /* Tampilkan Hamburger, Ubah Menu Menjadi Card Dropdown */
+            .navbar-menu-container { 
+                display: none; 
+                position: absolute; top: 100%; left: 0; right: 0; width: 100%;
+                transform: none; background: white; border-radius: 16px; padding: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1); flex-direction: column; margin-top: 10px;
+            }
+            .navbar-menu-container.active { display: flex; }
+            .nav-links { flex-direction: column; gap: 20px; text-align: center; }
+            .nav-links li:hover .dropdown-menu { 
+                position: relative; box-shadow: none; margin-top: 10px; border: 1px solid #eaeaea; 
+            }
+            .hamburger { display: flex; } /* Tampilkan icon hamburger */
+            
             .hero-img-wrapper { height: 350px; }
-            .main-card { margin: -60px 20px 30px; padding: 30px 24px; width: auto; }
-            .main-card h1 { font-size: 24px; }
-            .info-box { width: calc(50% - 10px); }
-            .rules-container { grid-template-columns: 1fr; }
+            .main-card { margin-top: -50px; padding: 25px; width: 95%; }
+            .info-container { grid-template-columns: repeat(2, 1fr); width: 95%; gap: 12px; }
+            .rules-container { grid-template-columns: 1fr; width: 95%; gap: 12px; }
+            .cta-container { width: 95%; }
             .gallery-card { width: 100%; max-width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-img-wrapper { height: 280px; }
+            .main-card h1 { font-size: 22px; }
+            .info-box { padding: 15px 10px; }
+            .info-label { font-size: 10px; }
+            .info-value { font-size: 13px; }
+            .rule-pill { font-size: 12px; padding: 12px 16px; }
+            .cta-btn { font-size: 13px; padding: 16px; }
         }
     </style>
 </head>
@@ -288,12 +332,19 @@
     <nav class="navbar">
         <div class="navbar-container">
             <!-- Logo Kiri -->
-            <a href="{{ route('beranda') }}" class="nav-logo">
-                <img src="{{ asset('images/logogedi.png') }}" alt="Nganjuk Abirupa">
-            </a>
+            <div class="nav-brand">
+                <a href="javascript:history.back()" class="btn-back" title="Kembali">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                    </svg>
+                </a>
+                <a href="{{ route('beranda') }}" class="nav-logo">
+                    <img src="{{ asset('images/logogedi.png') }}" alt="Nganjuk Abirupa">
+                </a>
+            </div>
             
-            <!-- Menu Tengah Absolut -->
-            <div class="navbar-menu-container">
+            <!-- Menu Tengah -->
+            <div class="navbar-menu-container" id="mobileMenu">
                 <ul class="nav-links">
                     <li><a href="{{ route('beranda') }}">Beranda</a></li>
                     <li class="dropdown">
@@ -308,9 +359,13 @@
                 </ul>
             </div>
 
-            <!-- Login Kanan -->
+            <!-- Login Kanan & Hamburger Menu -->
             <div class="nav-icons">
                 <button class="btn-login" onclick="openModal()">Login</button>
+                <!-- Hamburger Icon -->
+                <div class="hamburger" onclick="toggleMobileMenu()">
+                    <span></span><span></span><span></span>
+                </div>
             </div>
         </div>
     </nav>
@@ -405,9 +460,13 @@
 
     <!-- ════ GALLERY SECTION ════ -->
     <div class="gallery-section">
+        <div class="gallery-header">
+            <h2>Galeri <span>Event</span></h2>
+            <p>Momen dan kegiatan menarik di {{ $wisata->nama_wisata }}</p>
+        </div>
+
         @if(isset($galeri) && $galeri->count() > 0)
         <div class="gallery-track">
-            <!-- Hanya Menampilkan Gambar Utuh Tanpa Teks -->
             @foreach($galeri as $item)
             <div class="gallery-card">
                 <img src="{{ asset('images/destinasi/' . $item->gambar_poster) }}"
@@ -417,7 +476,9 @@
             @endforeach
         </div>
         @else
-        <div style="text-align: center; color: var(--gray);"> Belum ada galeri event untuk destinasi ini.</div>
+        <div class="gallery-empty">
+            Belum ada galeri event untuk destinasi ini.
+        </div>
         @endif
     </div>
 
@@ -451,6 +512,11 @@
 
     <!-- ════ SCRIPTS ════ -->
     <script>
+        // Hamburger Menu Toggle
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
         // Fungsi Modal Login
         function openModal() {
             document.getElementById('loginModal').classList.add('active');
@@ -490,7 +556,7 @@
                         'X-CSRF-TOKEN'    : CSRF,
                         'X-Requested-With': 'XMLHttpRequest',
                     },
-                    body: JSON.stringify({ email, password }),
+                    body: JSON.stringify({ email, password }),  
                 });
                 const data = await res.json();
                 if (data.success) {
