@@ -14,7 +14,10 @@ Route::get('/',          fn() => redirect('/beranda'));
 Route::get('/beranda',   [BerandaController::class, 'index'])->name('beranda');
 Route::get('/wisata/{id}', [BerandaController::class, 'detail'])->name('wisata.detail');
 Route::get('/riwayat',   [RiwayatController::class, 'index'])->name('riwayat');
-Route::get('/informasi-harga', [InformasiController::class, 'harga'])->name('informasi.harga');
+
+// ✅ PERBAIKAN DI SINI: Arahkan ke WisataController@hargaTiket
+Route::get('/informasi-harga', [WisataController::class, 'hargaTiket'])->name('informasi.harga');
+
 Route::get('/pesan-tiket', [InformasiController::class, 'pesan'])->name('informasi.pesan');
 Route::get('/cara-pesan', function () {
     return view('informasi.cara-pesan');
@@ -45,5 +48,5 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::delete('/profil/delete', [ProfilController::class, 'adminDelete'])->name('admin.profil.delete'); 
     Route::get('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     // Pastikan baris ini ada di dalam group admin
-Route::delete('/galeri/{id}', [WisataController::class, 'hapusEvent'])->name('admin.galeri.destroy');
+    Route::delete('/galeri/{id}', [WisataController::class, 'hapusEvent'])->name('admin.galeri.destroy');
 });

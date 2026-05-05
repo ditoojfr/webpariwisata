@@ -249,32 +249,35 @@
         </div>
     </nav>
 
-    <!-- MAIN CONTENT -->
+<!-- MAIN CONTENT -->
     <div class="main-wrapper">
         <div class="section-title" data-aos="fade-down">
             <h1>DAFTAR HARGA TIKET</h1>
             <p class="section-subtitle">Informasi lengkap harga tiket masuk wisata Nganjuk. Harga dapat berubah sewaktu-waktu sesuai kebijakan pengelola.</p>
         </div>
 
+        <!-- HANYA ADA SATU CLASS PRICE-GRID -->
         <div class="price-grid">
-            <!-- 1. Air Terjun Sedudo -->
-            <div class="price-card" data-aos="fade-up" data-aos-delay="100">
+            
+            <!-- MULAI LOOPING DI SINI -->
+            @foreach ($wisatas as $index => $wisata)
+            <div class="price-card" data-aos="fade-up" data-aos-delay="{{ ($index % 3 + 1) * 100 }}">
                 <div class="price-header">
-                    <h3>Air Terjun Sedudo</h3>
-                    <span class="price-badge">Wisata Alam</span>
+                    <h3>{{ $wisata->nama_wisata }}</h3>
+                    <span class="price-badge">Wisata Nganjuk</span>
                 </div>
                 <div class="price-body">
                     <div class="price-row">
                         <span class="price-label">Tiket Dewasa</span>
-                        <span class="price-value">Rp 10.000</span>
+                        <span class="price-value">Rp {{ number_format($wisata->tiket_dewasa, 0, ',', '.') }}</span>
                     </div>
                     <div class="price-row">
                         <span class="price-label">Tiket Anak-anak</span>
-                        <span class="price-value">Rp 8.000</span>
+                        <span class="price-value">Rp {{ number_format($wisata->tiket_anak, 0, ',', '.') }}</span>
                     </div>
                     <div class="price-row">
                         <span class="price-label">Asuransi Perjalanan</span>
-                        <span class="price-value">Rp 1.000</span>
+                        <span class="price-value">Rp {{ number_format($wisata->biaya_asuransi, 0, ',', '.') }}</span>
                     </div>
                     <div class="price-total">
                         <span class="label">🕒 Jam Buka</span>
@@ -282,110 +285,9 @@
                     </div>
                 </div>
             </div>
+            @endforeach
+            <!-- AKHIR LOOPING -->
 
-            <!-- 2. Air Terjun Roro Kuning -->
-            <div class="price-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="price-header">
-                    <h3>Air Terjun Roro Kuning</h3>
-                    <span class="price-badge">Wisata Alam</span>
-                </div>
-                <div class="price-body">
-                    <div class="price-row">
-                        <span class="price-label">Tiket Dewasa</span>
-                        <span class="price-value">Rp 8.000</span>
-                    </div>
-                    <div class="price-row">
-                        <span class="price-label">Tiket Anak-anak</span>
-                        <span class="price-value">Rp 6.000</span>
-                    </div>
-                    <div class="price-row">
-                        <span class="price-label">Asuransi Perjalanan</span>
-                        <span class="price-value">Rp 1.000</span>
-                    </div>
-                    <div class="price-total">
-                        <span class="label">🕒 Jam Buka</span>
-                        <span class="amount">08:00 - 17:00</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. Goa Margo Tresno -->
-            <div class="price-card" data-aos="fade-up" data-aos-delay="300">
-                <div class="price-header">
-                    <h3>Goa Margo Tresno</h3>
-                    <span class="price-badge">Wisata Sejarah & Alam</span>
-                </div>
-                <div class="price-body">
-                    <div class="price-row">
-                        <span class="price-label">Tiket Dewasa</span>
-                        <span class="price-value">Rp 9.000</span>
-                    </div>
-                    <div class="price-row">
-                        <span class="price-label">Tiket Anak-anak</span>
-                        <span class="price-value">Rp 7.000</span>
-                    </div>
-                    <div class="price-row">
-                        <span class="price-label">Asuransi Perjalanan</span>
-                        <span class="price-value">Rp 1.000</span>
-                    </div>
-                    <div class="price-total">
-                        <span class="label">🕒 Jam Buka</span>
-                        <span class="amount">08:00 - 17:00</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. Sri Tanjung -->
-            <div class="price-card" data-aos="fade-up" data-aos-delay="400">
-                <div class="price-header">
-                    <h3>Sri Tanjung</h3>
-                    <span class="price-badge">Wisata Religi & Alam</span>
-                </div>
-                <div class="price-body">
-                    <div class="price-row">
-                        <span class="price-label">Tiket Dewasa</span>
-                        <span class="price-value">Rp 10.000</span>
-                    </div>
-                    <div class="price-row">
-                        <span class="price-label">Tiket Anak-anak</span>
-                        <span class="price-value">Rp 7.000</span>
-                    </div>
-                    <div class="price-row">
-                        <span class="price-label">Asuransi Perjalanan</span>
-                        <span class="price-value">Rp 500</span>
-                    </div>
-                    <div class="price-total">
-                        <span class="label">🕒 Jam Buka</span>
-                        <span class="amount">08:00 - 17:00</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. Taman Rekreasi Anjuk Ladang -->
-            <div class="price-card" data-aos="fade-up" data-aos-delay="500">
-                <div class="price-header">
-                    <h3>Taman Rekreasi Anjuk Ladang</h3>
-                    <span class="price-badge">Wisata Keluarga</span>
-                </div>
-                <div class="price-body">
-                    <div class="price-row">
-                        <span class="price-label">Tiket Dewasa</span>
-                        <span class="price-value">Rp 8.000</span>
-                    </div>
-                    <div class="price-row">
-                        <span class="price-label">Tiket Anak-anak</span>
-                        <span class="price-value">Rp 5.000</span>
-                    </div>
-                    <div class="price-row">
-                        <span class="price-label">Asuransi Perjalanan</span>
-                        <span class="price-value">Rp 500</span>
-                    </div>
-                    <div class="price-total">
-                        <span class="label">Total Mulai Dari</span>
-                        <span class="amount">Rp 5.500</span>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
