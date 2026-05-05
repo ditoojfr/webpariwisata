@@ -153,9 +153,10 @@ textarea{ resize:vertical; min-height:80px; }
 
         {{-- FORM UTAMA WISATA --}}
         <form id="editWisataForm" action="{{ route('admin.wisata.update') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-            
+        @csrf
+        @method('PUT')
+        <input type="hidden" name="id_wisata" value="{{ $wisata->id_wisata }}">
+                
             <div class="form-group">
                 <label>Nama Wisata</label>
                 <input type="text" name="nama_wisata" value="{{ old('nama_wisata', $wisata->nama_wisata ?? '') }}" placeholder="Masukkan nama wisata" required>

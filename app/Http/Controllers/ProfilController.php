@@ -140,6 +140,6 @@ class ProfilController extends Controller
         'user_email' => $request->email,
     ]);
 
-    return redirect()->back()->with('success', '✅ Profil admin berhasil diperbarui!');
+    return redirect()->back()->with('success', ' Profil admin berhasil diperbarui!');
 }
 }
