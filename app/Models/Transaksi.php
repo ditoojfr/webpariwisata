@@ -11,15 +11,15 @@ class Transaksi extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'nama_customer',
-        'tlp_costumer',    
-        'email', 
-        'tanggal_pesan',
-        'jml_tiket',
-        'harga_total',
-        'id_wisata',
-        'id_customer',
-    ];
+    'nama_customer',
+    'tlp_costumer',
+    'tanggal_pesan',
+    'jml_tiket',
+    'harga_total',
+    'id_wisata',
+    'id_customer',
+    'email', // Pastikan ini ada
+];
 
     public function wisata()
     {

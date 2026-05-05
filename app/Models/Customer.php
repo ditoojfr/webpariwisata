@@ -50,4 +50,9 @@ class Customer extends Authenticatable
     {
         return $this->hasOne(DataCustomer::class, 'id_customer', 'id_customer');
     }
+
+    public function ulasan()
+{
+    return $this->hasMany(UlasanWisata::class, 'id_customer', 'id_customer');
+}
 }

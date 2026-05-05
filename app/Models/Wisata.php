@@ -46,4 +46,10 @@ class Wisata extends Model
         }
         return asset('images/placeholder.jpg');
     }
+
+    // app/Models/Wisata.php
+public function ulasan()
+{
+    return $this->hasMany(UlasanWisata::class, 'id_wisata', 'id_wisata');
+}
 }
