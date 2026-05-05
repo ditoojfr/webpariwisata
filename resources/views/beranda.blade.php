@@ -1263,27 +1263,28 @@
     </div>
 </footer>
 
-<div class="modal-overlay" id="loginModal">
-    <div class="modal">
-        <button class="modal-close" onclick="closeModal()">&times;</button>
-        <h2>Masuk ke Akun</h2>
-        <p class="subtitle">Silakan login untuk mengakses fitur lengkap</p>
-        <form id="formLoginBeranda" action="#">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
+    <!-- ============ LOGIN MODAL ============ -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Masuk ke Akun</h2>
+            <p class="subtitle">Silakan login untuk mengakses fitur lengkap</p>
+            <form id="formLoginBeranda" action="#">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Kata Sandi</label>
+                    <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
+                </div>
+                <button type="submit" name="login" class="btn-submit">Masuk</button>
+            </form>
+            <div class="modal-footer-text">
+                Belum punya akun? <a href="#">Daftar Sekarang</a>
             </div>
-            <div class="form-group">
-                <label for="password">Kata Sandi</label>
-                <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
-            </div>
-            <button type="submit" name="login" class="btn-submit">Masuk</button>
-        </form>
-        <div class="modal-footer-text">
-            Belum punya akun? <a href="#">Daftar Sekarang</a>
         </div>
     </div>
-</div>
 
 <button class="scroll-top" id="scrollTop" onclick="scrollToTop()">↑</button>
 
