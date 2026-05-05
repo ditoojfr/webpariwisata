@@ -205,9 +205,7 @@ td { border-bottom: 1px solid #eee; }
                     
                     <div class="wisata-desc">{{ $wisata->deskripsi ?: 'Belum ada deskripsi.' }}</div>
                     
-                    <div style="margin-top: 20px;">
-                        <a href="{{ route('admin.edit') }}" class="btn-edit">✏️ Edit Wisata Saya</a>
-                    </div>
+                    
                 </div>
 
                 {{-- GALERI EVENT (Sekarang di luar kolom kiri, jadi bisa melar 100%) --}}
@@ -308,55 +306,83 @@ td { border-bottom: 1px solid #eee; }
                     <canvas id="chart"></canvas>
                 </div>
             </div>
-            <div class="date-box">
-                <h3 style="margin-bottom:14px;">Filter Tanggal</h3>
-                <div class="date-display">
-                    <i class="fas fa-calendar-alt" style="color:#2196f3;"></i>
-                    <span id="selectedDate">{{ now()->translatedFormat('d F Y') }}</span>
-                </div>
-                <input type="date" id="filterDate" value="{{ now()->format('Y-m-d') }}"
-                    style="width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;font-family:'Poppins',sans-serif;font-size:13px;">
-            </div>
+           <div class="date-box">
+    <h3 style="margin-bottom:14px;">Filter Tanggal</h3>
+    
+    <!-- Form Filter: Submit otomatis saat tanggal berubah -->
+    <form method="GET" action="{{ route('admin.beranda') }}" id="filterForm">
+        <div class="date-display" onclick="document.getElementById('filterDate').showPicker()">
+            <i class="fas fa-calendar-alt" style="color:#2196f3;"></i>
+            <span id="selectedDate">
+                {{ \Carbon\Carbon::parse($filterDate ?? now())->translatedFormat('d F Y') }}
+            </span>
+        </div>
+        
+        <input type="date" 
+               id="filterDate" 
+               name="tanggal" 
+               value="{{ $filterDate ?? now()->format('Y-m-d') }}"
+               onchange="document.getElementById('filterForm').submit()"
+               style="width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;font-family:'Poppins',sans-serif;font-size:13px;margin-top:10px;">
+    </form>
+    
+    <!-- Info Ringkas -->
+    <div style="margin-top:15px;padding:12px;background:#f0f7ff;border-radius:10px;">
+        <p style="font-size:13px;margin:0;color:#475569;">
+            <strong>{{ $transaksi->count() }}</strong> transaksi pada tanggal ini
+        </p>
+        <p style="font-size:11px;margin:5px 0 0;color:#94a3b8;">
+            Total: Rp {{ number_format($transaksi->sum('harga_total'), 0, ',', '.') }}
+        </p>
+    </div>
+</div>
         </div>
 
         {{-- TABEL TRANSAKSI --}}
         <div class="table-box">
-            <div class="table-header">
-                <h3>Tabel Transaksi Wisata Ini</h3>
-            </div>
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>ID Pesan</th>
-                            <th>Customer</th>
-                            <th>Tanggal</th>
-                            <th>Jumlah Tiket</th>
-                            <th>Total</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        @forelse($transaksi ?? [] as $i => $t)
-                        <tr>
-                            <td>{{ $i + 1 }}</td>
-                            <td>#{{ str_pad($t->id_pemesanan, 4, '0', STR_PAD_LEFT) }}</td>
-                            <td>{{ $t->nama_customer }}</td>
-                            <td>{{ \Carbon\Carbon::parse($t->tanggal_pesan)->format('d M Y') }}</td>
-                            <td>{{ $t->jml_tiket }} tiket</td>
-                            <td>Rp {{ number_format($t->harga_total, 0, ',', '.') }}</td>
-                            <td><span class="status-badge status-sukses">Selesai</span></td>
-                        </tr>
-                        @empty
-                        <tr class="empty-row">
-                            <td colspan="7">Belum ada transaksi untuk wisata ini.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="table-header">
+        <h3>Tabel Transaksi Wisata Ini</h3>
+        <span style="font-size:12px;color:#6b7280;">
+            Tanggal: {{ \Carbon\Carbon::parse($filterDate ?? now())->translatedFormat('d F Y') }}
+        </span>
+    </div>
+    
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>ID Pesan</th>
+                    <th>Customer</th>
+                    <th>Tanggal</th>
+                    <th>Jumlah Tiket</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                @forelse($transaksi as $i => $t)
+                <tr>
+                    <td>{{ $i + 1 }}</td>
+                    <td>#{{ str_pad($t->id_pemesanan, 4, '0', STR_PAD_LEFT) }}</td>
+                    <td>{{ $t->nama_customer ?? 'Guest' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($t->tanggal_pesan)->format('d M Y') }}</td>
+                    <td>{{ $t->jml_tiket }} tiket</td>
+                    <td>Rp {{ number_format($t->harga_total, 0, ',', '.') }}</td>
+                    <td><span class="status-badge status-sukses">Selesai</span></td>
+                </tr>
+                @empty
+                <tr class="empty-row">
+                    <td colspan="7" style="text-align:center;padding:40px;color:#9ca3af;">
+                        <i class="fas fa-inbox" style="font-size:40px;margin-bottom:10px;display:block;opacity:0.3;"></i>
+                        <p style="margin:0;font-size:14px;">Tidak ada transaksi pada tanggal {{ \Carbon\Carbon::parse($filterDate ?? now())->translatedFormat('d F Y') }}</p>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 
     </div>
 </div>
@@ -409,9 +435,14 @@ new Chart(document.getElementById('chart').getContext('2d'), {
 });
 
 // Filter tanggal
+// Filter tanggal - Update teks tanggal & submit form
 document.getElementById('filterDate').addEventListener('change', function() {
-    document.getElementById('selectedDate') .textContent = new Date(this.value)
+    // Update tampilan teks tanggal
+    document.getElementById('selectedDate').textContent = new Date(this.value)
         .toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+    
+    // Submit form untuk reload data
+    document.getElementById('filterForm').submit();
 });
 </script>
 </body>

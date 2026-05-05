@@ -292,10 +292,6 @@
     <button class="btn btn-edit" onclick="editProfile()">
         <i class="fas fa-edit"></i> Edit
     </button>
-    
-    <button class="btn btn-delete" onclick="deleteAccount()">
-        <i class="fas fa-trash"></i> Hapus Akun
-    </button>
 </div>
 
             <!-- RIGHT SIDE - Profile Form -->
@@ -372,33 +368,6 @@
         setTimeout(() => {
             document.querySelector('.profile-form').style.boxShadow = '0 5px 20px rgba(0,0,0,0.05)';
         }, 1000);
-    }
-
-    // Delete Account - Confirmation
-    function deleteAccount() {
-        Swal.fire({
-            title: '⚠️ PERINGATAN!',
-            text: 'Apakah Anda yakin ingin menghapus akun ini?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ff4757',
-            cancelButtonColor: '#d1d8e0',
-            confirmButtonText: 'Ya, Hapus Akun!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Submit form delete
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{{ route('admin.profil.delete') }}";
-                form.innerHTML = `
-                    @csrf
-                    @method('DELETE')
-                `;
-                document.body.appendChild(form);
-                form.submit();
-            }
-        });
     }
 
     // Cancel Changes
