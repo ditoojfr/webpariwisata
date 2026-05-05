@@ -1,5 +1,3 @@
-ini loginnya arahkan ke beranda soalnya loginnya ada diberanda
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
