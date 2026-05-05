@@ -144,24 +144,19 @@
             color: var(--gray); font-size: 14px; font-weight: 600; margin-bottom: 24px;
         }
         .location svg { width: 18px; height: 18px; color: var(--dark); flex-shrink: 0; margin-top: 2px; }
-        .description {
-            font-size: 15px; line-height: 1.8; color: #555; font-weight: 500;
-        }
+        
+        .description-box { margin-top: 10px; }
+        .description-short { font-size: 15px; line-height: 1.8; color: var(--nav-text); font-weight: 500; margin-bottom: 15px; }
+        .description-long { font-size: 14.5px; line-height: 1.8; color: var(--gray); }
 
         /* ─── INFO BOXES (Grid System) ─── */
         .info-container {
             width: 90%; max-width: 900px; margin: 0 auto 30px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 16px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
         }
         .info-box {
-            background: #ffffff; 
-            border: 1.5px solid #eaeaea;
-            border-radius: 16px; padding: 20px 10px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease;
+            background: #ffffff; border: 1.5px solid #eaeaea; border-radius: 16px; padding: 20px 10px;
+            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: transform 0.3s ease;
         }
         .info-box:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
         .info-box svg { width: 28px; height: 28px; color: var(--dark); margin-bottom: 10px; }
@@ -171,13 +166,10 @@
         /* ─── RULES (Grid System) ─── */
         .rules-container {
             width: 90%; max-width: 900px; margin: 0 auto 30px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 16px;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
         }
         .rule-pill {
-            display: flex; align-items: center; gap: 12px;
-            padding: 14px 20px; border-radius: 12px; 
+            display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-radius: 12px; 
             font-size: 13px; font-weight: 600; color: #fff;
         }
         .rule-pill svg { width: 18px; height: 18px; flex-shrink: 0; }
@@ -185,54 +177,64 @@
         .rule-pill.green { background: var(--green); }
 
         /* ─── CTA BUTTON ─── */
-        .cta-container {
-            width: 90%; max-width: 900px; margin: 0 auto 60px;
-        }
+        .cta-container { width: 90%; max-width: 900px; margin: 0 auto 60px; }
         .cta-btn {
             display: flex; align-items: center; justify-content: center; width: 100%; padding: 18px;
-            background: var(--green); color: #fff;
-            text-align: center; font-size: 15px; font-weight: 700;
-            border-radius: 50px; text-decoration: none;
-            box-shadow: 0 8px 20px rgba(76,175,80,0.3);
-            transition: 0.3s;
+            background: var(--green); color: #fff; text-align: center; font-size: 15px; font-weight: 700;
+            border-radius: 50px; text-decoration: none; box-shadow: 0 8px 20px rgba(76,175,80,0.3); transition: 0.3s;
         }
         .cta-btn:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(76,175,80,0.4); }
 
         /* ─── GALLERY SECTION ─── */
         .gallery-section {
-            background: var(--bg-gallery);
-            padding: 60px 20px 80px; 
-            border-top: 1px solid #e5e7eb;
+            background: var(--bg-gallery); padding: 60px 20px 80px; border-top: 1px solid #e5e7eb;
         }
         .gallery-header {
-            text-align: center; margin-bottom: 40px;
-            animation: fadeSlideUp 0.8s ease-out 0.7s forwards; opacity: 0;
+            text-align: center; margin-bottom: 40px; animation: fadeSlideUp 0.8s ease-out 0.7s forwards; opacity: 0;
         }
-        .gallery-header h2 {
-            font-size: 28px; font-weight: 800; color: var(--dark);
-            text-transform: uppercase; letter-spacing: -0.5px;
-        }
+        .gallery-header h2 { font-size: 28px; font-weight: 800; color: var(--dark); text-transform: uppercase; letter-spacing: -0.5px; }
         .gallery-header h2 span { color: var(--green); }
         .gallery-header p { font-size: 14.5px; color: var(--gray); margin-top: 8px; font-weight: 500; }
 
         .gallery-track {
-            max-width: 1200px; margin: 0 auto;
-            display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; 
-            align-items: flex-start; 
-            animation: fadeIn 1s ease-out 0.9s forwards; opacity: 0;
+            max-width: 1200px; margin: 0 auto; display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; 
+            align-items: flex-start; animation: fadeIn 1s ease-out 0.9s forwards; opacity: 0;
         }
+        
         .gallery-card {
             background: #fff; padding: 18px; border-radius: 20px; 
             box-shadow: 0 8px 24px rgba(0,0,0,0.06);
             width: 100%; max-width: 450px; flex: 1 1 300px; 
             transition: all 0.3s ease;
+            position: relative;
         }
         .gallery-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
-        .gallery-card img {
-            width: 100%; height: auto; 
-            border-radius: 12px; display: block;
-            border: 1px solid #f3f4f6; 
+        
+        .image-container {
+            position: relative; width: 100%; border-radius: 12px;
+            overflow: hidden; border: 1px solid #f3f4f6; 
         }
+        .gallery-card img { width: 100%; height: auto; display: block; }
+
+        /* BADGE STATUS EVENT */
+        .event-badge {
+            position: absolute; top: 12px; right: 12px; 
+            color: white; font-size: 11px; padding: 6px 14px; 
+            border-radius: 20px; font-weight: 800; z-index: 5; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .badge-blue { background: #3b82f6; }
+        .badge-orange { background: #f59e0b; }
+        .badge-green { background: #10b981; }
+
+        /* KOTAK TANGGAL EVENT */
+        .event-date-box {
+            background: #f8fafc; border-radius: 10px; padding: 12px; 
+            border: 1px solid #e2e8f0; text-align: center; margin-top: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .event-date-box p { font-size: 13.5px; margin: 0; color: #334155; font-weight: 700; }
+
         .gallery-empty {
             text-align: center; padding: 40px 20px; color: var(--gray);
             background: #fff; border-radius: 16px; border: 1px dashed #cbd5e1;
@@ -246,38 +248,27 @@
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5); z-index: 2000;
-            justify-content: center; align-items: center;
-            backdrop-filter: blur(5px);
+            justify-content: center; align-items: center; backdrop-filter: blur(5px);
         }
         .modal-overlay.active { display: flex; }
         .modal {
-            background: white; border-radius: 20px; padding: 30px;
-            width: 90%; max-width: 400px; position: relative;
+            background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; position: relative;
             animation: modalSlide 0.3s ease;
         }
         @keyframes modalSlide { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-close {
-            position: absolute; top: 15px; right: 20px; font-size: 24px;
-            cursor: pointer; color: var(--gray); background: none; border: none;
-            transition: color 0.3s;
+            position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--gray); background: none; border: none; transition: color 0.3s;
         }
         .modal-close:hover { color: var(--dark); }
         .modal h2 { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
         .modal .subtitle { color: var(--gray); font-size: 13px; margin-bottom: 24px; }
         .form-group { margin-bottom: 16px; text-align: left; }
         .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
-        .form-group input {
-            width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0;
-            border-radius: 10px; font-size: 13px; font-family: 'Poppins', sans-serif;
-            transition: border-color 0.3s; box-sizing: border-box;
-        }
+        .form-group input { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 13px; font-family: 'Poppins', sans-serif; transition: border-color 0.3s; box-sizing: border-box; }
         .form-group input:focus { outline: none; border-color: var(--green); }
         .btn-submit {
-            width: 100%; padding: 12px; margin-top: 10px;
-            background: linear-gradient(135deg, var(--green), #26A69A);
-            color: white; border: none; border-radius: 10px;
-            font-size: 15px; font-weight: 600; cursor: pointer;
-            font-family: 'Poppins', sans-serif; transition: transform 0.3s, box-shadow 0.3s;
+            width: 100%; padding: 12px; margin-top: 10px; background: linear-gradient(135deg, var(--green), #26A69A); color: white; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; transition: transform 0.3s, box-shadow 0.3s;
         }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(76,175,80,0.4); }
         .modal-footer-text { text-align: center; margin-top: 20px; font-size: 13px; color: var(--gray); }
@@ -289,24 +280,15 @@
             .hero-img-wrapper { border-radius: 0; } 
             .main-card { padding: 30px; }
         }
-
         @media (max-width: 768px) {
             .navbar-container { padding: 10px 16px; }
-            
-            /* Tampilkan Hamburger, Ubah Menu Menjadi Card Dropdown */
             .navbar-menu-container { 
-                display: none; 
-                position: absolute; top: 100%; left: 0; right: 0; width: 100%;
-                transform: none; background: white; border-radius: 16px; padding: 20px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.1); flex-direction: column; margin-top: 10px;
+                display: none; position: absolute; top: 100%; left: 0; right: 0; width: 100%; transform: none; background: white; border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); flex-direction: column; margin-top: 10px;
             }
             .navbar-menu-container.active { display: flex; }
             .nav-links { flex-direction: column; gap: 20px; text-align: center; }
-            .nav-links li:hover .dropdown-menu { 
-                position: relative; box-shadow: none; margin-top: 10px; border: 1px solid #eaeaea; 
-            }
-            .hamburger { display: flex; } /* Tampilkan icon hamburger */
-            
+            .nav-links li:hover .dropdown-menu { position: relative; box-shadow: none; margin-top: 10px; border: 1px solid #eaeaea; }
+            .hamburger { display: flex; } 
             .hero-img-wrapper { height: 350px; }
             .main-card { margin-top: -50px; padding: 25px; width: 95%; }
             .info-container { grid-template-columns: repeat(2, 1fr); width: 95%; gap: 12px; }
@@ -314,7 +296,6 @@
             .cta-container { width: 95%; }
             .gallery-card { width: 100%; max-width: 100%; }
         }
-
         @media (max-width: 480px) {
             .hero-img-wrapper { height: 280px; }
             .main-card h1 { font-size: 22px; }
@@ -331,7 +312,6 @@
     <!-- ════ NAVBAR ════ -->
     <nav class="navbar">
         <div class="navbar-container">
-            <!-- Logo Kiri -->
             <div class="nav-brand">
                 <a href="javascript:history.back()" class="btn-back" title="Kembali">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -343,7 +323,6 @@
                 </a>
             </div>
             
-            <!-- Menu Tengah -->
             <div class="navbar-menu-container" id="mobileMenu">
                 <ul class="nav-links">
                     <li><a href="{{ route('beranda') }}">Beranda</a></li>
@@ -359,10 +338,8 @@
                 </ul>
             </div>
 
-            <!-- Login Kanan & Hamburger Menu -->
             <div class="nav-icons">
                 <button class="btn-login" onclick="openModal()">Login</button>
-                <!-- Hamburger Icon -->
                 <div class="hamburger" onclick="toggleMobileMenu()">
                     <span></span><span></span><span></span>
                 </div>
@@ -388,7 +365,20 @@
             </svg>
             {{ $wisata->lokasi }}
         </div>
-        <p class="description">{{ $wisata->deskripsi }}</p>
+        
+        <div class="description-box">
+            @if($wisata->deskripsi)
+            <p class="description-short">
+                {{ $wisata->deskripsi }}
+            </p>
+            @endif
+
+            @if($wisata->fasilitas)
+            <p class="description-long">
+                {{ nl2br(e($wisata->fasilitas)) }}
+            </p>
+            @endif
+        </div>
     </div>
 
     <!-- ════ INFO BOXES ════ -->
@@ -465,19 +455,66 @@
             <p>Momen dan kegiatan menarik di {{ $wisata->nama_wisata }}</p>
         </div>
 
-        @if(isset($galeri) && $galeri->count() > 0)
+        @php
+            // FILTER: Hapus otomatis dari tampilan jika event sudah berakhir (melewati tgl_selesai)
+            $galeriAktif = collect();
+            if(isset($galeri)) {
+                $galeriAktif = collect($galeri)->filter(function($item) {
+                    if (empty($item->tgl_selesai)) return true; // Jika tidak ada batas waktu, tetap tampilkan
+                    $sekarang = \Carbon\Carbon::now()->startOfDay();
+                    $selesai = \Carbon\Carbon::parse($item->tgl_selesai)->startOfDay();
+                    return $sekarang->diffInDays($selesai, false) >= 0; // Filter event yang sisa harinya >= 0
+                });
+            }
+        @endphp
+
+        @if($galeriAktif->count() > 0)
         <div class="gallery-track">
-            @foreach($galeri as $item)
+            @foreach($galeriAktif as $item)
+            
+            @php
+                $badge = '';
+                if ($item->tgl_selesai) {
+                    $sekarang = \Carbon\Carbon::now()->startOfDay();
+                    $selesai = \Carbon\Carbon::parse($item->tgl_selesai)->startOfDay();
+                    
+                    if ($item->tgl_mulai && $sekarang->lessThan(\Carbon\Carbon::parse($item->tgl_mulai)->startOfDay())) {
+                        $badge = '<div class="event-badge badge-blue">Segera Hadir</div>';
+                    } else {
+                        $sisaHari = $sekarang->diffInDays($selesai, false);
+                        if ($sisaHari <= 3) {
+                            $badge = '<div class="event-badge badge-orange">Sisa ' . $sisaHari . ' Hari</div>';
+                        } else {
+                            $badge = '<div class="event-badge badge-green">Aktif</div>';
+                        }
+                    }
+                }
+            @endphp
+
             <div class="gallery-card">
-                <img src="{{ asset('images/destinasi/' . $item->gambar_poster) }}"
-                     alt="Event {{ $wisata->nama_wisata }}"
-                     onerror="this.src='{{ asset('images/fotoberanda.png') }}'">
+                <!-- Wrapper Gambar & Badge -->
+                <div class="image-container">
+                    <img src="{{ asset('images/destinasi/' . $item->gambar_poster) }}"
+                         alt="Event {{ $wisata->nama_wisata }}"
+                         onerror="this.src='{{ asset('images/fotoberanda.png') }}'">
+                    {!! $badge !!}
+                </div>
+                
+                <!-- Kotak Tanggal di bawah gambar -->
+                <div class="event-date-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 15px; height: 15px; color: var(--green);">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                    </svg>
+                    <p>
+                        {{ \Carbon\Carbon::parse($item->tgl_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($item->tgl_selesai)->format('d M Y') }}
+                    </p>
+                </div>
             </div>
             @endforeach
         </div>
         @else
         <div class="gallery-empty">
-            Belum ada galeri event untuk destinasi ini.
+            Belum ada galeri event yang aktif untuk destinasi ini.
         </div>
         @endif
     </div>
@@ -512,12 +549,10 @@
 
     <!-- ════ SCRIPTS ════ -->
     <script>
-        // Hamburger Menu Toggle
         function toggleMobileMenu() {
             document.getElementById('mobileMenu').classList.toggle('active');
         }
 
-        // Fungsi Modal Login
         function openModal() {
             document.getElementById('loginModal').classList.add('active');
             document.body.style.overflow = 'hidden'; 
@@ -536,7 +571,6 @@
             if (e.key === 'Escape') closeModal(); 
         });
 
-        // Proses Form Login via Fetch API
         document.getElementById('formLoginDetail').addEventListener('submit', async function(e) {
             e.preventDefault();
             
