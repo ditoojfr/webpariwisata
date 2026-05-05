@@ -1430,9 +1430,6 @@
                 </div>
                 <button type="submit" name="login" class="btn-submit">Masuk</button>
             </form>
-            <div class="modal-footer-text">
-                Belum punya akun? <a href="#">Daftar Sekarang</a>
-            </div>
         </div>
     </div>
 
