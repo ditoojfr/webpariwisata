@@ -6,7 +6,7 @@
     <title>Harga Tiket - Nganjuk Abirupa</title>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -30,30 +30,102 @@
         body { font-family: 'Poppins', sans-serif; color: var(--text-dark); background: var(--bg-light); overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
 
-        /* ============ NAVBAR ============ */
-        .navbar { position: fixed; top: 20px; left: 0; right: 0; width: 100%; z-index: 1000; background: transparent; padding: 0; transition: all 0.3s ease; }
-        .navbar-container { max-width: 1000px; margin: 0 auto; background: var(--nav-bg); border-radius: 50px; padding: 12px 30px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .navbar-logo img { height: 40px; width: auto; }
-        .navbar-menu-container { flex: 1; display: flex; justify-content: center; }
-        .navbar-menu { display: flex; gap: 50px; align-items: center; list-style: none; }
-        .navbar-menu a { font-weight: 700; font-size: 15px; position: relative; transition: color 0.3s; }
-        .navbar-menu a:hover, .navbar-menu a.active { color: var(--nav-active); }
-        .navbar-menu a.active::after { content: ''; position: absolute; bottom: -12px; left: 0; width: 100%; height: 4px; border-radius: 4px; background: var(--nav-underline); }
-        .btn-login { padding: 10px 32px; border: 2px solid var(--primary-green); border-radius: 25px; color: var(--primary-green); font-weight: 600; cursor: pointer; background: transparent; transition: all 0.3s; }
-        .btn-login:hover { background: var(--primary-green); color: white; transform: translateY(-2px); }
-        .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
-        .hamburger span { width: 25px; height: 3px; background: var(--text-dark); border-radius: 3px; }
+        /* ─── NAVBAR (SAMA PERSIS DENGAN BERANDA.BLADE.PHP) ─── */
+        .navbar {
+            position: fixed; top: 24px; left: 0; right: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: center; transition: all 0.3s ease;
+        }
+        .navbar-container {
+            width: 90%; max-width: 1000px; position: relative; 
+            background: var(--nav-bg);
+            border-radius: 50px; padding: 10px 24px; 
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .nav-logo img { height: 32px; width: auto; display: block; }
+        
+        .navbar-menu-container {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            display: flex; justify-content: center;
+        }
+        .nav-links { display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; align-items: center; }
+        
+        /* PERBAIKAN: Tambahan padding-bottom untuk mencegah area klik terputus */
+        .nav-links li { position: relative; padding-bottom: 10px; }
+        
+        .nav-links a {
+            text-decoration: none; color: var(--nav-text);
+            font-weight: 700; font-size: 14px;
+            position: relative; transition: color 0.3s;
+        }
+        .nav-links a:hover,
+        .nav-links a.active { color: var(--nav-active); }
+        .nav-links a.active::after {
+            content: ''; position: absolute; bottom: -8px; left: 0;
+            width: 100%; height: 3px; background: #fbbf24; border-radius: 2px;
+        }
 
-        /* ============ DROPDOWN ============ */
-        .navbar-menu li { position: relative; }
-        .dropdown-menu { position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(10px); background: white; min-width: 180px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 100; list-style: none; }
-        .dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        .dropdown-menu li a { display: block; padding: 10px 20px; color: #333; font-weight: 500; font-size: 14px; white-space: nowrap; }
-        .dropdown-menu li a:hover { background-color: #f0f8f4; color: var(--primary-green); padding-left: 25px; }
-        .dropdown-menu li a::after { display: none; }
+        /* ============ DROPDOWN MENU ============ */
+        .dropdown-menu { display: none; }
+        
+        /* Desktop Dropdown - Hover */
+        .nav-links li:hover .dropdown-menu {
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-width: 170px;
+            margin-top: 0; /* PERBAIKAN: Ubah jadi 0 agar tidak ada celah kosong */
+            list-style: none;
+        }
+        
+        .dropdown-menu li { margin-bottom: 5px; padding-bottom: 0; }
+        .dropdown-menu a {
+            font-weight: 600;
+            font-size: 13px;
+            display: block;
+            padding: 8px 12px;
+            color: var(--text-dark);
+            border-radius: 6px;
+        }
+        .dropdown-menu a:hover { background: #f0fdf4; color: var(--primary-green); }
+        .dropdown-menu a::after { display: none; }
+
+        /* ============ NAV ICONS ============ */
+        .nav-icons { display: flex; align-items: center; }
+
+        .btn-login {
+            padding: 8px 24px; border: 2px solid var(--primary-green);
+            border-radius: 50px; color: var(--primary-green);
+            font-weight: 600; font-size: 13px; cursor: pointer;
+            background: transparent; transition: all 0.2s;
+            display: inline-block;
+        }
+        .btn-login:hover { background: var(--primary-green); color: #fff; transform: translateY(-2px); }
+
+        /* ============ HAMBURGER ============ */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+        .hamburger span {
+            width: 22px;
+            height: 2.5px;
+            background: var(--text-dark);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
 
         /* ============ MAIN CONTENT ============ */
-        .main-wrapper { margin-top: 110px; padding: 40px 20px 80px; }
+        .main-wrapper { margin-top: 130px; padding: 40px 20px 80px; }
         .section-title { text-align: center; margin-bottom: 50px; }
         .section-title h1 { font-size: 32px; font-weight: 800; color: var(--text-dark); position: relative; display: inline-block; }
         .section-title h1::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 60px; height: 4px; background: linear-gradient(90deg, var(--primary-green), var(--accent-blue)); border-radius: 2px; }
@@ -85,44 +157,94 @@
 
         /* ============ RESPONSIVE ============ */
         @media (max-width: 768px) {
-            .navbar-menu { display: none; position: absolute; top: 100%; left: 20px; right: 20px; background: white; flex-direction: column; padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); gap: 15px; margin-top: 10px; }
-            .navbar-menu.active { display: flex; }
+            .navbar { top: 12px; padding: 0 12px; }
+            .navbar-container { padding: 10px 16px; }
+
+            .navbar-menu-container {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                width: 100%;
+                transform: none;
+                background: white;
+                border-radius: 16px;
+                padding: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+                flex-direction: column;
+                margin-top: 10px;
+            }
+            .navbar-menu-container.active { display: flex; }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            .nav-links li { padding-bottom: 0; }
+
+            /* Dropdown di mobile: relative agar tidak overlap */
+            .nav-links li:hover .dropdown-menu {
+                position: relative;
+                box-shadow: none;
+                margin-top: 10px;
+                border: 1px solid #eaeaea;
+            }
+
+            /* Matikan hover dropdown di mobile, gunakan class open via JS */
+            .nav-links li .dropdown-menu { display: none !important; }
+            .nav-links li.open .dropdown-menu {
+                display: block !important;
+                position: relative;
+                box-shadow: none;
+                margin-top: 10px;
+                border: 1px solid #eaeaea;
+                left: auto;
+                min-width: unset;
+                padding: 8px 0;
+            }
+
             .hamburger { display: flex; }
             .price-grid { grid-template-columns: 1fr; }
             .section-title h1 { font-size: 26px; }
+            .main-wrapper { margin-top: 100px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
+    <!-- NAVBAR (SAMA PERSIS DENGAN BERANDA.BLADE.PHP) -->
+    <nav class="navbar" id="navbar">
         <div class="navbar-container">
-            <a href="{{ route('beranda') }}" class="navbar-logo">
-                <img src="{{ asset('images/logo-abirupa.png') }}" alt="Nganjuk Abirupa">
-            </a>
-            <div class="navbar-menu-container">
-                <ul class="navbar-menu" id="navMenu">
+            <div class="nav-brand">
+                <a href="{{ route('beranda') }}" class="nav-logo">
+                    <img src="{{ asset('images/logogedi.png') }}" alt="Nganjuk Abirupa">
+                </a>
+            </div>
+
+            <div class="navbar-menu-container" id="mobileMenu">
+                <ul class="nav-links">
                     <li><a href="{{ route('beranda') }}">Beranda</a></li>
+
                     <li class="dropdown">
-    <!-- Trigger Dropdown -->
-    <a href="#" class="dropdown-toggle">Informasi Tiket ▾</a>
-    
-    <!-- Isi Dropdown (3 Menu) -->
-    <ul class="dropdown-menu">
-        <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
-        <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
-        <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
-    </ul>
-</li>
+                        <a href="#" class="dropdown-toggle" id="dropdownToggle">Informasi Tiket ▾</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
+                            <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
+                            <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
+                        </ul>
+                    </li>
+
                     <li><a href="{{ route('riwayat') }}">Riwayat</a></li>
                 </ul>
             </div>
-            <div>
-                <button class="btn-login" onclick="alert('Fitur Login akan segera hadir!')">Login</button>
-            </div>
-            <div class="hamburger" onclick="document.getElementById('navMenu').classList.toggle('active')">
-                <span></span><span></span><span></span>
+
+            <div class="nav-icons">
+                <a href="{{ route('beranda') }}" class="btn-login">Login</a>
+                <div class="hamburger" onclick="toggleMobileMenu()">
+                    <span></span><span></span><span></span>
+                </div>
             </div>
         </div>
     </nav>
@@ -155,9 +277,9 @@
                         <span class="price-value">Rp 1.000</span>
                     </div>
                     <div class="price-total">
-    <span class="label">🕐 Jam Buka</span>
-    <span class="amount">08:00 - 17:00</span>
-</div>
+                        <span class="label">🕒 Jam Buka</span>
+                        <span class="amount">08:00 - 17:00</span>
+                    </div>
                 </div>
             </div>
 
@@ -181,9 +303,9 @@
                         <span class="price-value">Rp 1.000</span>
                     </div>
                     <div class="price-total">
-    <span class="label">🕐 Jam Buka</span>
-    <span class="amount">08:00 - 17:00</span>
-</div>
+                        <span class="label">🕒 Jam Buka</span>
+                        <span class="amount">08:00 - 17:00</span>
+                    </div>
                 </div>
             </div>
 
@@ -207,9 +329,9 @@
                         <span class="price-value">Rp 1.000</span>
                     </div>
                     <div class="price-total">
-    <span class="label">🕐 Jam Buka</span>
-    <span class="amount">08:00 - 17:00</span>
-</div>
+                        <span class="label">🕒 Jam Buka</span>
+                        <span class="amount">08:00 - 17:00</span>
+                    </div>
                 </div>
             </div>
 
@@ -233,9 +355,9 @@
                         <span class="price-value">Rp 500</span>
                     </div>
                     <div class="price-total">
-    <span class="label">🕐 Jam Buka</span>
-    <span class="amount">08:00 - 17:00</span>
-</div>
+                        <span class="label">🕒 Jam Buka</span>
+                        <span class="amount">08:00 - 17:00</span>
+                    </div>
                 </div>
             </div>
 
@@ -279,16 +401,72 @@
     <!-- SCRIPTS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // ===== INIT AOS ANIMATION =====
         AOS.init({ duration: 800, easing: 'ease-out-cubic', once: true, offset: 50 });
-        
-        // Navbar scroll effect
+
+        // ===== NAVBAR SCROLL EFFECT =====
+        const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
             if (window.scrollY > 50) {
-                navbar.style.padding = '10px 0';
+                navbar.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)';
             } else {
-                navbar.style.padding = '0';
+                navbar.style.boxShadow = '0 10px 30px rgba(0,0,0,0.06)';
             }
+        });
+
+        // ===== HAMBURGER & MOBILE MENU =====
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+            // Tutup dropdown saat menu ditutup
+            if (!document.getElementById('mobileMenu').classList.contains('active')) {
+                const dropdownLi = document.getElementById('dropdownToggle')?.parentElement;
+                if (dropdownLi) dropdownLi.classList.remove('open');
+            }
+        }
+
+        // Toggle dropdown di mobile saat di-klik
+        const dropdownToggle = document.getElementById('dropdownToggle');
+        if (dropdownToggle) {
+            dropdownToggle.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.parentElement.classList.toggle('open');
+                }
+            });
+        }
+
+        // Tutup menu saat link diklik (kecuali dropdown toggle)
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                // Cegah aksi default jika klik menu "Informasi Tiket" agar dropdown tidak hilang
+                if (link.id === 'dropdownToggle') {
+                    e.preventDefault();
+                    return;
+                }
+                
+                // Tutup menu jika klik selain tombol dropdown
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (mobileMenu) mobileMenu.classList.remove('active');
+                const dropdownLi = document.getElementById('dropdownToggle')?.parentElement;
+                if (dropdownLi) dropdownLi.classList.remove('open');
+            });
+        });
+
+        // ===== ACTIVE NAV LINK =====
+        const sections = document.querySelectorAll('section[id], .main-wrapper');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) current = section.getAttribute('id') || '';
+            });
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current) || link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
         });
     </script>
 </body>

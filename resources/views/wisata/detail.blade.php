@@ -16,6 +16,7 @@
             --nav-bg:     #e1e6ec; 
             --nav-text:   #4b5563; 
             --nav-active: #101827; 
+            --nav-underline: #fbbf24;
             --bg-body:    #f9fafb; 
             --bg-gallery: #f4f6f9;
         }
@@ -31,7 +32,6 @@
             100% { opacity: 1; }
         }
 
-        .navbar { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
         .hero-section { animation: fadeSlideUp 0.8s ease-out 0.2s forwards; opacity: 0; }
         .main-card { animation: fadeSlideUp 0.8s ease-out 0.4s forwards; opacity: 0; }
         .info-container { animation: fadeSlideUp 0.8s ease-out 0.5s forwards; opacity: 0; }
@@ -39,18 +39,35 @@
         .cta-container { animation: fadeSlideUp 0.8s ease-out 0.7s forwards; opacity: 0; }
         .gallery-section { animation: fadeIn 1s ease-out 0.8s forwards; opacity: 0; }
 
-        /* ─── NAVBAR ─── */
+        /* ─── NAVBAR (STYLE RIWAYAT) ─── */
         .navbar {
-            position: absolute; top: 24px; left: 0; right: 0; width: 100%; z-index: 1000;
-            display: flex; justify-content: center;
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0;
+            transition: all 0.3s ease;
         }
+
         .navbar-container {
-            width: 90%; max-width: 1000px; position: relative; 
-            background: var(--nav-bg);
-            border-radius: 50px; padding: 10px 24px; 
-            display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--nav-bg); 
+            border-radius: 50px;
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+            position: relative;
+            width: 90%;
         }
+
         .nav-brand { display: flex; align-items: center; gap: 12px; }
         .btn-back {
             display: flex; align-items: center; justify-content: center;
@@ -61,57 +78,139 @@
         }
         .btn-back:hover { background: var(--green); color: #fff; }
         .btn-back svg { width: 18px; height: 18px; }
-        .nav-logo img { height: 32px; width: auto; display: block; }
+        .nav-logo img { height: 40px; width: auto; display: block; object-fit: contain; }
         
         .navbar-menu-container {
-            position: absolute; left: 50%; transform: translateX(-50%);
-            display: flex; justify-content: center;
+            flex: 1;
+            display: flex;
+            justify-content: center;
         }
-        .nav-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+
+        .nav-links { 
+            display: flex; 
+            gap: 50px; 
+            list-style: none; 
+            margin: 0; 
+            padding: 0; 
+            align-items: center;
+        }
+        
         .nav-links a {
-            text-decoration: none; color: var(--nav-text);
-            font-weight: 700; font-size: 14px;
-            position: relative; transition: color 0.3s;
+            text-decoration: none; 
+            color: var(--nav-text);
+            font-weight: 700; 
+            font-size: 15px;
+            position: relative; 
+            transition: color 0.3s;
+            cursor: pointer;
         }
         .nav-links a:hover,
         .nav-links a.active { color: var(--nav-active); }
-        .nav-links a.active::after {
-            content: ''; position: absolute; bottom: -8px; left: 0;
-            width: 100%; height: 3px; background: #fbbf24; border-radius: 2px;
+        
+        .nav-links > li > a.active::after {
+            content: ''; 
+            position: absolute; 
+            bottom: -12px; 
+            left: 0;
+            width: 100%; 
+            height: 4px; 
+            border-radius: 4px;
+            background: var(--nav-underline);
         }
 
-        .dropdown-menu { display: none; } 
+        /* ─── DROPDOWN DESKTOP (HOVER + ANIMASI) ─── */
         .nav-links li { position: relative; }
-        .nav-links li:hover .dropdown-menu { 
-            display: block; position: absolute; top: 100%; left: 0; 
-            background: white; padding: 10px; border-radius: 8px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-width: 170px;
-            margin-top: 15px;
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: white;
+            min-width: 180px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 8px 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+            list-style: none;
+            margin-top: 0;
         }
-        .dropdown-menu li { list-style: none; margin-bottom: 5px; }
-        .dropdown-menu a { font-weight: 600; font-size: 13px; display: block; padding: 8px 12px; color: var(--dark); border-radius: 6px; }
-        .dropdown-menu a:hover { background: #f0fdf4; color: var(--green); }
+
+        @media (min-width: 769px) {
+            .dropdown:hover .dropdown-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        .dropdown-menu li { list-style: none; margin: 0; padding: 0; }
+        .dropdown-menu a { 
+            display: block;
+            padding: 10px 20px; 
+            font-weight: 500; 
+            font-size: 14px; 
+            color: #333; 
+            border-radius: 6px; 
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .dropdown-menu a:hover { 
+            background-color: #f0f8f4; 
+            color: var(--green); 
+            padding-left: 25px;
+        }
         .dropdown-menu a::after { display: none; }
 
-        .nav-icons { display: flex; align-items: center; }
+        .nav-icons { display: flex; align-items: center; gap: 15px; }
         .btn-login {
-            padding: 8px 24px; border: 2px solid var(--green);
-            border-radius: 50px; color: var(--green);
-            font-weight: 600; font-size: 13px; cursor: pointer;
-            background: transparent; font-family: 'Poppins', sans-serif;
-            transition: all 0.2s; display: inline-block;
+            padding: 10px 32px; 
+            border: 2px solid var(--green);
+            border-radius: 25px; 
+            color: var(--green);
+            font-weight: 600; 
+            font-size: 14px; 
+            cursor: pointer;
+            background: transparent; 
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s; 
+            display: inline-block;
+            text-decoration: none;
         }
-        .btn-login:hover { background: var(--green); color: #fff; transform: translateY(-2px); }
+        .btn-login:hover { 
+            background: var(--green); 
+            color: #fff; 
+            transform: translateY(-2px); 
+        }
 
-        /* HAMBURGER MENU */
+        /* ─── HAMBURGER MENU ─── */
         .hamburger {
-            display: none; flex-direction: column; gap: 4px; cursor: pointer; margin-left: 15px;
+            display: none; 
+            flex-direction: column; 
+            gap: 5px; 
+            cursor: pointer; 
+            padding: 5px;
+            z-index: 1001;
         }
-        .hamburger span { width: 22px; height: 2.5px; background: var(--dark); border-radius: 2px; transition: 0.3s; }
+        .hamburger span { 
+            width: 25px; 
+            height: 3px; 
+            background: #333; 
+            border-radius: 3px; 
+            transition: all 0.3s; 
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
 
         /* ─── HERO SECTION ─── */
         .hero-section {
-            width: 100%; max-width: 1200px; margin: 100px auto 0;
+            width: 100%; max-width: 1200px; 
+            margin: 110px auto 0;
             padding: 0 20px;
         }
         .hero-img-wrapper {
@@ -242,7 +341,18 @@
         }
 
         /* ─── FOOTER ─── */
-        footer { background: var(--green); color: white; text-align: center; padding: 20px; font-size: 13px; font-weight: 500; }
+        footer { 
+            background: var(--green); 
+            color: white; 
+            text-align: center; 
+            padding: 20px; 
+            font-size: 13px; 
+            font-weight: 500;
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            border-radius: 12px;
+        }
 
         /* ─── LOGIN MODAL ─── */
         .modal-overlay {
@@ -281,20 +391,86 @@
             .main-card { padding: 30px; }
         }
         @media (max-width: 768px) {
-            .navbar-container { padding: 10px 16px; }
-            .navbar-menu-container { 
-                display: none; position: absolute; top: 100%; left: 0; right: 0; width: 100%; transform: none; background: white; border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); flex-direction: column; margin-top: 10px;
+            .navbar { top: 12px; }
+            .navbar-container { border-radius: 40px; padding: 12px 20px; width: 95%; }
+            
+            .navbar-menu-container {
+                display: none; 
+                position: absolute;
+                top: calc(100% + 15px);
+                left: 0;
+                right: 0;
+                width: 100%; 
+                background: transparent; 
+                margin-top: 0;
+                z-index: 999;
             }
-            .navbar-menu-container.active { display: flex; }
-            .nav-links { flex-direction: column; gap: 20px; text-align: center; }
-            .nav-links li:hover .dropdown-menu { position: relative; box-shadow: none; margin-top: 10px; border: 1px solid #eaeaea; }
+            .navbar-menu-container.active { display: block; }
+            
+            .nav-links {
+                display: flex; 
+                flex-direction: column; 
+                background: white; 
+                padding: 20px;
+                border-radius: 20px; 
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+                gap: 10px; 
+                width: 100%;
+                text-align: center;
+            }
+            .nav-links li { width: 100%; padding: 0; border-bottom: none; }
+            
+            /* Matikan hover dropdown di mobile */
+            .dropdown:hover .dropdown-menu { 
+                opacity: 0; 
+                visibility: hidden; 
+                transform: translateX(-50%) translateY(10px);
+            }
+            
+            /* Dropdown mobile via class show-dropdown */
+            .dropdown-menu {
+                position: static !important; 
+                transform: none !important; 
+                box-shadow: none; 
+                opacity: 1 !important;
+                visibility: visible !important; 
+                display: none !important; 
+                background: #f8fafc; 
+                margin-top: 10px;
+                border-radius: 8px; 
+                padding: 10px 0; 
+                width: 100%; 
+                min-width: unset;
+            }
+            .dropdown.show-dropdown .dropdown-menu { 
+                display: block !important; 
+            }
+            .dropdown-menu li a { 
+                padding: 10px 15px; 
+                font-size: 13px; 
+                text-align: center;
+            }
+            .dropdown-menu li a:hover {
+                padding-left: 15px;
+            }
+
+            /* Style untuk dropdown toggle di mobile */
+            .dropdown-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+            }
+
             .hamburger { display: flex; } 
+            .hero-section { margin-top: 100px; }
             .hero-img-wrapper { height: 350px; }
             .main-card { margin-top: -50px; padding: 25px; width: 95%; }
             .info-container { grid-template-columns: repeat(2, 1fr); width: 95%; gap: 12px; }
             .rules-container { grid-template-columns: 1fr; width: 95%; gap: 12px; }
             .cta-container { width: 95%; }
             .gallery-card { width: 100%; max-width: 100%; }
+            footer { width: 95%; }
         }
         @media (max-width: 480px) {
             .hero-img-wrapper { height: 280px; }
@@ -304,13 +480,14 @@
             .info-value { font-size: 13px; }
             .rule-pill { font-size: 12px; padding: 12px 16px; }
             .cta-btn { font-size: 13px; padding: 16px; }
+            .btn-login { padding: 8px 20px; font-size: 13px; }
         }
     </style>
 </head>
 <body>
 
     <!-- ════ NAVBAR ════ -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="navbar-container">
             <div class="nav-brand">
                 <a href="javascript:history.back()" class="btn-back" title="Kembali">
@@ -323,25 +500,31 @@
                 </a>
             </div>
             
-            <div class="navbar-menu-container" id="mobileMenu">
-                <ul class="nav-links">
+            <div class="navbar-menu-container" id="navMenuContainer">
+                <ul class="nav-links" id="navMenu">
                     <li><a href="{{ route('beranda') }}">Beranda</a></li>
+                    
+                    <!-- DROPDOWN: INFORMASI TIKET -->
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle active">Informasi Tiket ▾</a>
-                        <ul class="dropdown-menu">
+                        <a href="javascript:void(0)" class="dropdown-toggle active" id="dropdownToggle" aria-haspopup="true" aria-expanded="false">Informasi Tiket ▾</a>
+                        <ul class="dropdown-menu" id="dropdownMenu">
                             <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
                             <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
                             <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
                         </ul>
                     </li>
+                    
                     <li><a href="{{ route('riwayat') }}">Riwayat</a></li>
                 </ul>
             </div>
 
             <div class="nav-icons">
                 <button class="btn-login" onclick="openModal()">Login</button>
-                <div class="hamburger" onclick="toggleMobileMenu()">
-                    <span></span><span></span><span></span>
+                <!-- Hamburger Menu -->
+                <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </div>
             </div>
         </div>
@@ -549,10 +732,66 @@
 
     <!-- ════ SCRIPTS ════ -->
     <script>
-        function toggleMobileMenu() {
-            document.getElementById('mobileMenu').classList.toggle('active');
+        // === NAVBAR TOGGLE SCRIPT ===
+        const hamburger = document.getElementById('hamburger');
+        const navMenuContainer = document.getElementById('navMenuContainer');
+        const dropdownToggle = document.getElementById('dropdownToggle');
+        const dropdownParent = dropdownToggle ? dropdownToggle.parentElement : null;
+
+        function toggleMenu() {
+            if (hamburger) hamburger.classList.toggle('active');
+            if (navMenuContainer) navMenuContainer.classList.toggle('active');
+            // Reset dropdown saat menu mobile ditutup
+            if (navMenuContainer && !navMenuContainer.classList.contains('active') && dropdownParent) {
+                dropdownParent.classList.remove('show-dropdown');
+            }
         }
 
+        // Toggle Dropdown via Klik (Mobile Only)
+        if (dropdownToggle) {
+            dropdownToggle.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault(); 
+                    e.stopPropagation();
+                    if (dropdownParent) {
+                        dropdownParent.classList.toggle('show-dropdown');
+                        // Update aria-expanded untuk aksesibilitas
+                        const expanded = dropdownParent.classList.contains('show-dropdown');
+                        this.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                    }
+                }
+            });
+        }
+
+        // Tutup dropdown & mobile menu saat klik link submenu
+        document.querySelectorAll('.dropdown-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navMenuContainer) navMenuContainer.classList.remove('active');
+                if (hamburger) hamburger.classList.remove('active');
+                if (dropdownParent) dropdownParent.classList.remove('show-dropdown');
+                if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Tutup dropdown jika klik di luar area
+        document.addEventListener('click', function(e) {
+            if (dropdownParent && dropdownToggle && 
+                !dropdownParent.contains(e.target) && 
+                !dropdownToggle.contains(e.target)) {
+                dropdownParent.classList.remove('show-dropdown');
+                if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Reset dropdown state saat resize window (mobile ↔ desktop)
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && dropdownParent) {
+                dropdownParent.classList.remove('show-dropdown');
+                if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // === MODAL LOGIN FUNCTIONS ===
         function openModal() {
             document.getElementById('loginModal').classList.add('active');
             document.body.style.overflow = 'hidden'; 
@@ -571,6 +810,7 @@
             if (e.key === 'Escape') closeModal(); 
         });
 
+        // === FORM LOGIN HANDLER ===
         document.getElementById('formLoginDetail').addEventListener('submit', async function(e) {
             e.preventDefault();
             

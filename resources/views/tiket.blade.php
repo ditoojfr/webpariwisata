@@ -16,6 +16,8 @@
             --text-dark: #333;
             --text-gray: #666;
             --nav-bg: #e1e6ec;
+            --nav-text: #4b5563;
+--nav-underline: #fbbf24;
         }
         
         body { 
@@ -26,33 +28,133 @@
         
         a { text-decoration: none; color: inherit; }
 
-        /* NAVBAR */
-        .navbar {
-            position: fixed;
-            top: 20px;
-            left: 0;
-            right: 0;
-            width: 100%;
-            z-index: 1000;
-        }
+        /* ============ NAVBAR ============ */
+.navbar {
+    position: fixed;
+    top: 20px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+}
 
-        .navbar-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: var(--nav-bg);
-            border-radius: 50px;
-            padding: 12px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
+.navbar-container {
+    width: 90%;
+    max-width: 1000px;
+    position: relative;
+    background: var(--nav-bg);
+    border-radius: 50px;
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
 
-        .navbar-logo img { height: 40px; width: auto; }
-        .navbar-menu { display: flex; gap: 50px; align-items: center; list-style: none; }
-        .navbar-menu a { font-weight: 700; font-size: 15px; color: var(--text-dark); }
-        .navbar-menu a:hover { color: var(--primary-green); }
+.nav-brand { display: flex; align-items: center; gap: 12px; }
+.nav-logo img { height: 36px; width: auto; display: block; }
 
+.navbar-menu-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.nav-links li { position: relative; padding-bottom: 10px; }
+.nav-links a {
+    text-decoration: none;
+    color: var(--nav-text);
+    font-weight: 700;
+    font-size: 14px;
+    position: relative;
+    transition: color 0.3s;
+}
+.nav-links a:hover,
+.nav-links a.active { color: #101827; }
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #fbbf24;
+    border-radius: 2px;
+}
+
+.dropdown-menu { display: none; }
+.nav-links li:hover .dropdown-menu {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    min-width: 170px;
+    margin-top: 0;
+    list-style: none;
+}
+.dropdown-menu li { margin-bottom: 5px; padding-bottom: 0; }
+.dropdown-menu a {
+    font-weight: 600;
+    font-size: 13px;
+    display: block;
+    padding: 8px 12px;
+    color: var(--text-dark);
+    border-radius: 6px;
+}
+.dropdown-menu a:hover { background: #f0fdf4; color: var(--primary-green); }
+.dropdown-menu a::after { display: none; }
+
+.nav-icons { display: flex; align-items: center; }
+.btn-login {
+    padding: 8px 24px;
+    border: 2px solid var(--primary-green);
+    border-radius: 50px;
+    color: var(--primary-green);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.2s;
+    display: inline-block;
+}
+.btn-login:hover {
+    background: var(--primary-green);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    margin-left: 15px;
+}
+.hamburger span {
+    width: 22px;
+    height: 2.5px;
+    background: var(--text-dark);
+    border-radius: 2px;
+    transition: 0.3s;
+}
         /* MAIN CONTENT */
         .main-wrapper {
             margin-top: 120px;
@@ -419,9 +521,11 @@
 
         .data-field {
             position: absolute;
-            right: 11%;
-            width: 24%;
-            height: 11%;
+            /* Digeser agar benar-benar di tengah area putih stub tiket */
+            right: 4%; 
+            /* Lebar diperkecil agar tidak menyentuh gerigi/garis biru di kiri */
+            width: 22%; 
+            height: 10%;
             background: transparent;
             display: flex;
             align-items: center;
@@ -429,16 +533,31 @@
             color: #1e3a5f;
             font-weight: 700;
             text-align: center;
-            font-size: clamp(12px, 1.2vw, 16px);
-            padding: 0 10px;
+            font-size: clamp(11px, 1.1vw, 15px);
+            padding: 0 5px;
+            line-height: 1.1;
+            overflow: hidden;
         }
 
-        .field-destinasi { top: 22%; right: 20px; font-size: clamp(14px, 1.3vw, 18px); }
-        .field-nama { top: 35%; right: 20px; }
-        .field-email { top: 48%; right: 20px; font-size: clamp(10px, 0.9vw, 12px); }
-        .field-tanggal { top: 60%; right: 20px; }
-        .field-pengunjung { top: 73%; right: 20px; }
-
+        /* Mengatur ulang jarak vertikal (top) agar tidak saling bertumpukan */
+        .field-destinasi { 
+            top: 21%; 
+        }
+        .field-nama { 
+            top: 37%; /* Ditambah jaraknya agar tidak ditabrak destinasi */
+        }
+        .field-email { 
+            top: 50%; 
+            font-size: clamp(9px, 0.8vw, 11px); 
+            word-break: break-all;
+        }
+        .field-tanggal { 
+            top: 62%; 
+        }
+        .field-pengunjung { 
+            top: 74%; 
+        }
+        
         /* FOOTER */
         .footer { 
             background: linear-gradient(135deg, #4CAF50 0%, #26A69A 100%); 
@@ -460,7 +579,56 @@
 
         @media (max-width: 768px) {
             .ticket-grid { grid-template-columns: 1fr; gap: 30px; }
-            .navbar-menu { display: none; }
+            /* Tambahkan ini di dalam @media (max-width: 768px) */
+.navbar { top: 10px; padding: 0 10px; }
+.navbar-container { padding: 8px 15px; width: 95%; }
+.nav-logo img { height: 30px; }
+.navbar-menu-container {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: none;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    flex-direction: column;
+    margin-top: 10px;
+}
+.navbar-menu-container.active { display: flex; }
+.nav-links {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+}
+.nav-links li { padding-bottom: 0; width: 100%; }
+.nav-links a { 
+    font-size: 15px;
+    padding: 8px 0;
+    display: block;
+}
+.nav-links li:hover .dropdown-menu {
+    position: relative;
+    box-shadow: none;
+    margin-top: 10px;
+    border: 1px solid #eaeaea;
+}
+.nav-links li .dropdown-menu { display: none !important; }
+.nav-links li.open .dropdown-menu {
+    display: block !important;
+    position: relative;
+    box-shadow: none;
+    margin-top: 10px;
+    border: 1px solid #eaeaea;
+    left: auto;
+    min-width: unset;
+    padding: 8px 0;
+}
+.hamburger { display: flex; }
+.btn-login { padding: 6px 18px; font-size: 12px; }
             .ticket-container { padding: 25px; }
         }
     </style>
@@ -468,18 +636,40 @@
 <body>
 
     <!-- NAVBAR -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="{{ route('beranda') }}" class="navbar-logo">
+    <!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+    <div class="navbar-container">
+        <div class="nav-brand">
+            <a href="{{ route('beranda') }}" class="nav-logo">
                 <img src="{{ asset('images/logo-abirupa.png') }}" alt="Nganjuk Abirupa">
             </a>
-            <ul class="navbar-menu">
+        </div>
+
+        <div class="navbar-menu-container" id="mobileMenu">
+            <ul class="nav-links">
                 <li><a href="{{ route('beranda') }}">Beranda</a></li>
-                <li><a href="{{ route('informasi.pesan') }}">Informasi Tiket</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="dropdownToggle">Informasi Tiket ▾</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
+                        <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
+                        <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
+                    </ul>
+                </li>
+
                 <li><a href="{{ route('riwayat') }}">Riwayat</a></li>
             </ul>
         </div>
-    </nav>
+
+        <div class="nav-icons">
+            <a href="{{ route('beranda') }}" class="btn-login">Login</a>
+            <div class="hamburger" onclick="toggleMobileMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </div>
+</nav>
 
     <!-- MAIN CONTENT -->
     <div class="main-wrapper">
@@ -748,5 +938,45 @@
             });
         }
     </script>
+
+    <script>
+    // === NAVBAR FUNCTIONS ===
+    function toggleMobileMenu() {
+        document.getElementById('mobileMenu').classList.toggle('active');
+        if (!document.getElementById('mobileMenu').classList.contains('active')) {
+            document.getElementById('dropdownToggle').parentElement.classList.remove('open');
+        }
+    }
+
+    document.getElementById('dropdownToggle').addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.parentElement.classList.toggle('open');
+        }
+    });
+
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (link.id === 'dropdownToggle') {
+                e.preventDefault();
+                return;
+            }
+            document.getElementById('mobileMenu').classList.remove('active');
+            document.getElementById('dropdownToggle').parentElement.classList.remove('open');
+        });
+    });
+
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)';
+        } else {
+            navbar.style.boxShadow = '0 10px 30px rgba(0,0,0,0.05)';
+        }
+    });
+</script>
+
 </body>
 </html>
