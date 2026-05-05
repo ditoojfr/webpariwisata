@@ -196,7 +196,7 @@ if ($request->hasFile('gambar_event')) {
     ->where('id_wisata', $admin->id_wisata)
     ->update($data);
 
-    return redirect()->route('admin.beranda')->with('success', '✅ Data wisata & Galeri Event berhasil diperbarui!');
+    return redirect()->route('admin.beranda')->with('success', ' Data wisata & Galeri Event berhasil diperbarui!');
 }
 
 // Fungsi khusus buat hapus poster event satuan
