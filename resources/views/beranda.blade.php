@@ -192,7 +192,7 @@
             transition: 0.3s;
         }
 
-        /* ============ RESPONSIVE (MOBILE) ============ */
+       /* ============ RESPONSIVE (MOBILE) ============ */
         @media (max-width: 768px) {
             .navbar { top: 12px; padding: 0 12px; }
 
@@ -213,7 +213,6 @@
                 flex-direction: column;
                 margin-top: 10px;
             }
-
             .navbar-menu-container.active { display: flex; }
 
             .nav-links {
@@ -247,57 +246,62 @@
 
             .hamburger { display: flex; }
 
-            /* Sesuaikan margin hero agar tidak tertutup navbar di mobile */
+            /* TAMBAHAN BARU: Menghilangkan margin putih di HP */
             .hero {
-                margin-top: 80px;
+                margin-top: 0; 
                 height: 60vh;
                 min-height: 400px;
             }
         }
 
         /* ============ HERO SECTION ============ */
-        .hero {
-            margin-top: 100px;
-            position: relative;
-            width: 100%;
-            height: 85vh;
-            min-height: 650px;
-            overflow: hidden;
-        }
+.hero {
+    margin-top: 0; /* Menghilangkan ruang putih di bagian atas */
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    min-height: 650px;
+    overflow: hidden;
+}
 
-        .hero-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            filter: brightness(0.9);
-        }
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9);
+}
 
-        .hero-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0,0,0,0.5));
-            padding: 60px 20px 30px;
-        }
+.hero-overlay {
+    position: absolute;
+    top: 0; /* Tarik overlay dari ujung atas */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.3); /* Efek gelap transparan merata agar teks terbaca */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Mendorong teks agar pas di tengah-tengah air biru */
+    align-items: center;
+    padding: 0 20px;
+}
 
-        .hero-text {
-            max-width: 1200px;
-            margin: 0 auto;
-            color: white;
-        }
+.hero-text {
+    max-width: 1200px;
+    text-align: center; /* Membuat teks rata tengah */
+    color: white;
+}
 
-        .hero-text h1 {
-            font-size: 42px;
-            font-weight: 800;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-        }
+.hero-text h1 {
+    font-size: 42px;
+    font-weight: 800;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+}
 
-        .hero-text p {
-            font-size: 18px;
-            margin-top: 10px;
-            opacity: 0.9;
-        }
+.hero-text p {
+    font-size: 18px;
+    margin-top: 10px;
+    opacity: 0.9;
+}
 
         /* ============ SECTION TITLE ============ */
         .section-title {
