@@ -189,20 +189,24 @@ if ($request->hasFile('gambar_event')) {
 }
 
 // Fungsi khusus buat hapus poster event satuan
-    public function hapusEvent($id)
-    {
-        // Cari data event berdasarkan id_galeri
-        $event = DB::table('galeri_event')->where('id_galeri', $id)->first();
-        
-        if ($event) {
-            // Hapus file fisiknya dari folder
-            if (file_exists(public_path('images/destinasi/' . $event->gambar_poster))) {
-                unlink(public_path('images/destinasi/' . $event->gambar_poster));
-            }
-            // Hapus datanya dari database
-            DB::table('galeri_event')->where('id_galeri', $id)->delete();
+public function hapusEvent($id)
+{
+    // Menggunakan DB::table karena lu tidak pakai model Galeri khusus
+    $event = DB::table('galeri_event')->where('id_galeri', $id)->first();
+    
+    if ($event) {
+        // Hapus file fisik agar storage tidak bengkak
+        $path = public_path('images/destinasi/' . $event->gambar_poster);
+        if (file_exists($path)) {
+            unlink($path);
         }
-
-        return back()->with('success', '✅ Poster event berhasil dihapus!');
+        
+        // Hapus data dari tabel
+        DB::table('galeri_event')->where('id_galeri', $id)->delete();
+        
+        return back()->with('success', 'Poster berhasil dihapus!');
     }
+
+    return back()->with('error', 'Event tidak ditemukan.');
+}
 }
