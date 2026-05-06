@@ -15,15 +15,22 @@
       
       /* Backgrounds */
       --panel: #f8fafc;
-      --nav-bg: #e8ecf1;
+      --nav-bg: #e1e6ec;
       
       /* Text */
       --text: #0f172a;
       --muted: #64748b;
+      --text-dark: #333;
+      --text-gray: #666;
+      
+      /* Navbar Specific */
+      --nav-text: #4b5563;
+      --nav-active: #101827;
+      --nav-underline: #fbbf24;
       
       /* UI */
       --border: #e2e8f0;
-      --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
       --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.2);
       
       /* Radius */
@@ -54,6 +61,7 @@
       color: var(--text);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
 
     a {
@@ -80,131 +88,100 @@
     .wrap {
       width: 92%;
       max-width: 1100px;
-      margin: 0 auto;
-      padding-top: 24px;
+      margin: 130px auto 0; /* Disesuaikan agar tidak tertutup navbar */
       padding-bottom: 40px;
     }
 
-    /* ==========================================================================
-      3. NAVBAR
-      ========================================================================== */
-    .nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--nav-bg);
-      border-radius: var(--radius-pill);
-      padding: 14px 28px;
-      box-shadow: var(--shadow);
-      position: relative;
-      z-index: 50;
+    /* ─── NAVBAR (SAMA PERSIS DENGAN BERANDA & HARGA) ─── */
+    .navbar {
+        position: fixed; top: 24px; left: 0; right: 0; width: 100%; z-index: 1000;
+        display: flex; justify-content: center; transition: all 0.3s ease;
+    }
+    .navbar-container {
+        width: 90%; max-width: 1000px; position: relative; 
+        background: var(--nav-bg);
+        border-radius: 50px; padding: 10px 24px; 
+        display: flex; align-items: center; justify-content: space-between;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; }
+    .nav-logo img { height: 32px; width: auto; display: block; }
+    
+    .navbar-menu-container {
+        position: absolute; left: 50%; transform: translateX(-50%);
+        display: flex; justify-content: center;
+    }
+    .nav-links { display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; align-items: center; }
+    
+    .nav-links li { position: relative; padding-bottom: 10px; }
+    
+    .nav-links a {
+        text-decoration: none; color: var(--nav-text);
+        font-weight: 700; font-size: 14px;
+        position: relative; transition: color 0.3s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--nav-active); }
+    .nav-links a.active::after {
+        content: ''; position: absolute; bottom: -8px; left: 0;
+        width: 100%; height: 3px; background: var(--nav-underline); border-radius: 2px;
     }
 
-    .nav .logo img {
-      height: 40px;
-      width: auto;
+    /* ============ DROPDOWN MENU ============ */
+    .dropdown-menu { display: none; }
+    
+    .nav-links li:hover .dropdown-menu {
+        display: block;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        min-width: 170px;
+        margin-top: 0; 
+        list-style: none;
     }
-
-    .nav .menu-container {
-      flex: 1;
-      display: flex;
-      justify-content: center;
+    
+    .dropdown-menu li { margin-bottom: 5px; padding-bottom: 0; }
+    .dropdown-menu a {
+        font-weight: 600;
+        font-size: 13px;
+        display: block;
+        padding: 8px 12px;
+        color: var(--text-dark);
+        border-radius: 6px;
     }
+    .dropdown-menu a:hover { background: #f0fdf4; color: var(--primary-green); }
+    .dropdown-menu a::after { display: none; }
 
-    .nav .menu {
-      display: flex;
-      gap: 36px;
-      align-items: center;
-      list-style: none;
+    /* ============ NAV ICONS ============ */
+    .nav-icons { display: flex; align-items: center; }
+
+    .btn-login {
+        padding: 8px 24px; border: 2px solid var(--primary-green);
+        border-radius: 50px; color: var(--primary-green);
+        font-weight: 600; font-size: 13px; cursor: pointer;
+        background: transparent; transition: all 0.2s;
+        display: inline-block;
     }
+    .btn-login:hover { background: var(--primary-green); color: #fff; transform: translateY(-2px); }
 
-    .nav .menu > li {
-      position: relative;
+    /* ============ HAMBURGER ============ */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+        margin-left: 15px;
     }
-
-    .nav .menu a {
-      font-weight: 600;
-      color: #475569;
-      transition: color var(--transition-fast);
-      padding: 4px 0;
-    }
-
-    .nav .menu a:hover,
-    .nav .menu a.active {
-      color: var(--text);
-    }
-
-    .nav .menu a.active::after {
-      content: "";
-      position: absolute;
-      bottom: -14px;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      border-radius: 4px;
-      background: #fbbf24;
-    }
-
-    /* Dropdown Menu */
-    .nav .dropdown-menu {
-      position: absolute;
-      top: 100%;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: var(--white);
-      min-width: 210px;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      padding: 8px 0;
-      opacity: 0;
-      visibility: hidden;
-      transition: all var(--transition-normal);
-      z-index: 100;
-      list-style: none;
-    }
-
-    .nav .dropdown:hover .dropdown-menu {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .nav .dropdown-menu li a {
-      display: block;
-      padding: 10px 20px;
-      font-size: 14px;
-      font-weight: 500;
-      white-space: nowrap;
-      transition: all var(--transition-fast);
-    }
-
-    .nav .dropdown-menu li a:hover {
-      background: #f0fdf4;
-      color: var(--primary-green);
-      padding-left: 24px;
-    }
-
-    /* Login Button */
-    .nav .icons {
-      display: flex;
-      gap: 12px;
-    }
-
-    .nav .btn-login {
-      padding: 10px 32px;
-      border: 2px solid var(--primary-green);
-      border-radius: 25px;
-      color: var(--primary-green);
-      font-weight: 600;
-      background: transparent;
-      transition: all var(--transition-normal);
-      display: inline-block;
-    }
-
-    .nav .btn-login:hover {
-      background: var(--primary-green);
-      color: var(--white);
-      transform: translateY(-2px);
+    .hamburger span {
+        width: 22px;
+        height: 2.5px;
+        background: var(--text-dark);
+        border-radius: 2px;
+        transition: 0.3s;
     }
 
     /* ==========================================================================
@@ -214,7 +191,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: 32px 0 24px;
+      margin: 0 0 24px;
       flex-wrap: wrap;
       gap: 16px;
     }
@@ -471,7 +448,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 2000;
       opacity: 0;
       visibility: hidden;
       transition: all var(--transition-normal);
@@ -650,16 +627,59 @@
       10. RESPONSIVE DESIGN
       ========================================================================== */
     @media (max-width: 768px) {
-      /* Navbar */
-      .nav .menu {
-        gap: 20px;
-      }
-      
-      .nav .btn-login {
-        padding: 8px 20px;
-        font-size: 13px;
-      }
-      
+        /* Navbar Mobile */
+        .navbar { top: 12px; padding: 0 12px; }
+        .navbar-container { padding: 10px 16px; }
+
+        .navbar-menu-container {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            width: 100%;
+            transform: none;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            flex-direction: column;
+            margin-top: 10px;
+        }
+        .navbar-menu-container.active { display: flex; }
+
+        .nav-links {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+        }
+        .nav-links li { padding-bottom: 0; }
+
+        /* Dropdown di mobile */
+        .nav-links li:hover .dropdown-menu {
+            position: relative;
+            box-shadow: none;
+            margin-top: 10px;
+            border: 1px solid #eaeaea;
+        }
+
+        .nav-links li .dropdown-menu { display: none !important; }
+        .nav-links li.open .dropdown-menu {
+            display: block !important;
+            position: relative;
+            box-shadow: none;
+            margin-top: 10px;
+            border: 1px solid #eaeaea;
+            left: auto;
+            min-width: unset;
+            padding: 8px 0;
+        }
+
+        .hamburger { display: flex; }
+        .btn-login { padding: 6px 18px; font-size: 12px; }
+        
+        .wrap { margin-top: 100px; }
+
       /* Search Box */
       .search-box {
         flex-direction: column;
@@ -733,89 +753,50 @@
         width: 100%;
       }
     }
-
-    /* ==========================================================================
-      11. UTILITIES & ACCESSIBILITY
-      ========================================================================== */
-    /* Focus states for accessibility */
-    a:focus,
-    button:focus,
-    input:focus {
-      outline: 2px solid var(--primary-green);
-      outline-offset: 2px;
-    }
-
-    /* Reduce motion for users who prefer it */
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-      
-      html {
-        scroll-behavior: auto;
-      }
-    }
-
-    /* Print styles */
-    @media print {
-      .nav,
-      .search-box,
-      .footer,
-      .modal-overlay {
-        display: none !important;
-      }
-      
-      body {
-        background: var(--white);
-        color: var(--text);
-      }
-      
-      .wrap {
-        width: 100%;
-        max-width: none;
-        padding: 0;
-      }
-      
-      .riwayat-table {
-        box-shadow: none;
-        border: 1px solid var(--border);
-      }
-    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- NAVBAR -->
-    <nav class="nav">
-      <a class="logo" href="{{ route('beranda') }}">
-        <img src="{{ asset('images/logo-abirupa.png') }}" alt="Nganjuk Abirupa" />
-      </a>
-      <div class="menu-container">
-        <ul class="menu">
-          <li><a href="{{ route('beranda') }}">Beranda</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle">Informasi Tiket ▾</a>
-            <ul class="dropdown-menu">
-              <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
-              <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
-              <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
-            </ul>
-          </li>
-          <li><a href="{{ route('riwayat') }}" class="active">Riwayat</a></li>
-        </ul>
-      </div>
-      <div class="icons">
-        <a class="btn-login" href="{{ route('beranda') }}">Login</a>
-      </div>
-    </nav>
+  
+  <!-- NAVBAR (SAMA PERSIS DENGAN BERANDA & HARGA) -->
+  <nav class="navbar" id="navbar">
+      <div class="navbar-container">
+          <div class="nav-brand">
+              <a href="{{ route('beranda') }}" class="nav-logo">
+                  <img src="{{ asset('images/logogedi.png') }}" alt="Nganjuk Abirupa">
+              </a>
+          </div>
 
+          <div class="navbar-menu-container" id="mobileMenu">
+              <ul class="nav-links">
+                  <li><a href="{{ route('beranda') }}">Beranda</a></li>
+
+                  <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" id="dropdownToggle">Informasi Tiket ▾</a>
+                      <ul class="dropdown-menu">
+                          <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
+                          <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
+                          <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
+                      </ul>
+                  </li>
+
+                  <li><a href="{{ route('riwayat') }}" class="active">Riwayat</a></li>
+              </ul>
+          </div>
+
+          <div class="nav-icons">
+              <a href="{{ route('beranda') }}" class="btn-login">Login</a>
+              <div class="hamburger" onclick="toggleMobileMenu()">
+                  <span></span><span></span><span></span>
+              </div>
+          </div>
+      </div>
+  </nav>
+
+  <div class="wrap">
     <!-- HEADER -->
     <div class="riwayat-header">
       <div class="riwayat-title">Riwayat Transaksi</div>
+      <a href="{{ route('beranda') }}" class="back-btn">← Kembali</a>
     </div>
 
     <!-- ========== SEARCH BOX ========== -->
@@ -930,6 +911,54 @@
   </div>
 
   <script>
+    // ===== NAVBAR SCROLL EFFECT =====
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)';
+        } else {
+            navbar.style.boxShadow = '0 10px 30px rgba(0,0,0,0.06)';
+        }
+    });
+
+    // ===== HAMBURGER & MOBILE MENU =====
+    function toggleMobileMenu() {
+        document.getElementById('mobileMenu').classList.toggle('active');
+        // Tutup dropdown saat menu ditutup
+        if (!document.getElementById('mobileMenu').classList.contains('active')) {
+            const dropdownLi = document.getElementById('dropdownToggle')?.parentElement;
+            if (dropdownLi) dropdownLi.classList.remove('open');
+        }
+    }
+
+    // Toggle dropdown di mobile saat di-klik
+    const dropdownToggle = document.getElementById('dropdownToggle');
+    if (dropdownToggle) {
+        dropdownToggle.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.parentElement.classList.toggle('open');
+            }
+        });
+    }
+
+    // Tutup menu saat link diklik (kecuali dropdown toggle)
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (link.id === 'dropdownToggle') {
+                e.preventDefault();
+                return;
+            }
+            
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) mobileMenu.classList.remove('active');
+            const dropdownLi = document.getElementById('dropdownToggle')?.parentElement;
+            if (dropdownLi) dropdownLi.classList.remove('open');
+        });
+    });
+
+
     // === FORMAT RUPIAH ===
     function formatRupiah(angka) {
       if (!angka) return 'Rp 0';
