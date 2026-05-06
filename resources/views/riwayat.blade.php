@@ -794,14 +794,14 @@
       const total = document.getElementById('modal-total').textContent;
       
       const text = `
-=== DETAIL PEMESANAN - NGANJUK ABIRUPA ===
-Nomor: ${nomor}
-Wisata: ${wisata}
-Tanggal: ${tanggal}
-Nama: ${nama}
-Total: ${total}
-Status: Lunas
-==========================================
+        === DETAIL PEMESANAN - NGANJUK ABIRUPA ===
+        Nomor: ${nomor}
+        Wisata: ${wisata}
+        Tanggal: ${tanggal}
+        Nama: ${nama}
+        Total: ${total}
+        Status: Lunas
+        ==========================================
       `.trim();
       
       const blob = new Blob([text], { type: 'text/plain' });
