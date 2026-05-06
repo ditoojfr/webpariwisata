@@ -17,7 +17,7 @@
         :root {
             --primary-green: #4CAF50;
             --accent-blue: #26A69A;
-            --bg-light: #f5faf5;
+            --bg-light: linear-gradient(160deg, #f0fdf4 0%, #e0f2fe 100%);
             --text-dark: #333;
             --text-gray: #666;
             --shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -26,7 +26,7 @@
             --nav-text: #4b5563;
             --nav-active: #101827;
         }
-        body { font-family: 'Poppins', sans-serif; color: var(--text-dark); background: var(--bg-light); overflow-x: hidden; }
+        body { font-family: 'Poppins', sans-serif; color: var(--text-dark); background: var(--bg-light); background-attachment: fixed; overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
 
         /* ─── NAVBAR (SAMA PERSIS DENGAN BERANDA.BLADE.PHP) ─── */

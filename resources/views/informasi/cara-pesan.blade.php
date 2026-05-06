@@ -19,7 +19,7 @@
             --primary-green: #4CAF50;
             --dark-green: #2E7D32;
             --light-green: #81C784;
-            --bg-light: #f5faf5;
+            --bg-light: linear-gradient(160deg, #f0fdf4 0%, #e0f2fe 100%);
             --text-dark: #333;
             --text-gray: #4b5563;
             --nav-bg: #e1e6ec;
@@ -34,6 +34,7 @@
             font-family: 'Poppins', sans-serif; 
             color: var(--text-dark); 
             background: var(--bg-light);
+background-attachment: fixed;
             overflow-x: hidden;
         }
         a { text-decoration: none; color: inherit; }

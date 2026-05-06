@@ -14,7 +14,7 @@
       --white: #ffffff;
       
       /* Backgrounds */
-      --panel: #f8fafc;
+      --panel: #eef7f0;
       --nav-bg: #e1e6ec;
       
       /* Text */
@@ -55,9 +55,10 @@
       scroll-behavior: smooth;
     }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--panel);
+   body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(160deg, #f0fdf4 0%, #e0f2fe 100%);
+  background-attachment: fixed;
       color: var(--text);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
