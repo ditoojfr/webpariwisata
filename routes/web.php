@@ -14,6 +14,8 @@ Route::get('/',          fn() => redirect('/beranda'));
 Route::get('/beranda',   [BerandaController::class, 'index'])->name('beranda');
 Route::get('/wisata/{id}', [BerandaController::class, 'detail'])->name('wisata.detail');
 Route::get('/riwayat',   [RiwayatController::class, 'index'])->name('riwayat');
+Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
+Route::get('/riwayat/cari', [RiwayatController::class, 'getCari'])->name('riwayat.cari');
 
 // ✅ PERBAIKAN DI SINI: Arahkan ke WisataController@hargaTiket
 Route::get('/informasi-harga', [WisataController::class, 'hargaTiket'])->name('informasi.harga');

@@ -25,7 +25,6 @@
             --nav-bg: #e1e6ec;
             --nav-text: #4b5563;
             --nav-active: #101827;
-            --nav-underline: #fbbf24;
         }
         body { font-family: 'Poppins', sans-serif; color: var(--text-dark); background: var(--bg-light); overflow-x: hidden; }
         a { text-decoration: none; color: inherit; }
@@ -61,10 +60,7 @@
         }
         .nav-links a:hover,
         .nav-links a.active { color: var(--nav-active); }
-        .nav-links a.active::after {
-            content: ''; position: absolute; bottom: -8px; left: 0;
-            width: 100%; height: 3px; background: #fbbf24; border-radius: 2px;
-        }
+        
 
         /* ============ DROPDOWN MENU ============ */
         .dropdown-menu { display: none; }
