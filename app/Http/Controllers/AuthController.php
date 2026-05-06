@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers; // <-- Perhatikan namespacenya gak pake Api
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer; // Pastikan model Customer lu bener namanya
@@ -64,7 +64,6 @@ class AuthController extends Controller
         return response()->json(['status' => 'success', 'message' => 'Password berhasil diubah!']);
     }
 
-    // 2. FUNGSI CEK OTP
     // 2. FUNGSI CEK OTP
     public function verifyOtp(Request $request)
     {
