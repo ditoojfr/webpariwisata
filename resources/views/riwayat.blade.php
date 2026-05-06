@@ -7,87 +7,248 @@
   <title>Riwayat Transaksi - Nganjuk Abirupa</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{ 
+    :root {
+      /* Colors */
       --primary-green: #4CAF50;
       --dark-green: #2E7D32;
-      --panel:#f8fafc; 
-      --nav-bg:#e8ecf1; 
-      --white:#ffffff;
-      --border:#e2e8f0;
-      --text:#0f172a; 
-      --muted:#64748b; 
-    }
-    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-    body{ background:var(--panel); color:var(--text); }
-    a{ color:inherit; text-decoration:none; }
-
-    /* ============ LAYOUT ============ */
-    .wrap{ width:92%; max-width:1100px; margin:0 auto; padding-top:24px; }
-
-    /* ============ NAVBAR ============ */
-    .nav{ 
-      display:flex; align-items:center; justify-content:space-between; 
-      background:var(--nav-bg); border-radius:52px; padding:14px 28px; 
-      box-shadow:0 8px 24px rgba(0,0,0,.06); position:relative; z-index:50;
-    }
-    .logo img{ height:40px; }
-    .menu-container{ flex:1; display:flex; justify-content:center; }
-    .menu{ display:flex; gap:36px; align-items:center; list-style:none; }
-    .menu > li{ position:relative; }
-    .menu a{ font-weight:600; color:#475569; transition:color .2s; }
-    .menu a:hover, .menu a.active{ color:var(--text); }
-    .menu a.active::after{ 
-      content:""; position:absolute; bottom:-14px; left:0; width:100%; height:4px; 
-      border-radius:4px; background:#fbbf24; 
+      --white: #ffffff;
+      
+      /* Backgrounds */
+      --panel: #f8fafc;
+      --nav-bg: #e8ecf1;
+      
+      /* Text */
+      --text: #0f172a;
+      --muted: #64748b;
+      
+      /* UI */
+      --border: #e2e8f0;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.2);
+      
+      /* Radius */
+      --radius-sm: 8px;
+      --radius-md: 10px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-pill: 52px;
+      
+      /* Transitions */
+      --transition-fast: 0.2s ease;
+      --transition-normal: 0.3s ease;
     }
 
-    .dropdown-menu{
-      position:absolute; top:100%; left:50%; transform:translateX(-50%) translateY(10px);
-      background:var(--white); min-width:210px; border-radius:12px;
-      box-shadow:0 10px 30px rgba(0,0,0,.12); padding:8px 0;
-      opacity:0; visibility:hidden; transition:all .25s ease; z-index:100; list-style:none;
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .dropdown:hover .dropdown-menu{ opacity:1; visibility:visible; transform:translateX(-50%) translateY(0); }
-    .dropdown-menu li a{ display:block; padding:10px 20px; font-size:14px; font-weight:500; white-space:nowrap; }
-    .dropdown-menu li a:hover{ background:#f0fdf4; color:var(--primary-green); padding-left:24px; }
 
-    .icons{ display:flex; gap:12px; }
-    .btn-login {
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--panel);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ==========================================================================
+      2. LAYOUT & CONTAINER
+      ========================================================================== */
+    .wrap {
+      width: 92%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 24px;
+      padding-bottom: 40px;
+    }
+
+    /* ==========================================================================
+      3. NAVBAR
+      ========================================================================== */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--nav-bg);
+      border-radius: var(--radius-pill);
+      padding: 14px 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 50;
+    }
+
+    .nav .logo img {
+      height: 40px;
+      width: auto;
+    }
+
+    .nav .menu-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .nav .menu {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav .menu > li {
+      position: relative;
+    }
+
+    .nav .menu a {
+      font-weight: 600;
+      color: #475569;
+      transition: color var(--transition-fast);
+      padding: 4px 0;
+    }
+
+    .nav .menu a:hover,
+    .nav .menu a.active {
+      color: var(--text);
+    }
+
+    .nav .menu a.active::after {
+      content: "";
+      position: absolute;
+      bottom: -14px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      border-radius: 4px;
+      background: #fbbf24;
+    }
+
+    /* Dropdown Menu */
+    .nav .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--white);
+      min-width: 210px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 8px 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+      z-index: 100;
+      list-style: none;
+    }
+
+    .nav .dropdown:hover .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .nav .dropdown-menu li a {
+      display: block;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: all var(--transition-fast);
+    }
+
+    .nav .dropdown-menu li a:hover {
+      background: #f0fdf4;
+      color: var(--primary-green);
+      padding-left: 24px;
+    }
+
+    /* Login Button */
+    .nav .icons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav .btn-login {
       padding: 10px 32px;
       border: 2px solid var(--primary-green);
       border-radius: 25px;
       color: var(--primary-green);
       font-weight: 600;
-      cursor: pointer;
       background: transparent;
-      transition: all 0.3s;
+      transition: all var(--transition-normal);
       display: inline-block;
     }
-    .btn-login:hover {
+
+    .nav .btn-login:hover {
       background: var(--primary-green);
-      color: white;
+      color: var(--white);
       transform: translateY(-2px);
     }
 
-    /* ============ CONTENT ============ */
-    .riwayat-header{ 
-      display:flex; justify-content:space-between; align-items:center; 
-      margin:32px 0 24px; flex-wrap:wrap; gap:16px; 
+    /* ==========================================================================
+      4. PAGE HEADER
+      ========================================================================== */
+    .riwayat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 32px 0 24px;
+      flex-wrap: wrap;
+      gap: 16px;
     }
-    .riwayat-title{ font-size:26px; font-weight:800; color:var(--text); }
-    .back-btn{ 
-      background:var(--primary-green); color:var(--white); padding:9px 18px; 
-      border-radius:10px; font-weight:600; font-size:14px; transition:all .2s; 
-    }
-    .back-btn:hover{ background:var(--dark-green); transform:translateY(-2px); }
 
-    /* ========== SEARCH BOX ========== */
+    .riwayat-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .back-btn {
+      background: var(--primary-green);
+      color: var(--white);
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 14px;
+      transition: all var(--transition-fast);
+    }
+
+    .back-btn:hover {
+      background: var(--dark-green);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+      5. SEARCH BOX
+      ========================================================================== */
     .search-box {
       background: var(--white);
-      border-radius: 16px;
+      border-radius: var(--radius-xl);
       padding: 20px;
       margin-bottom: 24px;
-      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+      box-shadow: var(--shadow);
       display: flex;
       gap: 12px;
       align-items: center;
@@ -113,10 +274,10 @@
       width: 100%;
       padding: 12px 16px;
       border: 2px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       font-size: 14px;
-      font-family: 'Poppins', sans-serif;
-      transition: border-color 0.2s;
+      font-family: inherit;
+      transition: border-color var(--transition-fast);
     }
 
     .search-group input:focus {
@@ -126,49 +287,6 @@
 
     .search-group input::placeholder {
       color: var(--muted);
-    }
-
-    .btn-cari {
-      background: var(--primary-green);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-cari:hover {
-      background: var(--dark-green);
-      transform: translateY(-2px);
-    }
-
-    .btn-cari:disabled {
-      background: #94a3b8;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-reset {
-      background: var(--white);
-      color: var(--text);
-      border: 2px solid var(--border);
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-reset:hover {
-      background: #f1f5f9;
-      border-color: var(--muted);
     }
 
     .search-hint {
@@ -189,6 +307,49 @@
       display: block;
     }
 
+    /* Search Buttons */
+    .btn-cari,
+    .btn-reset {
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 14px;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-cari {
+      background: var(--primary-green);
+      color: var(--white);
+    }
+
+    .btn-cari:hover {
+      background: var(--dark-green);
+      transform: translateY(-2px);
+    }
+
+    .btn-cari:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-reset {
+      background: var(--white);
+      color: var(--text);
+      border: 2px solid var(--border);
+    }
+
+    .btn-reset:hover {
+      background: #f1f5f9;
+      border-color: var(--muted);
+    }
+
+    /* ==========================================================================
+      6. LOADING & EMPTY STATES
+      ========================================================================== */
     .loading {
       text-align: center;
       padding: 40px;
@@ -210,43 +371,101 @@
       to { transform: rotate(360deg); }
     }
 
-    /* ========== TABEL ========== */
-    .riwayat-table{ 
-      width:100%; background:var(--white); border-radius:16px; 
-      overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.06); 
-    }
-    .riwayat-table table{ width:100%; border-collapse:collapse; }
-    .riwayat-table th{ 
-      background:#f8fafc; padding:14px 18px; text-align:left; 
-      font-size:13px; color:#64748b; font-weight:600; border-bottom:1px solid var(--border); 
-    }
-    .riwayat-table td{ 
-      padding:14px 18px; font-size:14px; border-bottom:1px solid var(--border); 
-      vertical-align:middle; color:#334155; 
-    }
-    .riwayat-table tr:last-child td{ border-bottom:none; }
-    .riwayat-table tr { cursor: pointer; transition: background 0.2s; }
-    .riwayat-table tr:hover { background: #f0fdf4; }
-    
-    .status-badge{ 
-      display:inline-block; padding:4px 12px; border-radius:20px; 
-      font-size:12px; font-weight:600; background:#d1fae5; color:#065f46; 
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
     }
 
-    /* Empty State */
-    .empty-state{ text-align:center; padding:60px 20px; }
-    .empty-state .icon-big{ font-size:48px; margin-bottom:16px; }
-    .empty-state p{ color:var(--muted); margin-bottom:8px; }
-    .empty-state .btn-jelajah{ 
-      display:inline-block; margin-top:16px; background:var(--primary-green); color:var(--white); 
-      padding:10px 24px; border-radius:10px; font-weight:600; transition:.2s; 
+    .empty-state .icon-big {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
     }
-    .empty-state .btn-jelajah:hover{ background:var(--dark-green); transform:translateY(-2px); }
 
-    /* ========== MODAL POPUP ========== */
+    .empty-state p {
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .empty-state .btn-jelajah {
+      display: inline-block;
+      margin-top: 16px;
+      background: var(--primary-green);
+      color: var(--white);
+      padding: 10px 24px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      transition: all var(--transition-fast);
+    }
+
+    .empty-state .btn-jelajah:hover {
+      background: var(--dark-green);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+      7. DATA TABLE
+      ========================================================================== */
+    .riwayat-table {
+      width: 100%;
+      background: var(--white);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .riwayat-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .riwayat-table th {
+      background: #f8fafc;
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .riwayat-table td {
+      padding: 14px 18px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      color: #334155;
+    }
+
+    .riwayat-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .riwayat-table tr {
+      cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+
+    .riwayat-table tr:hover {
+      background: #f0fdf4;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    /* ==========================================================================
+      8. MODAL POPUP
+      ========================================================================== */
     .modal-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(4px);
       display: flex;
@@ -255,7 +474,7 @@
       z-index: 1000;
       opacity: 0;
       visibility: hidden;
-      transition: all 0.3s ease;
+      transition: all var(--transition-normal);
       padding: 20px;
     }
 
@@ -271,18 +490,19 @@
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      box-shadow: var(--shadow-lg);
       transform: scale(0.9);
-      transition: transform 0.3s ease;
+      transition: transform var(--transition-normal);
     }
 
     .modal-overlay.active .modal-container {
       transform: scale(1);
     }
 
+    /* Modal Header */
     .modal-header {
       background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
-      color: white;
+      color: var(--white);
       padding: 20px 24px;
       display: flex;
       justify-content: space-between;
@@ -297,21 +517,19 @@
     }
 
     .modal-close {
-      background: none;
-      border: none;
-      color: white;
+      color: var(--white);
       font-size: 24px;
-      cursor: pointer;
       padding: 4px 8px;
-      border-radius: 8px;
-      transition: background 0.2s;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition-fast);
       line-height: 1;
     }
 
     .modal-close:hover {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
     }
 
+    /* Modal Body */
     .modal-body {
       padding: 24px;
     }
@@ -337,6 +555,7 @@
       margin-bottom: 12px;
     }
 
+    /* Detail Rows */
     .detail-row {
       display: flex;
       justify-content: space-between;
@@ -372,6 +591,7 @@
       font-size: 18px;
     }
 
+    /* Modal Footer */
     .modal-footer {
       padding: 16px 24px 24px;
       display: flex;
@@ -381,11 +601,10 @@
     .btn-modal {
       flex: 1;
       padding: 12px;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       font-weight: 600;
       font-size: 14px;
-      cursor: pointer;
-      transition: all 0.2s;
+      transition: all var(--transition-fast);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -394,8 +613,7 @@
 
     .btn-primary {
       background: var(--primary-green);
-      color: white;
-      border: none;
+      color: var(--white);
     }
 
     .btn-primary:hover {
@@ -414,33 +632,158 @@
       border-color: var(--muted);
     }
 
-    /* Footer */
-    .footer{ 
-      text-align:center; color:var(--white); font-size:13px; font-weight:500; 
-      padding:20px 0; margin-top:40px; background:var(--primary-green); border-radius:12px; 
+    /* ==========================================================================
+      9. FOOTER
+      ========================================================================== */
+    .footer {
+      text-align: center;
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 20px 0;
+      margin-top: 40px;
+      background: var(--primary-green);
+      border-radius: 12px;
     }
 
-    /* Responsive */
-    @media(max-width:768px){
-      .menu{ gap:20px; }
-      .search-box { flex-direction: column; align-items: stretch; }
-      .search-group { min-width: 100%; }
-      .btn-cari, .btn-reset { width: 100%; justify-content: center; }
-      
-      .riwayat-table table, .riwayat-table thead, .riwayat-table tbody, 
-      .riwayat-table th, .riwayat-table td, .riwayat-table tr{ display:block; }
-      .riwayat-table thead tr{ display:none; }
-      .riwayat-table td{ padding:12px 18px; border:none; }
-      .riwayat-table td::before{ 
-        content:attr(data-label); font-weight:600; color:#64748b; font-size:12px; 
-        display:block; margin-bottom:4px; text-transform:uppercase; 
+    /* ==========================================================================
+      10. RESPONSIVE DESIGN
+      ========================================================================== */
+    @media (max-width: 768px) {
+      /* Navbar */
+      .nav .menu {
+        gap: 20px;
       }
-      .riwayat-table tr{ border-bottom:1px solid var(--border); }
-      .btn-login{ padding: 8px 20px; font-size: 13px; }
       
-      .modal-container { margin: 10px; }
-      .detail-row { flex-direction: column; align-items: flex-start; gap: 4px; }
-      .detail-row .value { text-align: left; }
+      .nav .btn-login {
+        padding: 8px 20px;
+        font-size: 13px;
+      }
+      
+      /* Search Box */
+      .search-box {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .search-group {
+        min-width: 100%;
+      }
+      
+      .btn-cari,
+      .btn-reset {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      /* Table - Card View */
+      .riwayat-table table,
+      .riwayat-table thead,
+      .riwayat-table tbody,
+      .riwayat-table th,
+      .riwayat-table td,
+      .riwayat-table tr {
+        display: block;
+      }
+      
+      .riwayat-table thead tr {
+        display: none;
+      }
+      
+      .riwayat-table td {
+        padding: 12px 18px;
+        border: none;
+        border-bottom: 1px solid var(--border);
+      }
+      
+      .riwayat-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #64748b;
+        font-size: 12px;
+        display: block;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+      }
+      
+      .riwayat-table tr {
+        border-bottom: 1px solid var(--border);
+      }
+      
+      /* Modal */
+      .modal-container {
+        margin: 10px;
+      }
+      
+      .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      
+      .detail-row .value {
+        text-align: left;
+      }
+      
+      .modal-footer {
+        flex-direction: column;
+      }
+      
+      .btn-modal {
+        width: 100%;
+      }
+    }
+
+    /* ==========================================================================
+      11. UTILITIES & ACCESSIBILITY
+      ========================================================================== */
+    /* Focus states for accessibility */
+    a:focus,
+    button:focus,
+    input:focus {
+      outline: 2px solid var(--primary-green);
+      outline-offset: 2px;
+    }
+
+    /* Reduce motion for users who prefer it */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      .nav,
+      .search-box,
+      .footer,
+      .modal-overlay {
+        display: none !important;
+      }
+      
+      body {
+        background: var(--white);
+        color: var(--text);
+      }
+      
+      .wrap {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+      }
+      
+      .riwayat-table {
+        box-shadow: none;
+        border: 1px solid var(--border);
+      }
     }
   </style>
 </head>
