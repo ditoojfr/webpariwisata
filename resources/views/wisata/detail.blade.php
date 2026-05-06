@@ -17,10 +17,10 @@
             --nav-text:   #4b5563; 
             --nav-active: #101827; 
             --nav-underline: #fbbf24;
-            --bg-body:    #f9fafb; 
+            --bg-body: #eef7f0;
             --bg-gallery: #f4f6f9;
         }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg-body); color: var(--dark); overflow-x: hidden; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(160deg, #f0fdf4 0%, #e0f2fe 100%); background-attachment: fixed; color: var(--dark); overflow-x: hidden; }
 
         /* ─── ANIMASI MASUK ALA LARAVEL ─── */
         @keyframes fadeSlideUp {
