@@ -638,25 +638,51 @@
     margin-bottom: 40px;
 }
 
-/* PERBAIKAN: Tombol Download Sekarang */
-.btn-app-download {
-    display: inline-block;
-    background-color: #ffffff; /* Putih agar sangat kontras dengan hijau */
-    color: #2E7D32; /* Teks hijau gelap agar elegan */
-    padding: 16px 35px;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 16px;
+/* ============ TOMBOL PANAH BAWAH ============ */
+.btn-arrow-down {
+    display: flex !important; 
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff !important; 
+    color: #2E7D32 !important; 
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
     text-decoration: none;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    
+    /* Memposisikan tombol tepat di tengah */
+    margin: 40px auto 0 auto !important; 
+    
+    /* TAMBAHKAN KODE INI AGAR BISA DIKLIK */
+    position: relative;
+    z-index: 50;
+    cursor: pointer;
+    
+    transition: all 0.3s ease;
 }
 
-.btn-app-download:hover {
-    transform: translateY(-5px); /* Efek melayang saat hover */
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    background-color: #f8f9fa;
-    color: #1b5e20;
+.btn-arrow-down:hover {
+    background-color: #f8f9fa !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    transform: scale(1.05); 
+}
+
+/* Animasi Memantul (Bounce) ke Bawah (Tetap Sama) */
+.arrow-bounce {
+    animation: bounceDown 2s infinite !important;
+}
+
+@keyframes bounceDown {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(15px);
+    }
+    60% {
+        transform: translateY(7px);
+    }
 }
 
 /* Responsivitas untuk layar HP */
@@ -1206,18 +1232,20 @@
                 <img src="{{ asset('images/icon/hape.png') }}" alt="Mockup Aplikasi Nganjuk Abirupa">
             </div>
             <div class="app-text" data-aos="zoom-in" data-aos-delay="200" data-aos-duration="1000">
-    <h3>Temukan Hal yang sama dengan Versi Berbeda</h3>
-    <p>Jelajahi semua destinasi wisata Nganjuk melalui aplikasi mobile kami. Dapatkan informasi lengkap, pemesanan tiket online, dan pengalaman wisata yang tak terlupakan.</p>
-    
-    <!-- Tombol yang diperbaiki agar tidak hilang/kecil -->
-    <a href="#download-section" class="btn-app-download">
-        Download Sekarang
-    </a>
-</div>
+                <h3>Temukan Hal yang sama dengan Versi Berbeda</h3>
+                <p>Jelajahi semua destinasi wisata Nganjuk melalui aplikasi mobile kami. Dapatkan informasi lengkap, pemesanan tiket online, dan pengalaman wisata yang tak terlupakan.</p>
+                
+                <!-- Nama class diubah menjadi btn-arrow-down -->
+                <a href="#download-section" class="btn-arrow-down arrow-bounce">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="7 13 12 18 17 13"></polyline>
+                        <polyline points="7 6 12 11 17 6"></polyline>
+                    </svg>
+                </a>
+            </div>
         </div>
     </div>
 </section>
-
 <section class="download-section" id="download-section">
     <div class="container">
         <div class="download-content">
@@ -1443,14 +1471,24 @@
     // ===== PAGINATION DOTS =====
     
 
-    // ===== SMOOTH SCROLL =====
+ // ===== SMOOTH SCROLL (TERMASUK UNTUK TOMBOL PANAH) =====
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            
+            // Abaikan jika href hanya berisi "#" saja (seperti tombol dropdown)
+            if (targetId === '#') return;
+            
+            const target = document.querySelector(targetId);
+            
             if (target) {
-                window.scrollTo({ top: target.offsetTop - 70, behavior: 'smooth' });
-            }
+    e.preventDefault();
+    const yOffset = target.getBoundingClientRect().top + window.pageYOffset - 80;
+    window.scrollTo({ 
+        top: yOffset, 
+        behavior: 'smooth' 
+    });
+}
         });
     });
 
@@ -1459,12 +1497,33 @@
         alert('<?php echo $login_message; ?>');
     <?php endif; ?>
 
-    document.querySelector('.btn-download').addEventListener('click', (e) => {
+   // ===== FUNGSI ALERT TOMBOL UNDUH SEKARANG =====
+    const btnDownload = document.querySelector('.btn-download-solid');
+    if (btnDownload) {
+        btnDownload.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Download APK Nganjuk Abirupa akan segera tersedia!');
+        });
+    }
+
+    // ===== FUNGSI SCROLL KHUSUS PANAH BAWAH (ANTI-BENTROK) =====
+    const arrowBtn = document.querySelector('.btn-arrow-down');
+    const sectionDownload = document.getElementById('download-section');
+
+    if (arrowBtn && sectionDownload) {
+    arrowBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        alert('Download APK Nganjuk Abirupa akan segera tersedia!');
+        e.stopPropagation();
+
+        const yOffset = sectionDownload.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({
+            top: yOffset,
+            behavior: 'smooth'
+        });
     });
+}
 
     console.log('🌿 Nganjuk Abirupa Loaded with AOS Animations! ✨');
-</script>
+    </script>
 </body>
 </html>
