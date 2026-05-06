@@ -10,49 +10,53 @@ class Customer extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
-    protected $table = 'akun_customer';
-    protected $primaryKey = 'id_customer';
-    public $timestamps = false;
+    protected $table = 'akun_customer'; //
+    protected $primaryKey = 'id_customer'; //
+    public $timestamps = false; //
 
     protected $fillable = [
         'nama_customer',
         'email_customer',
+        'no_tlp',
         'password_customer',
         'tanggal_daftar',
-    ];
+    ]; //[cite: 6]
 
-    protected $hidden = ['password_customer'];
+    protected $hidden = [
+        'password_customer',
+    ]; //[cite: 6]
 
-    // PENTING: Tambahkan ini agar Laravel tidak mencoba 
-    // memproses password_customer sebagai objek tersembunyi/hash otomatis
-    protected $casts = [
-        'password_customer' => 'string', 
-    ];
-
-    // Override getAuthPassword agar Laravel tahu field password-nya
+    // Beritahu Laravel kalau kolom password-nya bernama 'password_customer'[cite: 6]
     public function getAuthPassword()
     {
         return $this->password_customer;
     }
 
-    // Relasi lainnya...
-    public function transaksi()
-    {
-        return $this->hasMany(Transaksi::class, 'id_customer', 'id_customer');
-    }
+    /**
+     * RELASI TABEL - JANGAN DIHAPUS LAGI BRE!
+     */
 
-    public function riwayat()
-    {
-        return $this->hasMany(RiwayatTransaksi::class, 'id_customer', 'id_customer');
-    }
-
+    // 1. Relasi ke data profil tambahan (Penting buat Registrasi)[cite: 6]
     public function dataCustomer()
     {
         return $this->hasOne(DataCustomer::class, 'id_customer', 'id_customer');
     }
 
+    // 2. Relasi ke Ulasan[cite: 6]
     public function ulasan()
-{
-    return $this->hasMany(UlasanWisata::class, 'id_customer', 'id_customer');
-}
+    {
+        return $this->hasMany(UlasanWisata::class, 'id_customer', 'id_customer');
+    }
+
+    // 3. Relasi ke Transaksi[cite: 6]
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'id_customer', 'id_customer');
+    }
+
+    // 4. Relasi ke Riwayat[cite: 6]
+    public function riwayat()
+    {
+        return $this->hasMany(RiwayatTransaksi::class, 'id_customer', 'id_customer');
+    }
 }
