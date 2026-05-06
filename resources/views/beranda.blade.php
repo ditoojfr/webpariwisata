@@ -1482,13 +1482,13 @@
             const target = document.querySelector(targetId);
             
             if (target) {
-                e.preventDefault();
-                // Menggulir dengan offset agar tidak tertutup navbar (sekitar 80px)
-                window.scrollTo({ 
-                    top: target.offsetTop - 80, 
-                    behavior: 'smooth' 
-                });
-            }
+    e.preventDefault();
+    const yOffset = target.getBoundingClientRect().top + window.pageYOffset - 80;
+    window.scrollTo({ 
+        top: yOffset, 
+        behavior: 'smooth' 
+    });
+}
         });
     });
 
@@ -1511,17 +1511,17 @@
     const sectionDownload = document.getElementById('download-section');
 
     if (arrowBtn && sectionDownload) {
-        arrowBtn.addEventListener('click', function(e) {
-            e.preventDefault();      // Mencegah layar melompat mendadak
-            e.stopPropagation();     // Mencegah script lain mengganggu klik ini
-            
-            // Perintah meluncur ke bawah
-            window.scrollTo({
-                top: sectionDownload.offsetTop - 80, 
-                behavior: 'smooth'
-            });
+    arrowBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const yOffset = sectionDownload.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({
+            top: yOffset,
+            behavior: 'smooth'
         });
-    }
+    });
+}
 
     console.log('🌿 Nganjuk Abirupa Loaded with AOS Animations! ✨');
     </script>
