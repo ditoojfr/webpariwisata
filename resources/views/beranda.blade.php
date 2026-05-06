@@ -329,11 +329,12 @@
             border-radius: 2px;
         }
 
-        /* ============ FEATURES SECTION ============ */
+        /* ============ APA YANG MENARIK (FEATURES) ============ */
         .features {
-            padding: 80px 0;
-            background: var(--bg-light);
-            position: relative;
+          padding: 100px 0;
+    /* Gradasi Hijau Mint ke Biru Langit yang sangat lembut */
+    background: linear-gradient(135deg, #f0fdf4 0%, #e0f7fa 100%);
+    position: relative;
         }
 
         .features-grid {
@@ -345,17 +346,15 @@
         }
 
         .feature-card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 35px 25px;
-            text-align: center;
-            box-shadow: var(--shadow);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(30px);
-        }
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    transition: all 0.4s ease;
+}
 
         .feature-card[data-aos].aos-animate {
             opacity: 1;
@@ -415,11 +414,13 @@
             line-height: 1.7;
         }
 
-        /* ============ DESTINATIONS SECTION ============ */
-        .destinations {
-            padding: 60px 0;
-            background: #f9fafb;
-        }
+/* ============ DESTINASI WISATA (DESTINATIONS) ============ */
+.destinations {
+    padding: 100px 0;
+    /* Warna putih bersih agar foto destinasi tetap menjadi fokus utama */
+   background-color: #f1f5f9;
+    position: relative;
+}
 
         .destinations-scroll {
             display: flex;
@@ -435,21 +436,24 @@
             display: none;
         }
 
-        .destination-card {
-            flex: 0 0 550px; 
-            background: #F5FAF7; 
-            border-radius: 24px; 
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08); 
-            transition: all 0.3s ease;
-            cursor: pointer;
-            padding: 15px;
-        }
-
+      /* Gaya kartu destinasi yang lebih modern */
+.destination-card {
+    flex: 0 0 550px; 
+    background-color: #ffffff; /* Card tetap putih bersih agar kontras dengan BG */
+    border-radius: 24px; 
+    overflow: hidden;
+    /* Shadow diperhalus agar terlihat modern di atas background abu-abu */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); 
+    padding: 15px;
+    border: 1px solid #e2e8f0; /* Garis tepi tipis agar card lebih tegas */
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
         .destination-card:hover {
-            transform: translateY(-8px); 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-green); /* Memberi sedikit sentuhan hijau saat di-hover */
+}
 
         .card-image {
             width: 100%;
@@ -474,12 +478,12 @@
             text-align: center;
         }
 
-        .card-text h3 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #333;
-            margin: 0;
-        }
+       .card-text h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #334155;
+    margin-top: 15px;
+}
 
         /* ============ VISI MISI SECTION ============ */
         .visi-misi {
@@ -568,185 +572,191 @@
         .handshake-illustration img {
             max-width: 300px;
         }
+/* ============ APP SECTION ============ */
+.app-section {
+    padding: 100px 0; /* Padding diperlebar agar lebih lega */
+    background: linear-gradient(135deg, #81C784 0%, #26A69A 100%);
+    position: relative;
+    overflow: hidden;
+}
 
-        /* ============ APP SECTION ============ */
-        .app-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #81C784 0%, #26A69A 100%);
-            position: relative;
-            overflow: hidden;
-        }
+.app-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 80px; /* Jarak antara HP dan Teks diperlebar agar tidak sesak */
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+}
 
-        .app-content {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            position: relative;
-            z-index: 1;
-        }
+.phone-mockup {
+    flex-shrink: 0;
+    width: 320px; /* Ukuran HP tetap besar sesuai permintaan */
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease;
+}
 
-        .phone-mockup {
-            flex-shrink: 0;
-            width: 250px;
-            opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.8s ease;
-        }
+.phone-mockup[data-aos].aos-animate {
+    opacity: 1;
+    transform: translateX(0);
+}
 
-        .phone-mockup[data-aos].aos-animate {
-            opacity: 1;
-            transform: translateX(0);
-        }
+.phone-mockup img {
+    width: 100%;
+    border-radius: 40px; /* Border radius disesuaikan dengan kelengkungan HP modern */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
 
-        .phone-mockup img {
-            width: 100%;
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
+.app-text {
+    color: white;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.8s ease;
+    max-width: 550px;
+}
 
-        .app-text {
-            color: white;
-            opacity: 0;
-            transform: translateX(50px);
-            transition: all 0.8s ease;
-        }
+.app-text[data-aos].aos-animate {
+    opacity: 1;
+    transform: translateX(0);
+}
 
-        .app-text[data-aos].aos-animate {
-            opacity: 1;
-            transform: translateX(0);
-        }
+.app-text h3 {
+    font-size: 38px; /* Ukuran judul sedikit ditambah agar lebih menonjol */
+    font-weight: 800;
+    margin-bottom: 24px;
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
 
-        .app-text h3 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
+.app-text p {
+    font-size: 18px; /* Teks deskripsi lebih besar agar mudah dibaca */
+    opacity: 0.95;
+    line-height: 1.8;
+    margin-bottom: 40px;
+}
 
-        .app-text p {
-            font-size: 14px;
-            opacity: 0.9;
-            line-height: 1.8;
-        }
+/* PERBAIKAN: Tombol Download Sekarang */
+.btn-app-download {
+    display: inline-block;
+    background-color: #ffffff; /* Putih agar sangat kontras dengan hijau */
+    color: #2E7D32; /* Teks hijau gelap agar elegan */
+    padding: 16px 35px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 30px;
-        }
+.btn-app-download:hover {
+    transform: translateY(-5px); /* Efek melayang saat hover */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    background-color: #f8f9fa;
+    color: #1b5e20;
+}
 
-        .pagination button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: white;
-            cursor: pointer;
-            padding: 5px 15px;
-            opacity: 0.7;
-            transition: opacity 0.3s;
-        }
-
-        .pagination button:hover {
-            opacity: 1;
-        }
-
-        .pagination .dots {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .pagination .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.4);
-            transition: all 0.3s;
-        }
-
-        .pagination .dot.active {
-            background: white;
-            transform: scale(1.2);
-        }
-
+/* Responsivitas untuk layar HP */
+@media (max-width: 992px) {
+    .app-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 50px;
+    }
+    .app-text h3 {
+        font-size: 28px;
+    }
+    .phone-mockup {
+        width: 280px;
+    }
+}
         /* ============ DOWNLOAD SECTION ============ */
-        .download-section {
-            padding: 80px 0;
-            background: var(--white);
-        }
+       .download-section {
+    padding: 100px 0;
+    /* Kombinasi warna Hijau ke Biru yang lebih menarik */
+    background: linear-gradient(145deg, #f0fdf4 0%, #e0f2fe 100%);
+    position: relative;
+}
 
         .download-content {
-            display: flex;
-            align-items: center;
-            gap: 60px;
-        }
+    display: flex;
+    align-items: center;
+    gap: 80px;
+}
 
-        .download-text {
-            flex: 1;
-            opacity: 0;
-            transform: translateX(-30px);
-            transition: all 0.6s ease;
-        }
+.download-text {
+    flex: 1;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s ease;
+}
 
-        .download-text[data-aos].aos-animate {
-            opacity: 1;
-            transform: translateX(0);
-        }
+.download-text h3 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
 
-        .download-text h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 15px;
-        }
+.download-text p {
+    font-size: 16px;
+    color: #475569;
+    line-height: 1.8;
+    margin-bottom: 35px;
+}
 
-        .download-text p {
-            font-size: 14px;
-            color: var(--text-gray);
-            line-height: 1.8;
-            margin-bottom: 25px;
-        }
+       /* Perbaikan Tombol yang Hilang/Kecil */
+.btn-download-solid {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 35px;
+    background: linear-gradient(135deg, #4CAF50 0%, #26A69A 100%);
+    color: white;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(38, 166, 154, 0.3);
+    transition: all 0.3s ease;
+}
 
-        .btn-download {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 30px;
-            border: 2px solid var(--primary-green);
-            border-radius: 25px;
-            color: var(--primary-green);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            background: transparent;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
+.btn-download-solid:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(38, 166, 154, 0.4);
+    filter: brightness(1.1);
+    color: white;
+}
 
-        .btn-download:hover {
-            background: var(--primary-green);
-            color: white;
-        }
+.download-illustration {
+    flex: 1.2;
+    text-align: center;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s ease;
+}
 
-        .download-illustration {
-            flex: 1;
-            text-align: center;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: all 0.6s ease;
-        }
+.download-illustration img {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
+}
 
-        .download-illustration[data-aos].aos-animate {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .download-illustration img {
-            max-width: 100%;
-            height: auto;
-            max-height: 450px;
-            object-fit: contain;
-        }
+/* Responsif Mobile */
+@media (max-width: 992px) {
+    .download-content {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 50px;
+    }
+    .btn-download-solid {
+        justify-content: center;
+    }
+}
 
         /* ============ FOOTER ============ */
         .footer {
@@ -1062,9 +1072,11 @@
 </section>
 
 <section class="features" id="informasi">
+    <section class="features" id="informasi">
     <div class="container">
+        <div class="section-title" data-aos="fade-down" data-aos-duration="800"></div><div class="container">
         <div class="section-title" data-aos="fade-down" data-aos-duration="800">
-            <h2>KELOLA WISATA DAN PENGALAMAN ANDA</h2>
+            <h2>Apa yang Menarik dari Nganjuk?</h2>
         </div>
 
         <div class="features-grid">
@@ -1194,34 +1206,31 @@
                 <img src="{{ asset('images/icon/hape.png') }}" alt="Mockup Aplikasi Nganjuk Abirupa">
             </div>
             <div class="app-text" data-aos="zoom-in" data-aos-delay="200" data-aos-duration="1000">
-                <h3>Temukan Hal yang sama dengan Versi Berbeda</h3>
-                <p>Jelajahi semua destinasi wisata Nganjuk melalui aplikasi mobile kami. Dapatkan informasi lengkap, pemesanan tiket online, dan pengalaman wisata yang tak terlupakan.</p>
-            </div>
-        </div>
-
-        <div class="pagination">
-            <button class="prev-btn">←</button>
-            <div class="dots">
-                <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            </div>
-            <button class="next-btn">→</button>
+    <h3>Temukan Hal yang sama dengan Versi Berbeda</h3>
+    <p>Jelajahi semua destinasi wisata Nganjuk melalui aplikasi mobile kami. Dapatkan informasi lengkap, pemesanan tiket online, dan pengalaman wisata yang tak terlupakan.</p>
+    
+    <!-- Tombol yang diperbaiki agar tidak hilang/kecil -->
+    <a href="#download-section" class="btn-app-download">
+        Download Sekarang
+    </a>
+</div>
         </div>
     </div>
 </section>
 
-<section class="download-section">
+<section class="download-section" id="download-section">
     <div class="container">
         <div class="download-content">
             <div class="download-text" data-aos="fade-right" data-aos-duration="800">
                 <h3>Download APK<br>NGANJUK ABIRUPA</h3>
-                <p>Our dedicated patient engagement app and web portal allow you to access information instantaneously (no tedious form, long calls, or administrative hassle) and securely.</p>
-                <a href="#" class="btn-download">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <p>Akses informasi wisata secara instan tanpa hambatan administratif. Unduh aplikasi kami sekarang untuk pengalaman menjelajah Nganjuk yang lebih mudah dan aman.</p>
+                <a href="#" class="btn-download-solid">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="7 10 12 15 17 10"/>
                         <line x1="12" y1="15" x2="12" y2="3"/>
                     </svg>
-                    Download
+                    Unduh Sekarang
                 </a>
             </div>
             <div class="download-illustration" data-aos="fade-left" data-aos-duration="800">
@@ -1234,33 +1243,46 @@
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
+            <!-- Kolom 1: Tentang Aplikasi -->
             <div class="footer-about">
                 <div class="footer-logo">
                     <div class="logo-icon">N</div>
                     <div class="logo-text">Nganjuk Abirupa</div>
                 </div>
                 <p>Aplikasi Nganjuk Abirupa hadir sebagai solusi bagi masyarakat untuk menikmati wisata Kota Nganjuk dengan kemudahan informasi pemesanan tiket berbasis online.</p>
-                <p style="margin-top: 10px;">©Abirupa 2026. All rights reserved.</p>
             </div>
+
+            <!-- Kolom 2: Menu Utama -->
             <div class="footer-company">
-                <h4>Company</h4>
+                <h4>Menu Utama</h4>
                 <ul class="footer-links">
-                    <li><a href="#">About</a></li><li><a href="#">Testimonials</a></li><li><a href="#">Find a doctor</a></li><li><a href="#">Apps</a></li>
+                    <li><a href="#beranda">Beranda</a></li>
+                    <li><a href="#informasi">Informasi</a></li>
+                    <li><a href="#riwayat">Destinasi Wisata</a></li> <!-- Id riwayat di kode Anda merujuk ke destinasi -->
+                    <li><a href="{{ route('riwayat') }}">Riwayat Pesanan</a></li>
                 </ul>
             </div>
+
+            <!-- Kolom 3: Informasi Tiket -->
             <div class="footer-region">
-                <h4>Region</h4>
+                <h4>Informasi Tiket</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Indonesia</a></li><li><a href="#">Singapore</a></li><li><a href="#">Hongkong</a></li><li><a href="#">Canada</a></li>
+                    <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
+                    <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
+                    <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
                 </ul>
             </div>
+
+            <!-- Kolom 4: Bantuan & Aplikasi -->
             <div class="footer-help">
-                <h4>Help</h4>
+                <h4>Bantuan & Aplikasi</h4>
                 <ul class="footer-links">
-                    <li><a href="#">Help center</a></li><li><a href="#">Contact support</a></li><li><a href="#">Instructions</a></li><li><a href="#">How it works</a></li>
+                    <li><a href="#download-section">Download APK</a></li>
+                    <li><a href="#" onclick="openModal()">Masuk / Login</a></li>                
                 </ul>
             </div>
         </div>
+        
         <div class="footer-bottom">
             <p>Tentang Kami - Aplikasi Nganjuk Abirupa | © 2026 All Rights Reserved</p>
         </div>
@@ -1419,24 +1441,7 @@
     function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
     // ===== PAGINATION DOTS =====
-    const dots = document.querySelectorAll('.dot');
-    let currentDot = 0;
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            dots.forEach(d => d.classList.remove('active'));
-            dot.classList.add('active'); currentDot = index;
-        });
-    });
-    document.querySelector('.prev-btn').addEventListener('click', () => {
-        currentDot = currentDot > 0 ? currentDot - 1 : dots.length - 1;
-        dots.forEach(d => d.classList.remove('active'));
-        dots[currentDot].classList.add('active');
-    });
-    document.querySelector('.next-btn').addEventListener('click', () => {
-        currentDot = currentDot < dots.length - 1 ? currentDot + 1 : 0;
-        dots.forEach(d => d.classList.remove('active'));
-        dots[currentDot].classList.add('active');
-    });
+    
 
     // ===== SMOOTH SCROLL =====
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
