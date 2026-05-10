@@ -34,14 +34,17 @@
             --nav-underline: #fbbf24;
         }
 
-        html { scroll-behavior: smooth; }
-
+html { 
+    scroll-behavior: smooth;
+    background: #26A69A; /* warna sama dengan ujung bawah footer */
+}
         body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-dark);
-            background: var(--white);
-            overflow-x: hidden;
-        }
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-dark);
+    background: linear-gradient(160deg, #c8e6c9 0%, #b2ebf2 100%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+}
 
         .container {
             max-width: 1200px;
@@ -248,19 +251,19 @@
 
             /* TAMBAHAN BARU: Menghilangkan margin putih di HP */
             .hero {
-                margin-top: 0; 
-                height: 60vh;
-                min-height: 400px;
-            }
+    margin-top: 0; 
+    height: 100vh;
+    min-height: 100vh;
+}
         }
 
         /* ============ HERO SECTION ============ */
 .hero {
-    margin-top: 0; /* Menghilangkan ruang putih di bagian atas */
+    margin-top: 0;
     position: relative;
     width: 100%;
-    height: 85vh;
-    min-height: 650px;
+    height: 100vh;
+    min-height: 100vh;
     overflow: hidden;
 }
 
@@ -302,6 +305,12 @@
     margin-top: 10px;
     opacity: 0.9;
 }
+.hero {
+    margin-top: 0; 
+    height: 100vh;
+    min-height: 100vh;
+}
+
 
         /* ============ SECTION TITLE ============ */
         .section-title {
@@ -331,11 +340,10 @@
 
         /* ============ APA YANG MENARIK (FEATURES) ============ */
         .features {
-          padding: 100px 0;
-    /* Gradasi Hijau Mint ke Biru Langit yang sangat lembut */
+    padding: 80px 0 60px;
     background: linear-gradient(135deg, #f0fdf4 0%, #e0f7fa 100%);
     position: relative;
-        }
+}
 
         .features-grid {
             display: grid;
@@ -416,9 +424,9 @@
 
 /* ============ DESTINASI WISATA (DESTINATIONS) ============ */
 .destinations {
-    padding: 100px 0;
+    padding: 80px 0;
     /* Warna putih bersih agar foto destinasi tetap menjadi fokus utama */
-   background-color: #f1f5f9;
+   background: linear-gradient(160deg, #e8f5e9 0%, #e0f7fa 100%);
     position: relative;
 }
 
@@ -485,93 +493,141 @@
     margin-top: 15px;
 }
 
-        /* ============ VISI MISI SECTION ============ */
-        .visi-misi {
-            padding: 80px 0;
-            background: var(--bg-gradient);
-            position: relative;
-        }
+       /* ============ VISI MISI SECTION ============ */
+.visi-misi {
+    padding: 100px 0;
+    background: linear-gradient(160deg, #f0fdf4 0%, #e0f7fa 100%);
+    position: relative;
+}
 
-        .visi-misi-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: start;
-        }
+.visi-misi-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
 
-        .visi-item, .misi-item {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 40px;
-            opacity: 0;
-            transform: translateX(-30px);
-            transition: all 0.6s ease;
-        }
+/* Kartu Visi */
+.visi-item {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.1);
+    border-left: 5px solid var(--primary-green);
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s ease;
+}
 
-        .visi-item[data-aos].aos-animate,
-        .misi-item[data-aos].aos-animate {
-            opacity: 1;
-            transform: translateX(0);
-        }
+/* Kartu Misi */
+.misi-item {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    margin-bottom: 0;
+    box-shadow: 0 8px 30px rgba(38, 166, 154, 0.1);
+    border-left: 5px solid var(--accent-blue);
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s ease;
+}
 
-        .visi-item .icon, .misi-item .icon {
-            flex-shrink: 0;
-            width: 100px;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+.visi-item[data-aos].aos-animate,
+.misi-item[data-aos].aos-animate {
+    opacity: 1;
+    transform: translateX(0);
+}
 
-        .visi-item .icon img,
-        .misi-item .icon img {
-            width: 100px;        
-            height: 100px;
-            object-fit: contain;
-            display: block;
-        }
+.visi-item:hover,
+.misi-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(76, 175, 80, 0.15);
+}
 
-        .visi-item h3, .misi-item h3 {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-        }
+.visi-item .icon,
+.misi-item .icon {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #e8f5e9, #e0f7fa);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .visi-item p, .misi-item p {
-            font-size: 14px;
-            color: var(--text-gray);
-            line-height: 1.8;
-        }
+.visi-item .icon img,
+.misi-item .icon img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
 
-        .misi-item ol {
-            font-size: 14px;
-            color: var(--text-gray);
-            line-height: 2;
-            padding-left: 20px;
-        }
+.visi-item h3,
+.misi-item h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-green);
+    margin-bottom: 12px;
+}
 
-        .misi-item ol li {
-            margin-bottom: 5px;
-        }
+.visi-item p {
+    font-size: 16px;
+    color: #475569;
+    line-height: 1.8;
+}
 
-        .handshake-illustration {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: all 0.6s ease;
-        }
+.misi-item ol {
+    font-size: 15px;
+    color: #475569;
+    line-height: 2;
+    padding-left: 20px;
+}
 
-        .handshake-illustration[data-aos].aos-animate {
-            opacity: 1;
-            transform: translateX(0);
-        }
+.misi-item ol li {
+    margin-bottom: 6px;
+}
 
-        .handshake-illustration img {
-            max-width: 300px;
-        }
+.misi-item ol li::marker {
+    color: var(--accent-blue);
+    font-weight: 700;
+}
+
+/* Ilustrasi kanan */
+.handshake-illustration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s ease;
+}
+
+.handshake-illustration[data-aos].aos-animate {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.handshake-illustration img {
+    max-width: 380px;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
+}
+
+@media (max-width: 992px) {
+    .visi-misi-content { 
+        grid-template-columns: 1fr; 
+    }
+    .handshake-illustration img { 
+        max-width: 260px; 
+    }
+}
 /* ============ APP SECTION ============ */
 .app-section {
     padding: 100px 0; /* Padding diperlebar agar lebih lega */
@@ -702,9 +758,9 @@
         /* ============ DOWNLOAD SECTION ============ */
        .download-section {
     padding: 100px 0;
-    /* Kombinasi warna Hijau ke Biru yang lebih menarik */
-    background: linear-gradient(145deg, #f0fdf4 0%, #e0f2fe 100%);
+    background: linear-gradient(180deg, #c8e6c9 0%, #b2ebf2 100%);
     position: relative;
+    margin: 0;
 }
 
         .download-content {
@@ -786,10 +842,11 @@
 
         /* ============ FOOTER ============ */
         .footer {
-            background: linear-gradient(135deg, #4CAF50 0%, #26A69A 100%);
-            color: white;
-            padding: 50px 0 30px;
-        }
+    background: linear-gradient(135deg, #4CAF50 0%, #26A69A 100%);
+    color: white;
+    padding: 50px 0 30px;
+    margin-top: 0;
+}
 
         .footer-grid {
             display: grid;
@@ -1098,9 +1155,7 @@
 </section>
 
 <section class="features" id="informasi">
-    <section class="features" id="informasi">
     <div class="container">
-        <div class="section-title" data-aos="fade-down" data-aos-duration="800"></div><div class="container">
         <div class="section-title" data-aos="fade-down" data-aos-duration="800">
             <h2>Apa yang Menarik dari Nganjuk?</h2>
         </div>
