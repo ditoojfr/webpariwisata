@@ -10,96 +10,120 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthApiController extends Controller
 {
-    // Login mobile (menggantikan nganjukabirupa/apimobile/login.php)
+    // LOGIN MANUAL (Email & Password)[cite: 9]
     public function login(Request $request)
     {
-        $data = $request->json()->all();
-        $nama = $data['nama_customer'] ?? '';
-        $password = $data['password_customer'] ?? '';
+        $email = $request->input('email');
+        $password = $request->input('password');
 
-        if (empty($nama) || empty($password)) {
-            return response()->json(['success' => false, 'message' => 'Nama dan password wajib diisi']);
+        if (empty($email) || empty($password)) {
+            return response()->json(['status' => 'error', 'message' => 'Email dan password wajib diisi'], 400);
         }
 
-        $customer = Customer::where('nama_customer', $nama)->first();
+        // Cari berdasarkan email_customer[cite: 9]
+        $customer = Customer::where('email_customer', $email)->first();
 
         if (!$customer) {
-            return response()->json(['success' => false, 'message' => 'Nama tidak ditemukan']);
+            return response()->json(['status' => 'error', 'message' => 'Email tidak ditemukan'], 404);
         }
 
-        // Support plain text lama DAN bcrypt baru
         $valid = Hash::check($password, $customer->password_customer)
             || $password === $customer->password_customer;
 
         if (!$valid) {
-            return response()->json(['success' => false, 'message' => 'Password salah']);
+            return response()->json(['status' => 'error', 'message' => 'Password salah'], 401);
         }
 
         $token = $customer->createToken('mobile-app')->plainTextToken;
 
         return response()->json([
-            'success'        => true,
+            'status'         => 'success', // Pakai status agar konsisten dengan Flutter[cite: 8, 9]
             'message'        => 'Login berhasil',
-            'id_customer'    => $customer->id_customer,
-            'nama_customer'  => $customer->nama_customer,
-            'email_customer' => $customer->email_customer,
             'token'          => $token,
+            'data'           => [
+                'id_customer'    => (string)$customer->id_customer,
+                'nama_customer'  => $customer->nama_customer,
+                'email'          => $customer->email_customer,
+                'foto'           => $customer->foto ?? '',
+            ]
         ]);
     }
 
-    // Register mobile (menggantikan apimobile/register.php)
-    public function register(Request $request)
-    {
-        $data = $request->json()->all();
+    // GOOGLE LOGIN (Disinkronkan dengan nama kolom DB)[cite: 9]
+    public function googleLogin(Request $request) {
+        $email = $request->email;
+        $nama  = $request->nama;
+        $foto  = $request->foto;
 
-        $nama     = trim($data['nama_customer'] ?? '');
-        $email    = trim($data['email_customer'] ?? '');
-        $no_tlp   = trim($data['no_tlp'] ?? '');
-        $password = trim($data['password_customer'] ?? '');
+        $user = Customer::where('email_customer', $email)->first();
 
-        if (empty($nama) || empty($email) || empty($password)) {
-            return response()->json(['success' => false, 'message' => 'Nama, email, dan password wajib diisi']);
-        }
-
-        // Cek duplikat
-        $exist = Customer::where('nama_customer', $nama)
-            ->orWhere('email_customer', $email)
-            ->first();
-
-        if ($exist) {
-            $id_customer = $exist->id_customer;
-        } else {
-            $customer = Customer::create([
+        if (!$user) {
+            $user = Customer::create([
                 'nama_customer'     => $nama,
-                'email_customer'    => $email,
-                'password_customer' => Hash::make($password),
+                'email_customer'    => $email, // Kolom DB lu email_customer[cite: 9]
+                'foto'              => $foto,
+                'password_customer' => Hash::make('password_google_default'), // Kolom DB lu password_customer[cite: 9]
+                'tanggal_daftar'    => now(),
             ]);
-            $id_customer = $customer->id_customer;
-        }
-
-        // Insert/update data_customer
-        DataCustomer::updateOrCreate(
-            ['id_customer' => $id_customer],
-            [
+            
+            // Buat profil detail juga karena Trigger dihapus[cite: 9]
+            $user->dataCustomer()->create([
                 'nama_customer'     => $nama,
                 'email_customer'    => $email,
-                'no_tlp'            => $no_tlp,
-                'password_customer' => Hash::make($password),
-            ]
-        );
+                'password_customer' => Hash::make('password_google_default'),
+            ]);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'success'     => true,
-            'message'     => 'Registrasi berhasil',
-            'id_customer' => $id_customer,
-            'no_tlp'      => $no_tlp,
+            'status' => 'success',
+            'token'  => $token,
+            'data'   => [
+                'id_customer'   => $user->id_customer,
+                'nama_customer' => $user->nama_customer,
+                'email'         => $user->email_customer,
+                'foto'          => $user->foto ?? '',
+            ]
         ]);
     }
 
-    // Logout API
+    // REGISTER MANUAL (Fix Undefined Variable)[cite: 9]
+    public function register(Request $request)
+    {
+        // 1. Buat Akun Utama[cite: 9]
+        $customer = Customer::create([
+            'nama_customer'     => $request->nama,
+            'email_customer'    => $request->email,
+            'password_customer' => Hash::make($request->password),
+            'tanggal_daftar'    => now(),
+        ]);
+
+        // 2. Buat Detail Profil (Karena Trigger dihapus)[cite: 9]
+        $customer->dataCustomer()->create([
+            'nama_customer'     => $request->nama,
+            'email_customer'    => $request->email,
+            'no_tlp'            => $request->no_tlp,
+            'password_customer' => Hash::make($request->password),
+        ]);
+
+        $token = $customer->createToken('mobile-app')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success', // Ganti ke status agar seragam[cite: 9]
+            'token'  => $token,
+            'data'   => [
+                'id_customer'   => $customer->id_customer, // Fix: dari $user ke $customer[cite: 9]
+                'nama_customer' => $customer->nama_customer,
+                'email'         => $customer->email_customer,
+                'foto'          => $customer->foto ?? '',
+            ]
+        ]);
+    }
+
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['success' => true, 'message' => 'Logout berhasil']);
+        return response()->json(['status' => 'success', 'message' => 'Logout berhasil']);
     }
 }

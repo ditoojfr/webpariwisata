@@ -9,9 +9,18 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!session('role') || session('role') !== 'admin') {
-            return redirect('/login')->with('error', 'Akses ditolak. Hanya admin yang boleh masuk.');
+        // Cek session role
+        if (session('role') !== 'admin') {
+            
+            // Jika request JSON (API)
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+            
+            // Redirect ke route login admin
+            return redirect()->route('admin.login'); 
         }
+        
         return $next($request);
     }
 }

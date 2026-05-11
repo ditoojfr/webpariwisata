@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $wisata->nama_wisata }} - Nganjuk Abirupa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --green:      #4CAF50;
+            --green-dark: #388E3C;
+            --dark:       #2e3338;
+            --gray:       #6b7280;
+            --nav-bg:     #e1e6ec; 
+            --nav-text:   #4b5563; 
+            --nav-active: #101827; 
+            --nav-underline: #fbbf24;
+            --bg-body: #eef7f0;
+            --bg-gallery: #f4f6f9;
+        }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(160deg, #f0fdf4 0%, #e0f2fe 100%); background-attachment: fixed; color: var(--dark); overflow-x: hidden; }
+
+        /* ─── ANIMASI MASUK ALA LARAVEL ─── */
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .hero-section { animation: fadeSlideUp 0.8s ease-out 0.2s forwards; opacity: 0; }
+        .main-card { animation: fadeSlideUp 0.8s ease-out 0.4s forwards; opacity: 0; }
+        .info-container { animation: fadeSlideUp 0.8s ease-out 0.5s forwards; opacity: 0; }
+        .rules-container { animation: fadeSlideUp 0.8s ease-out 0.6s forwards; opacity: 0; }
+        .cta-container { animation: fadeSlideUp 0.8s ease-out 0.7s forwards; opacity: 0; }
+        .gallery-section { animation: fadeIn 1s ease-out 0.8s forwards; opacity: 0; }
+
+        /* ─── NAVBAR (STYLE RIWAYAT) ─── */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
+            background: transparent !important;
+            box-shadow: none !important;
+            border: none !important;
+            padding: 0;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--nav-bg); 
+            border-radius: 50px;
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+            position: relative;
+            width: 90%;
+        }
+
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .btn-back {
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; border-radius: 50%;
+            background: #fff; color: var(--dark);
+            text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .btn-back:hover { background: var(--green); color: #fff; }
+        .btn-back svg { width: 18px; height: 18px; }
+        .nav-logo img { height: 40px; width: auto; display: block; object-fit: contain; }
+        
+        .navbar-menu-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-links { 
+            display: flex; 
+            gap: 50px; 
+            list-style: none; 
+            margin: 0; 
+            padding: 0; 
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none; 
+            color: var(--nav-text);
+            font-weight: 700; 
+            font-size: 15px;
+            position: relative; 
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+        .nav-links a:hover,
+        .nav-links a.active { color: var(--nav-active); }
+        
+        .nav-links > li > a.active::after {
+            content: ''; 
+            position: absolute; 
+            bottom: -12px; 
+            left: 0;
+            width: 100%; 
+            height: 4px; 
+            border-radius: 4px;
+            background: var(--nav-underline);
+        }
+
+        /* ─── DROPDOWN DESKTOP (HOVER + ANIMASI) ─── */
+        .nav-links li { position: relative; }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: white;
+            min-width: 180px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 8px 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+            list-style: none;
+            margin-top: 0;
+        }
+
+        @media (min-width: 769px) {
+            .dropdown:hover .dropdown-menu {
+                opacity: 1;
+                visibility: visible;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        .dropdown-menu li { list-style: none; margin: 0; padding: 0; }
+        .dropdown-menu a { 
+            display: block;
+            padding: 10px 20px; 
+            font-weight: 500; 
+            font-size: 14px; 
+            color: #333; 
+            border-radius: 6px; 
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .dropdown-menu a:hover { 
+            background-color: #f0f8f4; 
+            color: var(--green); 
+            padding-left: 25px;
+        }
+        .dropdown-menu a::after { display: none; }
+
+        .nav-icons { display: flex; align-items: center; gap: 15px; }
+        .btn-login {
+            padding: 10px 32px; 
+            border: 2px solid var(--green);
+            border-radius: 25px; 
+            color: var(--green);
+            font-weight: 600; 
+            font-size: 14px; 
+            cursor: pointer;
+            background: transparent; 
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s; 
+            display: inline-block;
+            text-decoration: none;
+        }
+        .btn-login:hover { 
+            background: var(--green); 
+            color: #fff; 
+            transform: translateY(-2px); 
+        }
+
+        /* ─── HAMBURGER MENU ─── */
+        .hamburger {
+            display: none; 
+            flex-direction: column; 
+            gap: 5px; 
+            cursor: pointer; 
+            padding: 5px;
+            z-index: 1001;
+        }
+        .hamburger span { 
+            width: 25px; 
+            height: 3px; 
+            background: #333; 
+            border-radius: 3px; 
+            transition: all 0.3s; 
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
+
+        /* ─── HERO SECTION ─── */
+        .hero-section {
+            width: 100%; max-width: 1200px; 
+            margin: 110px auto 0;
+            padding: 0 20px;
+        }
+        .hero-img-wrapper {
+            width: 100%; height: 480px;
+            border-radius: 24px; overflow: hidden;
+            position: relative;
+        }
+        .hero-img-wrapper img {
+            width: 100%; height: 100%; object-fit: cover; object-position: center;
+        }
+
+        /* ─── MAIN INFO CARD ─── */
+        .main-card {
+            background: #ffffff; 
+            width: 90%; max-width: 900px; 
+            margin: -80px auto 30px; 
+            border-radius: 24px; padding: 40px 50px;
+            position: relative; z-index: 10;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+        .main-card h1 {
+            font-size: clamp(24px, 4vw, 32px); 
+            font-weight: 800; color: var(--dark);
+            text-transform: uppercase; margin-bottom: 12px; letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .location {
+            display: flex; align-items: flex-start; gap: 8px;
+            color: var(--gray); font-size: 14px; font-weight: 600; margin-bottom: 24px;
+        }
+        .location svg { width: 18px; height: 18px; color: var(--dark); flex-shrink: 0; margin-top: 2px; }
+        
+        .description-box { margin-top: 10px; }
+        .description-short { font-size: 15px; line-height: 1.8; color: var(--nav-text); font-weight: 500; margin-bottom: 15px; }
+        .description-long { font-size: 14.5px; line-height: 1.8; color: var(--gray); }
+
+        /* ─── INFO BOXES (Grid System) ─── */
+        .info-container {
+            width: 90%; max-width: 900px; margin: 0 auto 30px;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+        }
+        .info-box {
+            background: #ffffff; border: 1.5px solid #eaeaea; border-radius: 16px; padding: 20px 10px;
+            text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: transform 0.3s ease;
+        }
+        .info-box:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .info-box svg { width: 28px; height: 28px; color: var(--dark); margin-bottom: 10px; }
+        .info-label { font-size: 11px; font-weight: 600; color: var(--gray); text-transform: uppercase; margin-bottom: 4px; }
+        .info-value { font-size: 14px; font-weight: 800; color: var(--dark); }
+
+        /* ─── RULES (Grid System) ─── */
+        .rules-container {
+            width: 90%; max-width: 900px; margin: 0 auto 30px;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+        }
+        .rule-pill {
+            display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-radius: 12px; 
+            font-size: 13px; font-weight: 600; color: #fff;
+        }
+        .rule-pill svg { width: 18px; height: 18px; flex-shrink: 0; }
+        .rule-pill.dark { background: var(--dark); }
+        .rule-pill.green { background: var(--green); }
+
+        /* ─── CTA BUTTON ─── */
+        .cta-container { width: 90%; max-width: 900px; margin: 0 auto 60px; }
+        .cta-btn {
+            display: flex; align-items: center; justify-content: center; width: 100%; padding: 18px;
+            background: var(--green); color: #fff; text-align: center; font-size: 15px; font-weight: 700;
+            border-radius: 50px; text-decoration: none; box-shadow: 0 8px 20px rgba(76,175,80,0.3); transition: 0.3s;
+        }
+        .cta-btn:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 10px 25px rgba(76,175,80,0.4); }
+
+        /* ─── GALLERY SECTION ─── */
+        .gallery-section {
+            background: var(--bg-gallery); padding: 60px 20px 80px; border-top: 1px solid #e5e7eb;
+        }
+        .gallery-header {
+            text-align: center; margin-bottom: 40px; animation: fadeSlideUp 0.8s ease-out 0.7s forwards; opacity: 0;
+        }
+        .gallery-header h2 { font-size: 28px; font-weight: 800; color: var(--dark); text-transform: uppercase; letter-spacing: -0.5px; }
+        .gallery-header h2 span { color: var(--green); }
+        .gallery-header p { font-size: 14.5px; color: var(--gray); margin-top: 8px; font-weight: 500; }
+
+        .gallery-track {
+            max-width: 1200px; margin: 0 auto; display: flex; gap: 30px; justify-content: center; flex-wrap: wrap; 
+            align-items: flex-start; animation: fadeIn 1s ease-out 0.9s forwards; opacity: 0;
+        }
+        
+        .gallery-card {
+            background: #fff; padding: 18px; border-radius: 20px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            width: 100%; max-width: 450px; flex: 1 1 300px; 
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .gallery-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
+        
+        .image-container {
+            position: relative; width: 100%; border-radius: 12px;
+            overflow: hidden; border: 1px solid #f3f4f6; 
+        }
+        .gallery-card img { width: 100%; height: auto; display: block; }
+
+        /* BADGE STATUS EVENT */
+        .event-badge {
+            position: absolute; top: 12px; right: 12px; 
+            color: white; font-size: 11px; padding: 6px 14px; 
+            border-radius: 20px; font-weight: 800; z-index: 5; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .badge-blue { background: #3b82f6; }
+        .badge-orange { background: #f59e0b; }
+        .badge-green { background: #10b981; }
+
+        /* KOTAK TANGGAL EVENT */
+        .event-date-box {
+            background: #f8fafc; border-radius: 10px; padding: 12px; 
+            border: 1px solid #e2e8f0; text-align: center; margin-top: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .event-date-box p { font-size: 13.5px; margin: 0; color: #334155; font-weight: 700; }
+
+        .gallery-empty {
+            text-align: center; padding: 40px 20px; color: var(--gray);
+            background: #fff; border-radius: 16px; border: 1px dashed #cbd5e1;
+            max-width: 600px; margin: 0 auto; font-size: 14px; font-weight: 500;
+        }
+
+        /* ─── FOOTER ─── */
+        footer { 
+            background: var(--green); 
+            color: white; 
+            text-align: center; 
+            padding: 20px; 
+            font-size: 13px; 
+            font-weight: 500;
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            border-radius: 12px;
+        }
+
+        /* ─── LOGIN MODAL ─── */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 2000;
+            justify-content: center; align-items: center; backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white; border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; position: relative;
+            animation: modalSlide 0.3s ease;
+        }
+        @keyframes modalSlide { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-close {
+            position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: var(--gray); background: none; border: none; transition: color 0.3s;
+        }
+        .modal-close:hover { color: var(--dark); }
+        .modal h2 { font-size: 22px; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+        .modal .subtitle { color: var(--gray); font-size: 13px; margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--dark); margin-bottom: 6px; }
+        .form-group input { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 13px; font-family: 'Poppins', sans-serif; transition: border-color 0.3s; box-sizing: border-box; }
+        .form-group input:focus { outline: none; border-color: var(--green); }
+        .btn-submit {
+            width: 100%; padding: 12px; margin-top: 10px; background: linear-gradient(135deg, var(--green), #26A69A); color: white; border: none; border-radius: 10px;
+            font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'Poppins', sans-serif; transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(76,175,80,0.4); }
+        .modal-footer-text { text-align: center; margin-top: 20px; font-size: 13px; color: var(--gray); }
+        .modal-footer-text a { color: var(--green); text-decoration: none; font-weight: 600; }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            .hero-section { padding: 0; }
+            .hero-img-wrapper { border-radius: 0; } 
+            .main-card { padding: 30px; }
+        }
+        @media (max-width: 768px) {
+            .navbar { top: 12px; }
+            .navbar-container { border-radius: 40px; padding: 12px 20px; width: 95%; }
+            
+            .navbar-menu-container {
+                display: none; 
+                position: absolute;
+                top: calc(100% + 15px);
+                left: 0;
+                right: 0;
+                width: 100%; 
+                background: transparent; 
+                margin-top: 0;
+                z-index: 999;
+            }
+            .navbar-menu-container.active { display: block; }
+            
+            .nav-links {
+                display: flex; 
+                flex-direction: column; 
+                background: white; 
+                padding: 20px;
+                border-radius: 20px; 
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+                gap: 10px; 
+                width: 100%;
+                text-align: center;
+            }
+            .nav-links li { width: 100%; padding: 0; border-bottom: none; }
+            
+            /* Matikan hover dropdown di mobile */
+            .dropdown:hover .dropdown-menu { 
+                opacity: 0; 
+                visibility: hidden; 
+                transform: translateX(-50%) translateY(10px);
+            }
+            
+            /* Dropdown mobile via class show-dropdown */
+            .dropdown-menu {
+                position: static !important; 
+                transform: none !important; 
+                box-shadow: none; 
+                opacity: 1 !important;
+                visibility: visible !important; 
+                display: none !important; 
+                background: #f8fafc; 
+                margin-top: 10px;
+                border-radius: 8px; 
+                padding: 10px 0; 
+                width: 100%; 
+                min-width: unset;
+            }
+            .dropdown.show-dropdown .dropdown-menu { 
+                display: block !important; 
+            }
+            .dropdown-menu li a { 
+                padding: 10px 15px; 
+                font-size: 13px; 
+                text-align: center;
+            }
+            .dropdown-menu li a:hover {
+                padding-left: 15px;
+            }
+
+            /* Style untuk dropdown toggle di mobile */
+            .dropdown-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+            }
+
+            .hamburger { display: flex; } 
+            .hero-section { margin-top: 100px; }
+            .hero-img-wrapper { height: 350px; }
+            .main-card { margin-top: -50px; padding: 25px; width: 95%; }
+            .info-container { grid-template-columns: repeat(2, 1fr); width: 95%; gap: 12px; }
+            .rules-container { grid-template-columns: 1fr; width: 95%; gap: 12px; }
+            .cta-container { width: 95%; }
+            .gallery-card { width: 100%; max-width: 100%; }
+            footer { width: 95%; }
+        }
+        @media (max-width: 480px) {
+            .hero-img-wrapper { height: 280px; }
+            .main-card h1 { font-size: 22px; }
+            .info-box { padding: 15px 10px; }
+            .info-label { font-size: 10px; }
+            .info-value { font-size: 13px; }
+            .rule-pill { font-size: 12px; padding: 12px 16px; }
+            .cta-btn { font-size: 13px; padding: 16px; }
+            .btn-login { padding: 8px 20px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ════ NAVBAR ════ -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <div class="nav-brand">
+                <a href="javascript:history.back()" class="btn-back" title="Kembali">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                    </svg>
+                </a>
+                <a href="{{ route('beranda') }}" class="nav-logo">
+                    <img src="{{ asset('images/logogedi.png') }}" alt="Nganjuk Abirupa">
+                </a>
+            </div>
+            
+            <div class="navbar-menu-container" id="navMenuContainer">
+                <ul class="nav-links" id="navMenu">
+                    <li><a href="{{ route('beranda') }}">Beranda</a></li>
+                    
+                    <!-- DROPDOWN: INFORMASI TIKET -->
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropdown-toggle active" id="dropdownToggle" aria-haspopup="true" aria-expanded="false">Informasi Tiket ▾</a>
+                        <ul class="dropdown-menu" id="dropdownMenu">
+                            <li><a href="{{ route('informasi.harga') }}">Harga Tiket</a></li>
+                            <li><a href="{{ route('informasi.cara-pesan') }}">Cara Pesan Tiket</a></li>
+                            <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li><a href="{{ route('riwayat') }}">Riwayat</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-icons">
+                <button class="btn-login" onclick="openModal()">Login</button>
+                <!-- Hamburger Menu -->
+                <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ════ HERO SECTION ════ -->
+    <div class="hero-section">
+        <div class="hero-img-wrapper">
+            <img src="{{ asset('images/destinasi/' . $wisata->gambar) }}"
+                 alt="{{ $wisata->nama_wisata }}"
+                 onerror="this.src='{{ asset('images/fotoberanda.png') }}'">
+        </div>
+    </div>
+
+    <!-- ════ MAIN INFO CARD ════ -->
+    <div class="main-card">
+        <h1>{{ strtoupper($wisata->nama_wisata) }}</h1>
+        <div class="location">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
+            </svg>
+            {{ $wisata->lokasi }}
+        </div>
+        
+        <div class="description-box">
+            @if($wisata->deskripsi)
+            <p class="description-short">
+                {{ $wisata->deskripsi }}
+            </p>
+            @endif
+
+            @if($wisata->fasilitas)
+            <p class="description-long">
+                {{ nl2br(e($wisata->fasilitas)) }}
+            </p>
+            @endif
+        </div>
+    </div>
+
+    <!-- ════ INFO BOXES ════ -->
+    <div class="info-container">
+        <div class="info-box">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <div class="info-label">Jam Buka</div>
+            <div class="info-value">{{ $wisata->jam_buka ?? '08:00:00' }}</div>
+        </div>
+        <div class="info-box">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <div class="info-label">Jam Tutup</div>
+            <div class="info-value">{{ $wisata->jam_tutup ?? '16:00:00' }}</div>
+        </div>
+        <div class="info-box">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+            </svg>
+            <div class="info-label">Tiket Dewasa</div>
+            <div class="info-value">Rp.{{ number_format($wisata->tiket_dewasa, 0, ',', '.') }}</div>
+        </div>
+        <div class="info-box">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+            <div class="info-label">Tiket Anak</div>
+            <div class="info-value">Rp.{{ number_format($wisata->tiket_anak, 0, ',', '.') }}</div>
+        </div>
+    </div>
+
+    <!-- ════ RULES ════ -->
+    <div class="rules-container">
+        <div class="rule-pill dark">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+            </svg>
+            Harga tiket bisa berubah sewaktu-waktu
+        </div>
+        <div class="rule-pill green">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+            Menjaga kebersihan tempat wisata
+        </div>
+        <div class="rule-pill green">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+            </svg>
+            Setiap pengunjung wajib membeli tiket
+        </div>
+        <div class="rule-pill dark">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+            </svg>
+            Mengikuti himbauan petunjuk petugas
+        </div>
+    </div>
+
+    <!-- ════ CTA BUTTON ════ -->
+    <div class="cta-container">
+        <a href="{{ route('informasi.pesan') }}?id={{ $wisata->id_wisata }}" class="cta-btn">
+            Pembelian Tiket Online Pembayaran via Qris
+        </a>
+    </div>
+
+    <!-- ════ GALLERY SECTION ════ -->
+    <div class="gallery-section">
+        <div class="gallery-header">
+            <h2>Galeri <span>Event</span></h2>
+            <p>Momen dan kegiatan menarik di {{ $wisata->nama_wisata }}</p>
+        </div>
+
+        @php
+            // FILTER: Hapus otomatis dari tampilan jika event sudah berakhir (melewati tgl_selesai)
+            $galeriAktif = collect();
+            if(isset($galeri)) {
+                $galeriAktif = collect($galeri)->filter(function($item) {
+                    if (empty($item->tgl_selesai)) return true; // Jika tidak ada batas waktu, tetap tampilkan
+                    $sekarang = \Carbon\Carbon::now()->startOfDay();
+                    $selesai = \Carbon\Carbon::parse($item->tgl_selesai)->startOfDay();
+                    return $sekarang->diffInDays($selesai, false) >= 0; // Filter event yang sisa harinya >= 0
+                });
+            }
+        @endphp
+
+        @if($galeriAktif->count() > 0)
+        <div class="gallery-track">
+            @foreach($galeriAktif as $item)
+            
+            @php
+                $badge = '';
+                if ($item->tgl_selesai) {
+                    $sekarang = \Carbon\Carbon::now()->startOfDay();
+                    $selesai = \Carbon\Carbon::parse($item->tgl_selesai)->startOfDay();
+                    
+                    if ($item->tgl_mulai && $sekarang->lessThan(\Carbon\Carbon::parse($item->tgl_mulai)->startOfDay())) {
+                        $badge = '<div class="event-badge badge-blue">Segera Hadir</div>';
+                    } else {
+                        $sisaHari = $sekarang->diffInDays($selesai, false);
+                        if ($sisaHari <= 3) {
+                            $badge = '<div class="event-badge badge-orange">Sisa ' . $sisaHari . ' Hari</div>';
+                        } else {
+                            $badge = '<div class="event-badge badge-green">Aktif</div>';
+                        }
+                    }
+                }
+            @endphp
+
+            <div class="gallery-card">
+                <!-- Wrapper Gambar & Badge -->
+                <div class="image-container">
+                    <img src="{{ asset('images/destinasi/' . $item->gambar_poster) }}"
+                         alt="Event {{ $wisata->nama_wisata }}"
+                         onerror="this.src='{{ asset('images/fotoberanda.png') }}'">
+                    {!! $badge !!}
+                </div>
+                
+                <!-- Kotak Tanggal di bawah gambar -->
+                <div class="event-date-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" style="width: 15px; height: 15px; color: var(--green);">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+                    </svg>
+                    <p>
+                        {{ \Carbon\Carbon::parse($item->tgl_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($item->tgl_selesai)->format('d M Y') }}
+                    </p>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        @else
+        <div class="gallery-empty">
+            Belum ada galeri event yang aktif untuk destinasi ini.
+        </div>
+        @endif
+    </div>
+
+    <!-- ════ FOOTER ════ -->
+    <footer>
+        © 2025 Nganjuk Abirupa - Disporabudar Nganjuk. All rights reserved.
+    </footer>
+
+    <!-- ════ LOGIN MODAL ════ -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Masuk ke Akun</h2>
+            <p class="subtitle">Silakan login untuk mengakses fitur lengkap</p>
+            <form id="formLoginDetail" action="#">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Kata Sandi</label>
+                    <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
+                </div>
+                <button type="submit" name="login" class="btn-submit">Masuk</button>
+            </form>
+            <div class="modal-footer-text">
+                Belum punya akun? <a href="#">Daftar Sekarang</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ SCRIPTS ════ -->
+    <script>
+        // === NAVBAR TOGGLE SCRIPT ===
+        const hamburger = document.getElementById('hamburger');
+        const navMenuContainer = document.getElementById('navMenuContainer');
+        const dropdownToggle = document.getElementById('dropdownToggle');
+        const dropdownParent = dropdownToggle ? dropdownToggle.parentElement : null;
+
+        function toggleMenu() {
+            if (hamburger) hamburger.classList.toggle('active');
+            if (navMenuContainer) navMenuContainer.classList.toggle('active');
+            // Reset dropdown saat menu mobile ditutup
+            if (navMenuContainer && !navMenuContainer.classList.contains('active') && dropdownParent) {
+                dropdownParent.classList.remove('show-dropdown');
+            }
+        }
+
+        // Toggle Dropdown via Klik (Mobile Only)
+        if (dropdownToggle) {
+            dropdownToggle.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault(); 
+                    e.stopPropagation();
+                    if (dropdownParent) {
+                        dropdownParent.classList.toggle('show-dropdown');
+                        // Update aria-expanded untuk aksesibilitas
+                        const expanded = dropdownParent.classList.contains('show-dropdown');
+                        this.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                    }
+                }
+            });
+        }
+
+        // Tutup dropdown & mobile menu saat klik link submenu
+        document.querySelectorAll('.dropdown-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navMenuContainer) navMenuContainer.classList.remove('active');
+                if (hamburger) hamburger.classList.remove('active');
+                if (dropdownParent) dropdownParent.classList.remove('show-dropdown');
+                if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Tutup dropdown jika klik di luar area
+        document.addEventListener('click', function(e) {
+            if (dropdownParent && dropdownToggle && 
+                !dropdownParent.contains(e.target) && 
+                !dropdownToggle.contains(e.target)) {
+                dropdownParent.classList.remove('show-dropdown');
+                if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Reset dropdown state saat resize window (mobile ↔ desktop)
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && dropdownParent) {
+                dropdownParent.classList.remove('show-dropdown');
+                if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // === MODAL LOGIN FUNCTIONS ===
+        function openModal() {
+            document.getElementById('loginModal').classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() {
+            document.getElementById('loginModal').classList.remove('active');
+            document.body.style.overflow = 'auto'; 
+        }
+
+        document.getElementById('loginModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('loginModal')) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => { 
+            if (e.key === 'Escape') closeModal(); 
+        });
+
+        // === FORM LOGIN HANDLER ===
+        document.getElementById('formLoginDetail').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email    = this.querySelector('input[type="email"], input[name="email"]').value.trim();
+            const password = this.querySelector('input[type="password"], input[name="password"]').value;
+            const CSRF     = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
+
+            const btn = this.querySelector('button[type="submit"], input[type="submit"]');
+            if (btn) { btn.disabled = true; btn.textContent = 'Memproses...'; }
+
+            try {
+                const res  = await fetch('{{ route("admin.login.post") }}', {
+                    method : 'POST',
+                    headers: {
+                        'Content-Type'    : 'application/json',
+                        'Accept'          : 'application/json',
+                        'X-CSRF-TOKEN'    : CSRF,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ email, password }),  
+                });
+                const data = await res.json();
+                if (data.success) {
+                    window.location.replace(data.redirect);
+                } else {
+                    alert('❌ ' + (data.message || 'Login gagal.'));
+                    if (btn) { btn.disabled = false; btn.textContent = 'Masuk'; }
+                }
+            } catch(err) {
+                alert('❌ Gagal menghubungi server.');
+                if (btn) { btn.disabled = false; btn.textContent = 'Masuk'; }
+            }
+        });
+    </script>
+</body>
+</html>

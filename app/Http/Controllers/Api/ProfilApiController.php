@@ -3,79 +3,85 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\DataCustomer;
+use App\Models\DataCustomer; // Sesuaikan kalau nama model lu Customer
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 
 class ProfilApiController extends Controller
 {
-    // GET /api/profile (menggantikan get_profile.php)
-    public function show(Request $request)
-    {
-        $id_customer = $request->query('id_customer') ?? $request->json('id_customer');
-
-        if (!$id_customer) {
-            return response()->json(['success' => false, 'message' => 'ID customer tidak boleh kosong']);
-        }
-
-        $profil = DataCustomer::where('id_customer', $id_customer)->first();
-
-        if (!$profil) {
-            return response()->json(['success' => false, 'message' => 'Profil tidak ditemukan']);
-        }
-
-        $fotoUrl = $profil->foto
-            ? url('storage/profil/' . $profil->foto)
-            : '';
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Profil ditemukan',
-            'profile' => [
-                'id_customer'    => $profil->id_customer,
-                'nama_customer'  => $profil->nama_customer,
-                'email_customer' => $profil->email_customer,
-                'no_tlp'         => $profil->no_tlp,
-                'foto'           => $fotoUrl,
-            ],
-        ]);
-    }
-
-    // PUT /api/profile (menggantikan updateProfile.php)
+    // POST /api/profile/update (Bisa buat Update Text & Upload Foto)[cite: 6, 7]
+    // POST /api/profile/update
     public function update(Request $request)
     {
-        $id_customer   = $request->post('id_customer');
-        $nama_customer = trim($request->post('nama_customer', ''));
-        $no_tlp        = trim($request->post('no_tlp', ''));
+        // 1. Ganti 'post' jadi 'input' biar lebih ampuh nangkep data dari Flutter
+        $id_customer    = $request->input('id_customer');
+        $nama_customer  = $request->input('nama_customer');
+        $email_customer = $request->input('email_customer');
+        $password       = $request->input('password');
 
-        if (!$id_customer || !$nama_customer) {
-            return response()->json(['success' => false, 'message' => 'Data tidak lengkap']);
+        // Bersihkan ID dari spasi ga sengaja
+        $id_customer = trim($id_customer);
+
+        if (!$id_customer) {
+            return response()->json(['status' => 'error', 'message' => 'ID tidak ditemukan.']);
         }
 
+        // Cari berdasarkan kolom id_customer
         $profil = DataCustomer::where('id_customer', $id_customer)->first();
+        
         if (!$profil) {
-            return response()->json(['success' => false, 'message' => 'Customer tidak ditemukan']);
+            // Ini biar lu tau di layar HP, ID berapa sih yang ditangkep Laravel!
+            return response()->json(['status' => 'error', 'message' => 'Customer gagal ditemukan untuk ID: [' . $id_customer . ']']);
         }
 
+        // 1. UPDATE FOTO 
         $foto = $profil->foto;
-
         if ($request->hasFile('foto')) {
             $file     = $request->file('foto');
             $namaFile = uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/profil', $namaFile);
+            $file->storeAs('public/profil', $namaFile); 
 
-            if ($foto && $foto !== 'default.jpg') {
+            if ($foto && $foto !== 'default.jpg' && $foto !== '') {
                 Storage::delete('public/profil/' . $foto);
             }
             $foto = $namaFile;
+            
+            if (!$nama_customer && !$email_customer) {
+                $profil->update(['foto' => $foto]);
+                return response()->json(['status' => 'success', 'message' => 'Foto diupdate', 'foto' => $foto]);
+            }
         }
 
-        $profil->update([
-            'nama_customer' => $nama_customer,
-            'no_tlp'        => $no_tlp,
-            'foto'          => $foto,
-        ]);
+        // 2. UPDATE TEXT (Ganti ke nama kolom yang bener)
+        $dataUpdate = [
+            'nama_customer'  => $nama_customer ?? $profil->nama_customer,
+            'email_customer' => $email_customer ?? $profil->email_customer, // <-- DISESUAIKAN SAMA DB LU
+            'foto'           => $foto
+        ];
 
-        return response()->json(['success' => true, 'message' => 'Profil berhasil diperbarui']);
+        // 3. UPDATE PASSWORD (Ganti ke kolom password_customer)
+        if (!empty($password)) {
+            $dataUpdate['password_customer'] = Hash::make($password); // <-- DISESUAIKAN SAMA DB LU
+        }
+
+        $profil->update($dataUpdate);
+
+        return response()->json(['status' => 'success', 'message' => 'Profil berhasil diperbarui']);
+    }
+
+    // POST /api/profile/hapus-foto
+    public function deleteFoto(Request $request)
+    {
+        $id_customer = $request->post('id_customer');
+        $profil = DataCustomer::where('id_customer', $id_customer)->first();
+
+        if ($profil && $profil->foto) {
+            Storage::delete('public/profil/' . $profil->foto);
+            $profil->update(['foto' => '']); // Kosongin nama foto di DB
+            return response()->json(['status' => 'success', 'message' => 'Foto dihapus']);
+        }
+
+        return response()->json(['status' => 'error', 'message' => 'Gagal hapus foto']);
     }
 }

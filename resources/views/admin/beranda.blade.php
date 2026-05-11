@@ -1,123 +1,449 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin - Nganjuk Abirupa</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{ --panel:#eef3f9; --brand:#3fb27f; --text:#0f172a; --muted:#667085; --nav:#e1e6ec; }
-    *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',Arial,sans-serif; }
-    body{ background:var(--panel); color:var(--text); }
-    a{ color:inherit; text-decoration:none; }
-    .wrap{ width:92%; max-width:1150px; margin:24px auto 48px; }
-    .nav{ display:flex; align-items:center; justify-content:space-between; background:var(--nav); border-radius:52px; padding:14px 22px; box-shadow:0 10px 30px rgba(0,0,0,.06); }
-    .logo img{ height:40px; }
-    .menu-container{ flex:1; display:flex; justify-content:center; }
-    .menu{ display:flex; gap:42px; align-items:center; }
-    .menu a{ font-weight:700; color:#4b5563; position:relative; }
-    .menu a.active{ color:#101827; }
-    .menu a.active::after{ content:""; position:absolute; bottom:-12px; left:0; width:100%; height:4px; border-radius:4px; background:#fbbf24; }
-    .icons{ display:flex; gap:12px; }
-    .icon{ width:46px; height:46px; border-radius:14px; background:#fff; border:1px solid #eef1f6; display:grid; place-items:center; font-size:20px; }
-    /* HERO */
-    .hero{ margin-top:18px; position:relative; background:linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),url('{{ asset("images/nganjuk-abirupa.png") }}') center/cover no-repeat; height:300px; border-radius:24px; overflow:hidden; }
-    .hero .text{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; text-align:center; }
-    .hero h1{ font-size:32px; font-weight:800; }
-    /* SECTION */
-    .section-header{ display:flex; justify-content:space-between; align-items:center; margin:28px 0 16px; }
-    .section-header h2{ font-size:24px; font-weight:800; }
-    .add-btn{ background:var(--brand); color:#fff; padding:10px 20px; border-radius:12px; font-weight:700; font-size:14px; transition:all 0.2s; }
-    .add-btn:hover{ background:#2f9a6e; transform:translateY(-1px); }
-    .grid{ display:grid; gap:22px; }
-    .grid.destinasi{ grid-template-columns:repeat(3,minmax(0,1fr)); }
-    @media(max-width:1000px){ .grid.destinasi{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
-    @media(max-width:700px){ .grid.destinasi{ grid-template-columns:1fr; } }
-    /* CARD */
-    .card{ background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 10px 26px rgba(0,0,0,.08); position:relative; }
-    .thumb{ width:100%; height:200px; background-size:cover; background-position:center; }
-    .content{ padding:12px 14px; }
-    .title{ font-weight:700; font-size:15px; margin-bottom:4px; }
-    .loc{ color:#6b7280; font-size:12px; margin-bottom:8px; }
-    .action-buttons{ display:flex; gap:8px; }
-    .btn-edit{ background:#fef3c7; color:#92400e; border:none; padding:6px 14px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer; transition:all 0.2s; }
-    .btn-edit:hover{ background:#fde68a; }
-    .btn-hapus{ background:#fee2e2; color:#dc2626; border:none; padding:6px 14px; border-radius:8px; font-weight:700; font-size:12px; cursor:pointer; transition:all 0.2s; }
-    .btn-hapus:hover{ background:#fecaca; }
-    .empty-state{ grid-column:1/-1; text-align:center; padding:60px; color:#94a3b8; }
-    .footer{ text-align:center; color:#fff; font-size:13px; padding:18px 0; margin-top:60px; background:#5EC292; }
-    @if(session('success'))
-    .alert-success{ background:#d1fae5; border:1px solid #6ee7b7; color:#065f46; padding:12px 18px; border-radius:12px; margin-bottom:20px; font-weight:600; }
-    @endif
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<title>Beranda - Admin {{ session('user_name') }}</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Tambahkan ini di <head> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Poppins', sans-serif; background: #f5f6f8; color: #333; }
+.container { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar {
+    width: 220px; background: #eef2ef; min-height: 100vh;
+    padding: 20px 15px; position: fixed; left: 0; top: 0;
+    transition: all 0.3s ease; z-index: 1000;
+}
+.logo { display: flex; justify-content: center; margin-bottom: 30px; }
+.logo img { width: 100px; }
+.menu { display: flex; flex-direction: column; gap: 10px; }
+.menu a {
+    text-decoration: none; padding: 12px 18px; border-radius: 15px;
+    font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 12px;
+    color: #333; background: white; transition: all 0.3s ease;
+}
+.menu a i { font-size: 16px; width: 20px; text-align: center; }
+.menu a.active { background: #52C396; color: white; box-shadow: 0 3px 10px rgba(82,195,150,0.3); }
+.menu a:hover:not(.active) { transform: translateX(5px); background: #dff5ec; }
+.menu a.logout { background: #fee2e2; color: #dc2626; margin-top: 10px; }
+.menu a.logout:hover { background: #fecaca; transform: translateX(5px); }
+
+/* MAIN */
+.main { flex: 1; margin-left: 220px; padding: 25px; transition: all 0.3s ease; }
+
+/* TOP BAR */
+.topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.topbar h2 { font-size: 20px; font-weight: 700; color: #1f2937; }
+.topbar .admin-info { font-size: 13px; color: #6b7280; }
+.topbar .admin-info span { font-weight: 700; color: #374151; }
+
+/* WISATA CARD */
+.wisata-card {
+    background: white; border-radius: 18px; padding: 24px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.06); margin-bottom: 24px;
+    display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;
+}
+.wisata-img { width: 100%; height: 180px; object-fit: cover; border-radius: 14px; }
+.wisata-info { flex: 1; min-width: 200px; }
+.wisata-info h3 { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+.wisata-info .lokasi { color: #6b7280; font-size: 13px; margin-bottom: 14px; }
+.harga-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.pill { padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.pill-green { background: #e6f7ee; color: #065f46; }
+.pill-amber { background: #fef3c7; color: #92400e; }
+.wisata-desc { font-size: 13px; color: #4b5563; line-height: 1.6; margin-bottom: 18px; }
+.btn-edit {
+    display: inline-block; background: #52C396; color: white;
+    padding: 10px 24px; border-radius: 10px; font-weight: 700;
+    text-decoration: none; font-size: 14px; transition: all .2s;
+}
+.btn-edit:hover { background: #3fb27f; transform: translateY(-1px); }
+
+/* CARDS */
+.cards-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+.card {
+    background: white; border-radius: 15px; padding: 20px;
+    display: flex; align-items: center; gap: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05); transition: transform 0.3s;
+}
+.card:hover { transform: translateY(-3px); }
+.card-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+.card-icon.pendapatan { background: #e8f5f0; color: #52C396; }
+.card-icon.tiket { background: #fff3e0; color: #ff9800; }
+.card-icon.transaksi { background: #e3f2fd; color: #2196f3; }
+.card-content h4 { margin: 0 0 4px; font-size: 12px; color: #888; }
+.card-content p { margin: 0; font-size: 18px; font-weight: 700; color: #1f2937; }
+
+/* CHART & DATE */
+.content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px; }
+.chart-box, .date-box { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+.chart-header { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
+.chart-container { position: relative; height: 250px; }
+.date-display {
+    background: #f0f7ff; padding: 12px; border-radius: 10px;
+    display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 15px;
+}
+
+/* TABLE */
+.table-box { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); }
+.table-header { display: flex; justify-content: space-between; margin-bottom: 15px; align-items: center; }
+.table-responsive { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 700px; }
+thead { background: #a5e7c0; }
+th, td { padding: 12px 10px; text-align: left; font-size: 13px; white-space: nowrap; }
+td { border-bottom: 1px solid #eee; }
+.status-badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.status-sukses { background: #d4edda; color: #155724; }
+.empty-row td { text-align: center; color: #9ca3af; padding: 32px; }
+
+/* HAMBURGER */
+.menu-toggle {
+    display: none; position: fixed; top: 15px; left: 15px; z-index: 1001;
+    background: #52C396; color: white; border: none;
+    width: 45px; height: 45px; border-radius: 10px;
+    font-size: 20px; cursor: pointer;
+}
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; }
+
+/* ALERT */
+.alert-success {
+    background: #d1fae5; border: 1px solid #6ee7b7; color: #065f46;
+    padding: 12px 18px; border-radius: 12px; margin-bottom: 20px; font-weight: 600;
+}
+
+/* KIRI KOLOM WISATA */
+.wisata-media-col { 
+    width: 260px; 
+    flex-shrink: 0; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+@media (max-width: 1024px) { .content-grid { grid-template-columns: 1fr; } }
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.active { transform: translateX(0); }
+    .main { margin-left: 0; padding: 15px; padding-top: 70px; }
+    .menu-toggle { display: block; }
+    .overlay.active { display: block; }
+    .cards-container { grid-template-columns: 1fr; }
+    .wisata-card { flex-direction: column; }
+    .wisata-media-col { width: 100%; }
+    .wisata-img { height: 200px; width: 100%; }
+}
+</style>
 </head>
 <body>
-<div class="wrap">
-  <!-- NAVBAR -->
-  <nav class="nav">
-    <a class="logo" href="{{ route('admin.beranda') }}">
-      <img src="{{ asset('images/logo-abirupa.png') }}" alt="Nganjuk Abirupa" />
-    </a>
-    <div class="menu-container">
-      <div class="menu">
-        <a href="{{ route('admin.beranda') }}" class="active">Kelola Wisata</a>
-        <a href="{{ route('admin.riwayat') }}">Riwayat</a>
-        <a href="#">Tentang Kami</a>
-      </div>
-    </div>
-    <div class="icons">
-      <a class="icon" href="{{ route('admin.profil') }}" title="Profil">👤</a>
-    </div>
-  </nav>
 
-  <!-- HERO -->
-  <div class="hero">
-    <div class="text">
-      <h1>Panel Admin Nganjuk Abirupa</h1>
-      <p style="opacity:.9;margin-top:8px;">Kelola destinasi wisata Kabupaten Nganjuk</p>
-    </div>
-  </div>
+<button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+<div class="overlay" onclick="toggleSidebar()"></div>
 
-  @if(session('success'))
-    <div class="alert-success" style="background:#d1fae5;border:1px solid #6ee7b7;color:#065f46;padding:12px 18px;border-radius:12px;margin-top:20px;font-weight:600;">
-      ✅ {{ session('success') }}
-    </div>
-  @endif
-
-  <!-- DAFTAR WISATA -->
-  <div class="section-header">
-    <h2>Daftar Destinasi Wisata</h2>
-    <a href="{{ route('admin.wisata.create') }}" class="add-btn">+ Tambah Wisata</a>
-  </div>
-
-  <div class="grid destinasi">
-    @forelse($destinasi as $d)
-      <article class="card">
-        <div class="thumb" style="background-image:url('{{ asset("storage/destinasi/" . ($d->gambar ?: "placeholder.jpg")) }}')"></div>
-        <div class="content">
-          <div class="title">{{ $d->nama_wisata }}</div>
-          <div class="loc">📍 {{ $d->lokasi }}</div>
-          <div class="action-buttons">
-            <a href="{{ route('admin.wisata.edit', $d->id_wisata) }}" class="btn-edit">✏️ Edit</a>
-            <button class="btn-hapus" onclick="hapusWisata({{ $d->id_wisata }}, '{{ $d->nama_wisata }}')">🗑️ Hapus</button>
-          </div>
+<div class="container">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="{{ asset('images/logo-abirupa.png') }}" alt="Logo">
         </div>
-      </article>
-    @empty
-      <div class="empty-state">
-        📌 Belum ada destinasi. <a href="{{ route('admin.wisata.create') }}" style="color:#5EC292;font-weight:700;">+ Tambah Wisata</a>
-      </div>
-    @endforelse
-  </div>
+        <div class="menu">
+            <a href="{{ route('admin.beranda') }}" class="active"><i class="fas fa-home"></i> Beranda</a>
+            @if($wisata)
+            <a href="{{ route('admin.edit') }}"><i class="fas fa-edit"></i> Edit Wisata</a>
+            @endif
+            <a href="{{ route('admin.profil') }}"><i class="fas fa-user"></i> Profil</a>
+            <a href="#" class="logout" onclick="confirmLogout(event)"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
 
-  <div class="footer">© 2025 Nganjuk Abirupa – Panel Admin</div>
+    <!-- MAIN -->
+    <div class="main">
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div>
+                <h2>Dashboard Admin</h2>
+                <div class="admin-info">Halo, <span>{{ session('user_name') }}</span> 👋</div>
+            </div>
+        </div>
+
+        @if(session('success'))
+            <div class="alert-success">✅ {{ session('success') }}</div>
+        @endif
+
+        {{-- TAMPILAN WISATA --}}
+        @if($wisata)
+            <div class="wisata-card">
+                
+                {{-- KOLOM KIRI (Hanya Foto Utama) --}}
+                <div class="wisata-media-col">
+                    <img class="wisata-img"
+                         src="{{ $wisata->gambar && file_exists(public_path('images/destinasi/' . $wisata->gambar)) 
+                                ? asset('images/destinasi/' . $wisata->gambar) 
+                                : asset('images/icon/Generic_avatar.png') }}"
+                         alt="{{ $wisata->nama_wisata }}"
+                         onerror="this.src='{{ asset('images/icon/Generic_avatar.png') }}'">
+                </div>
+
+                {{-- KOLOM KANAN (Info Teks) --}}
+                <div class="wisata-info">
+                    <h3>{{ $wisata->nama_wisata }}</h3>
+                    <div class="lokasi">📍 {{ $wisata->lokasi }}</div>
+                    
+                    <div class="harga-pills">
+                        <span class="pill pill-green">Dewasa: Rp {{ number_format($wisata->tiket_dewasa, 0, ',', '.') }}</span>
+                        <span class="pill pill-green">Anak: Rp {{ number_format($wisata->tiket_anak, 0, ',', '.') }}</span>
+                        <span class="pill pill-amber">Asuransi: Rp {{ number_format($wisata->biaya_asuransi ?? 500, 0, ',', '.') }}/org</span>
+                    </div>
+                    
+                    <div class="wisata-desc">{{ $wisata->deskripsi ?: 'Belum ada deskripsi.' }}</div>
+                    
+                    
+                </div>
+
+                {{-- GALERI EVENT (Sekarang di luar kolom kiri, jadi bisa melar 100%) --}}
+                <div class="event-wrapper" style="width: 100%; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-top: 10px;">
+                    <div class="event-header" style="font-weight: 800; font-size: 16px; margin-bottom: 15px; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-calendar-check" style="color: #52C396; font-size: 18px;"></i> Galeri Event & Aktivitas
+                    </div>
+                    
+                    @if(isset($galeri) && count($galeri) > 0)
+                        <div style="display: flex; gap: 20px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: thin;">
+                            @foreach($galeri as $g)
+                            @php
+                                $badge = '';
+                                if ($g->tgl_selesai) {
+                                    $sekarang = \Carbon\Carbon::now()->startOfDay();
+                                    $selesai = \Carbon\Carbon::parse($g->tgl_selesai)->startOfDay();
+                                    
+                                    if ($g->tgl_mulai && $sekarang->lessThan(\Carbon\Carbon::parse($g->tgl_mulai)->startOfDay())) {
+                                        $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #3b82f6; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Segera Hadir</div>';
+                                    } else {
+                                        $sisaHari = $sekarang->diffInDays($selesai, false);
+                                        if ($sisaHari < 0) {
+                                            $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Berakhir</div>';
+                                        } elseif ($sisaHari <= 3) {
+                                            $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #f59e0b; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Sisa ' . $sisaHari . ' Hari</div>';
+                                        } else {
+                                            $badge = '<div style="position: absolute; top: 12px; right: 12px; background: #10b981; color: white; font-size: 11px; padding: 5px 12px; border-radius: 20px; font-weight: 800; z-index: 5; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">Aktif</div>';
+                                        }
+                                    }
+                                }
+                            @endphp
+
+                            <div style="flex-shrink: 0; width: 220px; display: flex; flex-direction: column;">
+                                {{-- KOTAK POSTER & BADGE & TOMBOL HAPUS (Gak pake numpuk) --}}
+                                <div style="position: relative; width: 100%; height: 140px; margin-bottom: 10px; border-radius: 12px; overflow: hidden; border: 2px solid #52C396;">
+                                    <img src="{{ asset('images/destinasi/' . $g->gambar_poster) }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    {!! $badge !!}
+                                    
+                                </div>
+                                
+                                {{-- KOTAK TANGGAL --}}
+                                <div style="background: white; border-radius: 10px; padding: 6px 8px; border: 1px solid #cbd5e1; text-align: center;">
+                                    <p style="font-size: 12px; margin: 0; color: #334155; font-weight: 700;">
+                                        {{ \Carbon\Carbon::parse($g->tgl_mulai)->format('d M') }} - {{ \Carbon\Carbon::parse($g->tgl_selesai)->format('d M Y') }}
+                                    </p>
+                                </div>
+                            </div>
+                        @endforeach
+                        </div>
+                    @else
+                        <div style="text-align: center; padding: 20px; color: #94a3b8; border: 1px dashed #cbd5e1; border-radius: 12px; background: white;">
+                            <i class="fas fa-calendar-times" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                            <p style="font-size: 12px; font-style: italic; margin: 0;">Belum ada event yang berjalan.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @else
+            <div style="text-align:center;padding:60px;background:white;border-radius:18px;margin-bottom:24px;color:#9ca3af;">
+                <p style="font-size:40px;margin-bottom:12px;">🏔️</p>
+                <p style="font-size:16px;font-weight:600;color:#475569;">Belum ada wisata yang dipegang</p>
+                <p style="font-size:13px;margin-top:8px;">Hubungi super admin untuk assign wisata ke akun ini.</p>
+            </div>
+        @endif
+
+        {{-- STATISTIK CARDS --}}
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-icon pendapatan"><i class="fas fa-wallet"></i></div>
+                <div class="card-content">
+                    <h4>Total Pendapatan</h4>
+                    <p>Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon tiket"><i class="fas fa-ticket-alt"></i></div>
+                <div class="card-content">
+                    <h4>Tiket Hari Ini</h4>
+                    <p>{{ $tiketHariIni ?? 0 }} Tiket</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-icon transaksi"><i class="fas fa-check-circle"></i></div>
+                <div class="card-content">
+                    <h4>Transaksi Hari Ini</h4>
+                    <p>{{ $transaksiHariIni ?? 0 }} Transaksi</p>
+                </div>
+            </div>
+        </div>
+
+        {{-- CHART & DATE --}}
+        <div class="content-grid">
+            <div class="chart-box">
+                <div class="chart-header">
+                    <h3>Pendapatan 7 Hari Terakhir</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart"></canvas>
+                </div>
+            </div>
+           <div class="date-box">
+    <h3 style="margin-bottom:14px;">Filter Tanggal</h3>
+    
+    <!-- Form Filter: Submit otomatis saat tanggal berubah -->
+    <form method="GET" action="{{ route('admin.beranda') }}" id="filterForm">
+        <div class="date-display" onclick="document.getElementById('filterDate').showPicker()">
+            <i class="fas fa-calendar-alt" style="color:#2196f3;"></i>
+            <span id="selectedDate">
+                {{ \Carbon\Carbon::parse($filterDate ?? now())->translatedFormat('d F Y') }}
+            </span>
+        </div>
+        
+        <input type="date" 
+               id="filterDate" 
+               name="tanggal" 
+               value="{{ $filterDate ?? now()->format('Y-m-d') }}"
+               onchange="document.getElementById('filterForm').submit()"
+               style="width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;font-family:'Poppins',sans-serif;font-size:13px;margin-top:10px;">
+    </form>
+    
+    <!-- Info Ringkas -->
+    <div style="margin-top:15px;padding:12px;background:#f0f7ff;border-radius:10px;">
+        <p style="font-size:13px;margin:0;color:#475569;">
+            <strong>{{ $transaksi->count() }}</strong> transaksi pada tanggal ini
+        </p>
+        <p style="font-size:11px;margin:5px 0 0;color:#94a3b8;">
+            Total: Rp {{ number_format($transaksi->sum('harga_total'), 0, ',', '.') }}
+        </p>
+    </div>
+</div>
+        </div>
+
+        {{-- TABEL TRANSAKSI --}}
+        <div class="table-box">
+    <div class="table-header">
+        <h3>Tabel Transaksi Wisata Ini</h3>
+        <span style="font-size:12px;color:#6b7280;">
+            Tanggal: {{ \Carbon\Carbon::parse($filterDate ?? now())->translatedFormat('d F Y') }}
+        </span>
+    </div>
+    
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>ID Pesan</th>
+                    <th>Customer</th>
+                    <th>Tanggal</th>
+                    <th>Jumlah Tiket</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                @forelse($transaksi as $i => $t)
+                <tr>
+                    <td>{{ $i + 1 }}</td>
+                    <td>#{{ str_pad($t->id_pemesanan, 4, '0', STR_PAD_LEFT) }}</td>
+                    <td>{{ $t->nama_customer ?? 'Guest' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($t->tanggal_pesan)->format('d M Y') }}</td>
+                    <td>{{ $t->jml_tiket }} tiket</td>
+                    <td>Rp {{ number_format($t->harga_total, 0, ',', '.') }}</td>
+                    <td><span class="status-badge status-sukses">Selesai</span></td>
+                </tr>
+                @empty
+                <tr class="empty-row">
+                    <td colspan="7" style="text-align:center;padding:40px;color:#9ca3af;">
+                        <i class="fas fa-inbox" style="font-size:40px;margin-bottom:10px;display:block;opacity:0.3;"></i>
+                        <p style="margin:0;font-size:14px;">Tidak ada transaksi pada tanggal {{ \Carbon\Carbon::parse($filterDate ?? now())->translatedFormat('d F Y') }}</p>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    </div>
 </div>
 
 <script>
-  async function hapusWisata(id, nama) {
-    if (!confirm(`Yakin ingin menghapus wisata "${nama}"?`)) return;
-    window.location.href = `{{ url('/admin/wisata') }}/${id}/hapus`;
-  }
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('active');
+    document.querySelector('.overlay').classList.toggle('active');
+}
+function confirmLogout(event) {
+    event.preventDefault();
+    
+    Swal.fire({
+        title: 'Yakin ingin logout?',
+        text: "Anda akan keluar dari sistem",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#52C396',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, Logout!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "{{ route('admin.logout') }}";
+        }
+    })
+}
+
+// Chart data dari Laravel
+const chartLabels = @json($chartLabels ?? []);
+const chartData   = @json($chartData ?? []);
+
+new Chart(document.getElementById('chart').getContext('2d'), {
+    type: 'line',
+    data: {
+        labels: chartLabels,
+        datasets: [{
+            label: 'Pendapatan',
+            data: chartData,
+            borderColor: '#52C396',
+            backgroundColor: 'rgba(82,195,150,0.1)',
+            fill: true, tension: 0.4, pointRadius: 4,
+        }]
+    },
+    options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+
+// Filter tanggal
+// Filter tanggal - Update teks tanggal & submit form
+document.getElementById('filterDate').addEventListener('change', function() {
+    // Update tampilan teks tanggal
+    document.getElementById('selectedDate').textContent = new Date(this.value)
+        .toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+    
+    // Submit form untuk reload data
+    document.getElementById('filterForm').submit();
+});
 </script>
 </body>
 </html>
