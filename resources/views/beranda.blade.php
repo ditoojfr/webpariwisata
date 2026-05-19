@@ -5,10 +5,26 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nganjuk Abirupa - Kelola Wisata dan Pengalaman Anda</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- ===== PRECONNECT & DNS PREFETCH ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+    <!-- ===== PRELOAD ASET KRITIS ===== -->
+    <link rel="preload" as="image" href="{{ asset('images/fotoberanda.webp') }}" fetchpriority="high">
+    <link rel="preload" as="image" href="{{ asset('images/logogedi.png') }}">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" as="style">
+
+    <!-- ===== GOOGLE FONTS (non-blocking) ===== -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          media="print"
+          onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
+    </noscript>
     
     <style>
         /* ============ RESET & BASE ============ */
@@ -34,17 +50,14 @@
             --nav-underline: #fbbf24;
         }
 
-html { 
-    scroll-behavior: smooth;
-    background: #26A69A; /* warna sama dengan ujung bawah footer */
-}
+        html { scroll-behavior: smooth; }
+
         body {
-    font-family: 'Poppins', sans-serif;
-    color: var(--text-dark);
-    background: linear-gradient(160deg, #c8e6c9 0%, #b2ebf2 100%);
-    background-attachment: fixed;
-    overflow-x: hidden;
-}
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
 
         .container {
             max-width: 1200px;
@@ -52,16 +65,33 @@ html {
             padding: 0 20px;
         }
 
+        /* ============ ANIMASI PENGGANTI AOS (tanpa CDN) ============ */
+        [data-aos] {
+            opacity: 0;
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        [data-aos="fade-up"]    { transform: translateY(40px); }
+        [data-aos="fade-down"]  { transform: translateY(-40px); }
+        [data-aos="fade-right"] { transform: translateX(-40px); }
+        [data-aos="fade-left"]  { transform: translateX(40px); }
+        [data-aos="zoom-in"]    { transform: scale(0.85); }
+        [data-aos].aos-animate  {
+            opacity: 1;
+            transform: translateY(0) translateX(0) scale(1);
+        }
+
         /* ============ NAVBAR ============ */
         .navbar {
             position: fixed;
-            top: 20px;
+            top: 0;
             left: 0;
             right: 0;
             width: 100%;
             z-index: 1000;
             display: flex;
             justify-content: center;
+            padding-top: 20px;
+            pointer-events: none;
         }
 
         .navbar-container {
@@ -75,6 +105,7 @@ html {
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            pointer-events: auto;
         }
 
         .nav-brand { display: flex; align-items: center; gap: 12px; }
@@ -102,7 +133,6 @@ html {
             align-items: center;
         }
 
-        /* PERBAIKAN: Tambahan padding-bottom untuk mencegah area klik terputus saat kursor turun */
         .nav-links li { position: relative; padding-bottom: 10px; }
 
         .nav-links a {
@@ -117,17 +147,6 @@ html {
         .nav-links a:hover,
         .nav-links a.active { color: var(--nav-active); }
 
-        .nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: #fbbf24;
-            border-radius: 2px;
-        }
-
         /* ============ DROPDOWN MENU ============ */
         .dropdown-menu { display: none; }
         .nav-links li:hover .dropdown-menu {
@@ -140,7 +159,7 @@ html {
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             min-width: 170px;
-            margin-top: 0; /* PERBAIKAN: Ubah jadi 0 agar tidak ada celah kosong */
+            margin-top: 0;
             list-style: none;
         }
         .dropdown-menu li { margin-bottom: 5px; padding-bottom: 0; }
@@ -195,10 +214,9 @@ html {
             transition: 0.3s;
         }
 
-       /* ============ RESPONSIVE (MOBILE) ============ */
+        /* ============ RESPONSIVE (MOBILE) ============ */
         @media (max-width: 768px) {
             .navbar { top: 12px; padding: 0 12px; }
-
             .navbar-container { padding: 10px 16px; }
 
             .navbar-menu-container {
@@ -226,7 +244,6 @@ html {
 
             .nav-links li { padding-bottom: 0; }
 
-            /* Dropdown di mobile: relative agar tidak overlap */
             .nav-links li:hover .dropdown-menu {
                 position: relative;
                 box-shadow: none;
@@ -234,7 +251,6 @@ html {
                 border: 1px solid #eaeaea;
             }
 
-            /* Matikan hover dropdown di mobile, gunakan class open via JS */
             .nav-links li .dropdown-menu { display: none !important; }
             .nav-links li.open .dropdown-menu {
                 display: block !important;
@@ -249,68 +265,113 @@ html {
 
             .hamburger { display: flex; }
 
-            /* TAMBAHAN BARU: Menghilangkan margin putih di HP */
             .hero {
-    margin-top: 0; 
-    height: 100vh;
-    min-height: 100vh;
-}
+                margin-top: 0;
+                height: 100vh;
+                min-height: 100vh;
+            }
+
+            .hero-text h1 { font-size: 28px; }
+            .btn-hero-cta { padding: 12px 24px; font-size: 14px; }
         }
 
         /* ============ HERO SECTION ============ */
-.hero {
-    margin-top: 0;
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    min-height: 100vh;
-    overflow: hidden;
-}
+        .hero {
+            margin-top: 0;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 100vh;
+            overflow: hidden;
+            background-color: #0f172a;
+        }
 
-.hero-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.9);
-}
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
+            background: linear-gradient(
+                to bottom,
+                rgba(245, 250, 245, 0) 0%,
+                rgba(245, 250, 245, 0.4) 50%,
+                rgba(245, 250, 245, 0.85) 80%,
+                var(--bg-light) 100%
+            );
+            pointer-events: none;
+            z-index: 2;
+        }
 
-.hero-overlay {
-    position: absolute;
-    top: 0; /* Tarik overlay dari ujung atas */
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.3); /* Efek gelap transparan merata agar teks terbaca */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Mendorong teks agar pas di tengah-tengah air biru */
-    align-items: center;
-    padding: 0 20px;
-}
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.9);
+        }
 
-.hero-text {
-    max-width: 1200px;
-    text-align: center; /* Membuat teks rata tengah */
-    color: white;
-}
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1;
+        }
 
-.hero-text h1 {
-    font-size: 42px;
-    font-weight: 800;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-}
+        .hero-text {
+            max-width: 1200px;
+            text-align: center;
+            color: white;
+        }
 
-.hero-text p {
-    font-size: 18px;
-    margin-top: 10px;
-    opacity: 0.9;
-}
-.hero {
-    margin-top: 0; 
-    height: 100vh;
-    min-height: 100vh;
-}
+        .hero-text h1 {
+            font-size: 42px;
+            font-weight: 800;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
 
+        .hero-text p {
+            font-size: 18px;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        /* ============ HERO CTA BUTTON ============ */
+        .btn-hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--accent-blue) 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .btn-hero-cta svg { transition: transform 0.3s ease; }
+        .btn-hero-cta:hover svg { transform: translateY(3px); }
 
         /* ============ SECTION TITLE ============ */
         .section-title {
@@ -338,12 +399,13 @@ html {
             border-radius: 2px;
         }
 
-        /* ============ APA YANG MENARIK (FEATURES) ============ */
+        /* ============ FEATURES ============ */
         .features {
-    padding: 80px 0 60px;
-    background: linear-gradient(135deg, #f0fdf4 0%, #e0f7fa 100%);
-    position: relative;
-}
+            padding: 140px 0 60px;
+            position: relative;
+            z-index: 3;
+            margin-top: 0;
+        }
 
         .features-grid {
             display: grid;
@@ -354,20 +416,16 @@ html {
         }
 
         .feature-card {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
-    padding: 35px 25px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-    transition: all 0.4s ease;
-}
-
-        .feature-card[data-aos].aos-animate {
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            position: relative;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: all 0.4s ease;
+            overflow: hidden;
         }
 
         .feature-card::before {
@@ -382,10 +440,7 @@ html {
             transition: transform 0.4s;
         }
 
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
+        .feature-card:hover::before { transform: scaleX(1); }
         .feature-card:hover {
             transform: translateY(-10px);
             box-shadow: var(--shadow-hover);
@@ -402,10 +457,10 @@ html {
         }
 
         .feature-icon img {
-            width: 150px;       
-            height: 150px;      
-            object-fit: contain; 
-            display: block;    
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            display: block;
             margin: 0 auto;
         }
 
@@ -422,431 +477,367 @@ html {
             line-height: 1.7;
         }
 
-/* ============ DESTINASI WISATA (DESTINATIONS) ============ */
-.destinations {
-    padding: 80px 0;
-    /* Warna putih bersih agar foto destinasi tetap menjadi fokus utama */
-   background: linear-gradient(160deg, #e8f5e9 0%, #e0f7fa 100%);
-    position: relative;
-}
+        /* ============ DESTINATIONS ============ */
+        .destinations {
+            padding: 80px 0;
+            background: linear-gradient(160deg, #e8f5e9 0%, #e0f7fa 100%);
+            position: relative;
+        }
 
         .destinations-scroll {
             display: flex;
             gap: 25px;
-            overflow-x: auto; 
-            padding: 10px 20px 30px 20px; 
+            overflow-x: auto;
+            padding: 10px 20px 30px 20px;
             scroll-behavior: smooth;
-            -ms-overflow-style: none; 
+            -ms-overflow-style: none;
             scrollbar-width: none;
         }
 
-        .destinations-scroll::-webkit-scrollbar {
-            display: none;
+        .destinations-scroll::-webkit-scrollbar { display: none; }
+
+        .destination-card {
+            flex: 0 0 550px;
+            background-color: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-      /* Gaya kartu destinasi yang lebih modern */
-.destination-card {
-    flex: 0 0 550px; 
-    background-color: #ffffff; /* Card tetap putih bersih agar kontras dengan BG */
-    border-radius: 24px; 
-    overflow: hidden;
-    /* Shadow diperhalus agar terlihat modern di atas background abu-abu */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); 
-    padding: 15px;
-    border: 1px solid #e2e8f0; /* Garis tepi tipis agar card lebih tegas */
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
         .destination-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    border-color: var(--primary-green); /* Memberi sedikit sentuhan hijau saat di-hover */
-}
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-green);
+        }
 
         .card-image {
             width: 100%;
             height: 300px;
             overflow: hidden;
-            border-radius: 15px; 
+            border-radius: 15px;
         }
 
         .card-image img {
             width: 100%;
             height: 100%;
-            object-fit: cover; 
+            object-fit: cover;
             transition: transform 0.4s ease;
         }
 
-        .destination-card:hover .card-image img {
-            transform: scale(1.05);
-        }
+        .destination-card:hover .card-image img { transform: scale(1.05); }
 
         .card-text {
             padding: 20px 15px;
             text-align: center;
         }
 
-       .card-text h3 {
-    font-size: 20px;
-    font-weight: 700;
-    color: #334155;
-    margin-top: 15px;
-}
+        .card-text h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #334155;
+            margin-top: 15px;
+        }
 
-       /* ============ VISI MISI SECTION ============ */
-.visi-misi {
-    padding: 100px 0;
-    background: linear-gradient(160deg, #f0fdf4 0%, #e0f7fa 100%);
-    position: relative;
-}
+        /* ============ VISI MISI ============ */
+        .visi-misi {
+            padding: 100px 0;
+            background: linear-gradient(160deg, #f0fdf4 0%, #e0f7fa 100%);
+            position: relative;
+        }
 
-.visi-misi-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-}
+        .visi-misi-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
 
-/* Kartu Visi */
-.visi-item {
-    background: white;
-    border-radius: 20px;
-    padding: 35px;
-    margin-bottom: 24px;
-    box-shadow: 0 8px 30px rgba(76, 175, 80, 0.1);
-    border-left: 5px solid var(--primary-green);
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-    opacity: 0;
-    transform: translateX(-30px);
-    transition: all 0.6s ease;
-}
+        .visi-item {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 30px rgba(76, 175, 80, 0.1);
+            border-left: 5px solid var(--primary-green);
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+        }
 
-/* Kartu Misi */
-.misi-item {
-    background: white;
-    border-radius: 20px;
-    padding: 35px;
-    margin-bottom: 0;
-    box-shadow: 0 8px 30px rgba(38, 166, 154, 0.1);
-    border-left: 5px solid var(--accent-blue);
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-    opacity: 0;
-    transform: translateX(-30px);
-    transition: all 0.6s ease;
-}
+        .misi-item {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 0;
+            box-shadow: 0 8px 30px rgba(38, 166, 154, 0.1);
+            border-left: 5px solid var(--accent-blue);
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+        }
 
-.visi-item[data-aos].aos-animate,
-.misi-item[data-aos].aos-animate {
-    opacity: 1;
-    transform: translateX(0);
-}
+        .visi-item[data-aos].aos-animate,
+        .misi-item[data-aos].aos-animate {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-.visi-item:hover,
-.misi-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 16px 40px rgba(76, 175, 80, 0.15);
-}
+        .visi-item:hover,
+        .misi-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 40px rgba(76, 175, 80, 0.15);
+        }
 
-.visi-item .icon,
-.misi-item .icon {
-    flex-shrink: 0;
-    width: 72px;
-    height: 72px;
-    background: linear-gradient(135deg, #e8f5e9, #e0f7fa);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+        .visi-item .icon,
+        .misi-item .icon {
+            flex-shrink: 0;
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #e8f5e9, #e0f7fa);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.visi-item .icon img,
-.misi-item .icon img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain;
-}
+        .visi-item .icon img,
+        .misi-item .icon img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
 
-.visi-item h3,
-.misi-item h3 {
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--primary-green);
-    margin-bottom: 12px;
-}
+        .visi-item h3,
+        .misi-item h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 12px;
+        }
 
-.visi-item p {
-    font-size: 16px;
-    color: #475569;
-    line-height: 1.8;
-}
+        .visi-item p {
+            font-size: 16px;
+            color: #475569;
+            line-height: 1.8;
+        }
 
-.misi-item ol {
-    font-size: 15px;
-    color: #475569;
-    line-height: 2;
-    padding-left: 20px;
-}
+        .misi-item ol {
+            font-size: 15px;
+            color: #475569;
+            line-height: 2;
+            padding-left: 20px;
+        }
 
-.misi-item ol li {
-    margin-bottom: 6px;
-}
+        .misi-item ol li { margin-bottom: 6px; }
+        .misi-item ol li::marker { color: var(--accent-blue); font-weight: 700; }
 
-.misi-item ol li::marker {
-    color: var(--accent-blue);
-    font-weight: 700;
-}
+        .handshake-illustration {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.6s ease;
+        }
 
-/* Ilustrasi kanan */
-.handshake-illustration {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transform: translateX(30px);
-    transition: all 0.6s ease;
-}
+        .handshake-illustration[data-aos].aos-animate {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-.handshake-illustration[data-aos].aos-animate {
-    opacity: 1;
-    transform: translateX(0);
-}
+        .handshake-illustration img {
+            max-width: 380px;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
+        }
 
-.handshake-illustration img {
-    max-width: 380px;
-    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
-}
+        /* ============ APP SECTION ============ */
+        .app-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #81C784 0%, #26A69A 100%);
+            position: relative;
+            overflow: hidden;
+        }
 
-@media (max-width: 992px) {
-    .visi-misi-content { 
-        grid-template-columns: 1fr; 
-    }
-    .handshake-illustration img { 
-        max-width: 260px; 
-    }
-}
-/* ============ APP SECTION ============ */
-.app-section {
-    padding: 100px 0; /* Padding diperlebar agar lebih lega */
-    background: linear-gradient(135deg, #81C784 0%, #26A69A 100%);
-    position: relative;
-    overflow: hidden;
-}
+        .app-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 80px;
+            position: relative;
+            z-index: 1;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
 
-.app-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 80px; /* Jarak antara HP dan Teks diperlebar agar tidak sesak */
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-}
+        .phone-mockup {
+            flex-shrink: 0;
+            width: 320px;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
 
-.phone-mockup {
-    flex-shrink: 0;
-    width: 320px; /* Ukuran HP tetap besar sesuai permintaan */
-    opacity: 0;
-    transform: translateX(-50px);
-    transition: all 0.8s ease;
-}
+        .phone-mockup[data-aos].aos-animate {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-.phone-mockup[data-aos].aos-animate {
-    opacity: 1;
-    transform: translateX(0);
-}
+        .phone-mockup img {
+            width: 100%;
+            border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
 
-.phone-mockup img {
-    width: 100%;
-    border-radius: 40px; /* Border radius disesuaikan dengan kelengkungan HP modern */
-    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-}
+        .app-text {
+            color: white;
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease;
+            max-width: 550px;
+        }
 
-.app-text {
-    color: white;
-    opacity: 0;
-    transform: translateX(50px);
-    transition: all 0.8s ease;
-    max-width: 550px;
-}
+        .app-text[data-aos].aos-animate {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-.app-text[data-aos].aos-animate {
-    opacity: 1;
-    transform: translateX(0);
-}
+        .app-text h3 {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
 
-.app-text h3 {
-    font-size: 38px; /* Ukuran judul sedikit ditambah agar lebih menonjol */
-    font-weight: 800;
-    margin-bottom: 24px;
-    line-height: 1.2;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-}
+        .app-text p {
+            font-size: 18px;
+            opacity: 0.95;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
 
-.app-text p {
-    font-size: 18px; /* Teks deskripsi lebih besar agar mudah dibaca */
-    opacity: 0.95;
-    line-height: 1.8;
-    margin-bottom: 40px;
-}
+        /* ============ TOMBOL PANAH BAWAH ============ */
+        .btn-arrow-down {
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff !important;
+            color: #2E7D32 !important;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            text-decoration: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            margin: 40px auto 0 auto !important;
+            position: relative;
+            z-index: 50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-/* ============ TOMBOL PANAH BAWAH ============ */
-.btn-arrow-down {
-    display: flex !important; 
-    align-items: center;
-    justify-content: center;
-    background-color: #ffffff !important; 
-    color: #2E7D32 !important; 
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    text-decoration: none;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    
-    /* Memposisikan tombol tepat di tengah */
-    margin: 40px auto 0 auto !important; 
-    
-    /* TAMBAHKAN KODE INI AGAR BISA DIKLIK */
-    position: relative;
-    z-index: 50;
-    cursor: pointer;
-    
-    transition: all 0.3s ease;
-}
+        .btn-arrow-down:hover {
+            background-color: #f8f9fa !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            transform: scale(1.05);
+        }
 
-.btn-arrow-down:hover {
-    background-color: #f8f9fa !important;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-    transform: scale(1.05); 
-}
+        .arrow-bounce { animation: bounceDown 2s infinite !important; }
 
-/* Animasi Memantul (Bounce) ke Bawah (Tetap Sama) */
-.arrow-bounce {
-    animation: bounceDown 2s infinite !important;
-}
+        @keyframes bounceDown {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(15px); }
+            60% { transform: translateY(7px); }
+        }
 
-@keyframes bounceDown {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(15px);
-    }
-    60% {
-        transform: translateY(7px);
-    }
-}
-
-/* Responsivitas untuk layar HP */
-@media (max-width: 992px) {
-    .app-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 50px;
-    }
-    .app-text h3 {
-        font-size: 28px;
-    }
-    .phone-mockup {
-        width: 280px;
-    }
-}
         /* ============ DOWNLOAD SECTION ============ */
-       .download-section {
-    padding: 100px 0;
-    background: linear-gradient(180deg, #c8e6c9 0%, #b2ebf2 100%);
-    position: relative;
-    margin: 0;
-}
+        .download-section {
+            padding: 100px 0;
+            background: linear-gradient(180deg, #c8e6c9 0%, #b2ebf2 100%);
+            position: relative;
+            margin: 0;
+        }
 
         .download-content {
-    display: flex;
-    align-items: center;
-    gap: 80px;
-}
+            display: flex;
+            align-items: center;
+            gap: 80px;
+        }
 
-.download-text {
-    flex: 1;
-    opacity: 0;
-    transform: translateX(-30px);
-    transition: all 0.6s ease;
-}
+        .download-text {
+            flex: 1;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.6s ease;
+        }
 
-.download-text h3 {
-    font-size: 32px;
-    font-weight: 800;
-    color: #1e293b;
-    line-height: 1.2;
-    margin-bottom: 20px;
-}
+        .download-text h3 {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
 
-.download-text p {
-    font-size: 16px;
-    color: #475569;
-    line-height: 1.8;
-    margin-bottom: 35px;
-}
+        .download-text p {
+            font-size: 16px;
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 35px;
+        }
 
-       /* Perbaikan Tombol yang Hilang/Kecil */
-.btn-download-solid {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 35px;
-    background: linear-gradient(135deg, #4CAF50 0%, #26A69A 100%);
-    color: white;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 16px;
-    text-decoration: none;
-    box-shadow: 0 10px 25px rgba(38, 166, 154, 0.3);
-    transition: all 0.3s ease;
-}
+        .btn-download-solid {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 35px;
+            background: linear-gradient(135deg, #4CAF50 0%, #26A69A 100%);
+            color: white;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+            box-shadow: 0 10px 25px rgba(38, 166, 154, 0.3);
+            transition: all 0.3s ease;
+        }
 
-.btn-download-solid:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(38, 166, 154, 0.4);
-    filter: brightness(1.1);
-    color: white;
-}
+        .btn-download-solid:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(38, 166, 154, 0.4);
+            filter: brightness(1.1);
+            color: white;
+        }
 
-.download-illustration {
-    flex: 1.2;
-    text-align: center;
-    opacity: 0;
-    transform: translateX(30px);
-    transition: all 0.6s ease;
-}
+        .download-illustration {
+            flex: 1.2;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.6s ease;
+        }
 
-.download-illustration img {
-    max-width: 100%;
-    height: auto;
-    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
-}
-
-/* Responsif Mobile */
-@media (max-width: 992px) {
-    .download-content {
-        flex-direction: column-reverse;
-        text-align: center;
-        gap: 50px;
-    }
-    .btn-download-solid {
-        justify-content: center;
-    }
-}
+        .download-illustration img {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
+        }
 
         /* ============ FOOTER ============ */
         .footer {
-    background: linear-gradient(135deg, #4CAF50 0%, #26A69A 100%);
-    color: white;
-    padding: 50px 0 30px;
-    margin-top: 0;
-}
+            background: linear-gradient(135deg, #4CAF50 0%, #26A69A 100%);
+            color: white;
+            padding: 50px 0 30px;
+            margin-top: 0;
+        }
 
         .footer-grid {
             display: grid;
@@ -874,16 +865,8 @@ html {
             font-size: 18px;
         }
 
-        .footer-about .footer-logo .logo-text {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .footer-about p {
-            font-size: 13px;
-            line-height: 1.8;
-            opacity: 0.9;
-        }
+        .footer-about .footer-logo .logo-text { font-size: 18px; font-weight: 700; }
+        .footer-about p { font-size: 13px; line-height: 1.8; opacity: 0.9; }
 
         .footer h4 {
             font-size: 16px;
@@ -903,14 +886,8 @@ html {
             background: rgba(255,255,255,0.5);
         }
 
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
         .footer-links a {
             color: white;
             text-decoration: none;
@@ -918,11 +895,7 @@ html {
             opacity: 0.8;
             transition: opacity 0.3s;
         }
-
-        .footer-links a:hover {
-            opacity: 1;
-            padding-left: 5px;
-        }
+        .footer-links a:hover { opacity: 1; padding-left: 5px; }
 
         .footer-bottom {
             border-top: 1px solid rgba(255,255,255,0.2);
@@ -936,10 +909,7 @@ html {
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5);
             z-index: 2000;
             justify-content: center;
@@ -947,9 +917,7 @@ html {
             backdrop-filter: blur(5px);
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal {
             background: white;
@@ -962,20 +930,13 @@ html {
         }
 
         @keyframes modalSlide {
-            from {
-                transform: translateY(-30px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            from { transform: translateY(-30px); opacity: 0; }
+            to   { transform: translateY(0); opacity: 1; }
         }
 
         .modal-close {
             position: absolute;
-            top: 15px;
-            right: 20px;
+            top: 15px; right: 20px;
             font-size: 24px;
             cursor: pointer;
             color: var(--text-gray);
@@ -983,36 +944,13 @@ html {
             border: none;
             transition: color 0.3s;
         }
+        .modal-close:hover { color: var(--text-dark); }
 
-        .modal-close:hover {
-            color: var(--text-dark);
-        }
+        .modal h2 { font-size: 24px; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+        .modal .subtitle { color: var(--text-gray); font-size: 14px; margin-bottom: 30px; }
 
-        .modal h2 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-        }
-
-        .modal .subtitle {
-            color: var(--text-gray);
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-        }
-
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 8px; }
         .form-group input {
             width: 100%;
             padding: 12px 16px;
@@ -1022,11 +960,7 @@ html {
             font-family: 'Poppins', sans-serif;
             transition: border-color 0.3s;
         }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-green);
-        }
+        .form-group input:focus { outline: none; border-color: var(--primary-green); }
 
         .btn-submit {
             width: 100%;
@@ -1041,32 +975,16 @@ html {
             font-family: 'Poppins', sans-serif;
             transition: transform 0.3s, box-shadow 0.3s;
         }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(76,175,80,0.4); }
 
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(76,175,80,0.4);
-        }
-
-        .modal-footer-text {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: var(--text-gray);
-        }
-
-        .modal-footer-text a {
-            color: var(--primary-green);
-            text-decoration: none;
-            font-weight: 600;
-        }
+        #eyeIcon { transition: opacity 0.2s ease; }
+        #eyeIcon:hover { opacity: 0.8; }
 
         /* ============ SCROLL TO TOP ============ */
         .scroll-top {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 50px;
-            height: 50px;
+            bottom: 30px; right: 30px;
+            width: 50px; height: 50px;
             background: linear-gradient(135deg, var(--primary-green), var(--accent-blue));
             color: white;
             border: none;
@@ -1079,30 +997,25 @@ html {
             visibility: hidden;
             z-index: 999;
         }
+        .scroll-top.visible { opacity: 1; visibility: visible; }
+        .scroll-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(76,175,80,0.5); }
 
-        .scroll-top.visible {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .scroll-top:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(76,175,80,0.5);
-        }
-
-        /* ============ SISA MEDIA QUERIES (TABLET DLL) ============ */
+        /* ============ MEDIA QUERIES ============ */
         @media (max-width: 992px) {
             .features-grid { grid-template-columns: repeat(2, 1fr); }
             .footer-grid { grid-template-columns: repeat(2, 1fr); }
-            .app-content { flex-direction: column; text-align: center; }
-            .download-content { flex-direction: column; text-align: center; }
+            .app-content { flex-direction: column; text-align: center; gap: 50px; }
+            .download-content { flex-direction: column-reverse; text-align: center; gap: 50px; }
             .visi-misi-content { grid-template-columns: 1fr; }
+            .handshake-illustration img { max-width: 260px; }
+            .btn-download-solid { justify-content: center; }
+            .app-text h3 { font-size: 28px; }
+            .phone-mockup { width: 280px; }
         }
 
         @media (max-width: 768px) {
-            .hero-text h1 { font-size: 28px; }
             .features-grid { grid-template-columns: 1fr; }
-            .destinations-card { flex: 0 0 300px; } /* Sesuaikan ukuran card agar bisa di-scroll di mobile */
+            .destination-card { flex: 0 0 300px; }
             .footer-grid { grid-template-columns: 1fr; }
             .section-title h2 { font-size: 22px; }
         }
@@ -1121,7 +1034,6 @@ html {
         <div class="navbar-menu-container" id="mobileMenu">
             <ul class="nav-links">
                 <li><a href="{{ route('beranda') }}" class="active">Beranda</a></li>
-
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" id="dropdownToggle">Informasi Tiket ▾</a>
                     <ul class="dropdown-menu">
@@ -1130,7 +1042,6 @@ html {
                         <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
                     </ul>
                 </li>
-
                 <li><a href="{{ route('riwayat') }}">Riwayat</a></li>
             </ul>
         </div>
@@ -1145,11 +1056,17 @@ html {
 </nav>
 
 <section class="hero" id="beranda">
-    <img src="{{ asset('images/fotoberanda.png') }}" alt="Wisata Nganjuk" class="hero-image">
+    <img src="{{ asset('images/fotoberanda.webp') }}" alt="Wisata Nganjuk" class="hero-image" loading="eager">
     <div class="hero-overlay">
         <div class="hero-text" data-aos="fade-down" data-aos-duration="1000">
             <h1>Selamat Datang di Nganjuk Abirupa</h1>
             <p>Jelajahi keindahan wisata dan budaya Nganjuk yang mempesona</p>
+            <a href="#riwayat" class="btn-hero-cta">
+                <span>Jelajahi Destinasi</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </a>
         </div>
     </div>
 </section>
@@ -1159,51 +1076,45 @@ html {
         <div class="section-title" data-aos="fade-down" data-aos-duration="800">
             <h2>Apa yang Menarik dari Nganjuk?</h2>
         </div>
-
         <div class="features-grid">
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="100" data-aos-duration="800">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
                 <div class="feature-icon">
-                    <img src="{{ asset('images/icon/iconsedudo.png') }}" alt="Pesona Sedudo">
+                    <img src="{{ asset('images/icon/iconsedudo.png') }}" alt="Pesona Sedudo" loading="lazy" decoding="async">
                 </div>
                 <h3>Pesona Sedudo</h3>
                 <p>Ikon wisata Nganjuk dilingkung Gunung Wilis, kono amriya membaawa khusiat awet muda.</p>
             </div>
-
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
                 <div class="feature-icon">
-                    <img src="{{ asset('images/icon/iconkuliner.png') }}" alt="Kuliner Khas">
+                    <img src="{{ asset('images/icon/iconkuliner.png') }}" alt="Kuliner Khas" loading="lazy" decoding="async">
                 </div>
                 <h3>Kuliner Khas</h3>
                 <p>Cicipi Nasi Becek, perpaduan gulai dan sate khas Nganjuk yang melegenda.</p>
             </div>
-
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="feature-icon">
-                    <img src="{{ asset('images/icon/iconwarisan.png') }}" alt="Warisan Budaya">
+                    <img src="{{ asset('images/icon/iconwarisan.png') }}" alt="Warisan Budaya" loading="lazy" decoding="async">
                 </div>
                 <h3>Warisan Budaya</h3>
                 <p>Jejak berdirinya Nganjuk melalui Prasasti Anjuk Ladang (937 M) yang menandai kemenangan Raja Mpu Sindok.</p>
             </div>
-
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
                 <div class="feature-icon">
-                    <img src="{{ asset('images/icon/iconkesenian.png') }}" alt="Kesenian Lokal">
+                    <img src="{{ asset('images/icon/iconkesenian.png') }}" alt="Kesenian Lokal" loading="lazy" decoding="async">
                 </div>
                 <h3>Kesenian Lokal</h3>
                 <p>Nikmati berbagai pertunjukan kesenian tradisional yang kaya akan nilai budaya dan filosofi.</p>
             </div>
-
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="500" data-aos-duration="800">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
                 <div class="feature-icon">
-                    <img src="{{ asset('images/icon/iconakses.png') }}" alt="Akses Mudah">
+                    <img src="{{ asset('images/icon/iconakses.png') }}" alt="Akses Mudah" loading="lazy" decoding="async">
                 </div>
                 <h3>Akses Mudah</h3>
                 <p>Nganjuk terletak di jalur utama Surabaya-Yogyakarta, menjadikan tempat strategis bagi pelancong.</p>
             </div>
-
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="600" data-aos-duration="800">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
                 <div class="feature-icon">
-                    <img src="{{ asset('images/icon/iconcuaca.png') }}" alt="Cuaca Ideal">
+                    <img src="{{ asset('images/icon/iconcuaca.png') }}" alt="Cuaca Ideal" loading="lazy" decoding="async">
                 </div>
                 <h3>Cuaca Ideal</h3>
                 <p>Kunjungi di musim Kemarau (Mei-Oktober) untuk menjelajahi keindahan alam.</p>
@@ -1214,16 +1125,17 @@ html {
 
 <section class="destinations" id="riwayat">
     <div class="container">
-        <div class="section-title" data-aos="fade-down" data-aos-duration="800">
+        <div class="section-title" data-aos="fade-down">
             <h2>DESTINASI WISATA NGANJUK</h2>
         </div>
-
         <div class="destinations-scroll">
             @forelse($destinasi as $index => $d)
             <a href="{{ route('wisata.detail', $d->id_wisata) }}" class="destination-card" data-aos="fade-up" data-aos-delay="{{ ($index % 5 + 1) * 100 }}" style="text-decoration:none; color:inherit;">
                 <div class="card-image">
                     <img src="{{ asset('images/destinasi/' . $d->gambar) }}"
                          alt="{{ $d->nama_wisata }}"
+                         loading="lazy"
+                         decoding="async"
                          onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
                 </div>
                 <div class="card-text">
@@ -1239,25 +1151,23 @@ html {
 
 <section class="visi-misi">
     <div class="container">
-        <div class="section-title" data-aos="fade-down" data-aos-duration="800">
+        <div class="section-title" data-aos="fade-down">
             <h2>Visi & Misi</h2>
         </div>
-
         <div class="visi-misi-content">
             <div class="left-column">
-                <div class="visi-item" data-aos="fade-right" data-aos-duration="800">
+                <div class="visi-item" data-aos="fade-right">
                     <div class="icon">
-                        <img src="{{ asset('images/icon/visi.png') }}" alt="Icon Visi">
+                        <img src="{{ asset('images/icon/visi.png') }}" alt="Icon Visi" loading="lazy" decoding="async">
                     </div>
                     <div>
                         <h3>Visi</h3>
                         <p>Mewujudkan Pariwisata Nganjuk yang berdaya saing, berbudaya, dan berwawasan lingkungan melalui peningkatan kualitas destinasi serta ekonomi kreatif.</p>
                     </div>
                 </div>
-
-                <div class="misi-item" data-aos="fade-right" data-aos-delay="100" data-aos-duration="800">
+                <div class="misi-item" data-aos="fade-right" data-aos-delay="100">
                     <div class="icon">
-                        <img src="{{ asset('images/icon/misi.png') }}" alt="Icon Misi">
+                        <img src="{{ asset('images/icon/misi.png') }}" alt="Icon Misi" loading="lazy" decoding="async">
                     </div>
                     <div>
                         <h3>Misi</h3>
@@ -1270,10 +1180,9 @@ html {
                     </div>
                 </div>
             </div>
-
             <div class="right-column">
-                <div class="handshake-illustration" data-aos="fade-left" data-aos-duration="800">
-                    <img src="{{ asset('images/icon/saliman.png') }}" alt="Ilustrasi Bersalaman">
+                <div class="handshake-illustration" data-aos="fade-left">
+                    <img src="{{ asset('images/icon/saliman.png') }}" alt="Ilustrasi Bersalaman" loading="lazy" decoding="async">
                 </div>
             </div>
         </div>
@@ -1283,14 +1192,12 @@ html {
 <section class="app-section">
     <div class="container">
         <div class="app-content">
-            <div class="phone-mockup" data-aos="zoom-in" data-aos-duration="1000">
-                <img src="{{ asset('images/icon/hape.png') }}" alt="Mockup Aplikasi Nganjuk Abirupa">
+            <div class="phone-mockup" data-aos="zoom-in">
+                <img src="{{ asset('images/icon/hape.png') }}" alt="Mockup Aplikasi Nganjuk Abirupa" loading="lazy" decoding="async">
             </div>
-            <div class="app-text" data-aos="zoom-in" data-aos-delay="200" data-aos-duration="1000">
+            <div class="app-text" data-aos="zoom-in" data-aos-delay="200">
                 <h3>Temukan Hal yang sama dengan Versi Berbeda</h3>
                 <p>Jelajahi semua destinasi wisata Nganjuk melalui aplikasi mobile kami. Dapatkan informasi lengkap, pemesanan tiket online, dan pengalaman wisata yang tak terlupakan.</p>
-                
-                <!-- Nama class diubah menjadi btn-arrow-down -->
                 <a href="#download-section" class="btn-arrow-down arrow-bounce">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="7 13 12 18 17 13"></polyline>
@@ -1301,13 +1208,14 @@ html {
         </div>
     </div>
 </section>
+
 <section class="download-section" id="download-section">
     <div class="container">
         <div class="download-content">
-            <div class="download-text" data-aos="fade-right" data-aos-duration="800">
+            <div class="download-text" data-aos="fade-right">
                 <h3>Download APK<br>NGANJUK ABIRUPA</h3>
                 <p>Akses informasi wisata secara instan tanpa hambatan administratif. Unduh aplikasi kami sekarang untuk pengalaman menjelajah Nganjuk yang lebih mudah dan aman.</p>
-                <a href="#" class="btn-download-solid">
+                <a href="{{ asset('apk/NganjukAbirupa.apk') }}" download class="btn-download-solid">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="7 10 12 15 17 10"/>
@@ -1316,8 +1224,8 @@ html {
                     Unduh Sekarang
                 </a>
             </div>
-            <div class="download-illustration" data-aos="fade-left" data-aos-duration="800">
-                <img src="{{ asset('images/icon/downloadapk.png') }}" alt="Download APK Illustration">
+            <div class="download-illustration" data-aos="fade-left">
+                <img src="{{ asset('images/icon/downloadapk.png') }}" alt="Download APK Illustration" loading="lazy" decoding="async">
             </div>
         </div>
     </div>
@@ -1326,7 +1234,6 @@ html {
 <footer class="footer">
     <div class="container">
         <div class="footer-grid">
-            <!-- Kolom 1: Tentang Aplikasi -->
             <div class="footer-about">
                 <div class="footer-logo">
                     <div class="logo-icon">N</div>
@@ -1334,19 +1241,15 @@ html {
                 </div>
                 <p>Aplikasi Nganjuk Abirupa hadir sebagai solusi bagi masyarakat untuk menikmati wisata Kota Nganjuk dengan kemudahan informasi pemesanan tiket berbasis online.</p>
             </div>
-
-            <!-- Kolom 2: Menu Utama -->
             <div class="footer-company">
                 <h4>Menu Utama</h4>
                 <ul class="footer-links">
                     <li><a href="#beranda">Beranda</a></li>
                     <li><a href="#informasi">Informasi</a></li>
-                    <li><a href="#riwayat">Destinasi Wisata</a></li> <!-- Id riwayat di kode Anda merujuk ke destinasi -->
+                    <li><a href="#riwayat">Destinasi Wisata</a></li>
                     <li><a href="{{ route('riwayat') }}">Riwayat Pesanan</a></li>
                 </ul>
             </div>
-
-            <!-- Kolom 3: Informasi Tiket -->
             <div class="footer-region">
                 <h4>Informasi Tiket</h4>
                 <ul class="footer-links">
@@ -1355,80 +1258,80 @@ html {
                     <li><a href="{{ route('informasi.pesan') }}">Pesan Tiket Wisata</a></li>
                 </ul>
             </div>
-
-            <!-- Kolom 4: Bantuan & Aplikasi -->
             <div class="footer-help">
                 <h4>Bantuan & Aplikasi</h4>
                 <ul class="footer-links">
                     <li><a href="#download-section">Download APK</a></li>
-                    <li><a href="#" onclick="openModal()">Masuk / Login</a></li>                
+                    <li><a href="#" onclick="openModal()">Masuk / Login</a></li>
                 </ul>
             </div>
         </div>
-        
         <div class="footer-bottom">
             <p>Tentang Kami - Aplikasi Nganjuk Abirupa | © 2026 All Rights Reserved</p>
         </div>
     </div>
 </footer>
 
-    <!-- ============ LOGIN MODAL ============ -->
-    <div class="modal-overlay" id="loginModal">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal()">&times;</button>
-            <h2>Masuk ke Akun</h2>
-            <p class="subtitle">Silakan login untuk mengakses fitur lengkap</p>
-            <form id="formLoginBeranda" action="#">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Kata Sandi</label>
-                    <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required>
-                </div>
-                <button type="submit" name="login" class="btn-submit">Masuk</button>
-            </form>
-            <div class="modal-footer-text">
-                Belum punya akun? <a href="#">Daftar Sekarang</a>
+<div class="modal-overlay" id="loginModal">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <h2>Masuk ke Akun</h2>
+        <p class="subtitle">Silakan login untuk mengakses fitur lengkap</p>
+        <form id="formLoginBeranda" action="#">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="contoh@email.com" required>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="password">Kata Sandi</label>
+                <div style="position: relative;">
+                    <input type="password" id="password" name="password" placeholder="Masukkan kata sandi" required style="padding-right: 45px;">
+                    <button type="button" onclick="togglePasswordVisibility()" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-gray); padding: 5px;">
+                        <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <button type="submit" name="login" class="btn-submit">Masuk</button>
+        </form>
     </div>
+</div>
 
 <button class="scroll-top" id="scrollTop" onclick="scrollToTop()">↑</button>
 
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
+{{-- TIDAK ADA CDN EKSTERNAL - semua animasi pakai Intersection Observer bawaan browser --}}
 <script>
-    // ===== INIT AOS ANIMATION =====
-    AOS.init({
-        duration: 800,
-        easing: 'ease-out-cubic',
-        once: true,
-        offset: 100,
-        mirror: false
-    });
+    // ===== ANIMASI PENGGANTI AOS (tanpa CDN) =====
+    const aosObserver = new IntersectionObserver((entries) => {
+        entries.forEach(el => {
+            if (el.isIntersecting) {
+                const delay = parseInt(el.target.getAttribute('data-aos-delay') || 0);
+                setTimeout(() => el.target.classList.add('aos-animate'), delay);
+                aosObserver.unobserve(el.target); // Jalankan sekali saja
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('[data-aos]').forEach(el => aosObserver.observe(el));
 
     // ===== NAVBAR SCROLL EFFECT =====
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)';
-        } else {
-            navbar.style.boxShadow = '0 10px 30px rgba(0,0,0,0.06)';
-        }
+        navbar.style.boxShadow = window.scrollY > 50
+            ? '0 10px 40px rgba(0,0,0,0.1)'
+            : '0 10px 30px rgba(0,0,0,0.06)';
     });
 
     // ===== HAMBURGER & MOBILE MENU =====
     function toggleMobileMenu() {
         document.getElementById('mobileMenu').classList.toggle('active');
-        // Tutup dropdown saat menu ditutup
         if (!document.getElementById('mobileMenu').classList.contains('active')) {
             document.getElementById('dropdownToggle').parentElement.classList.remove('open');
         }
     }
 
-    // Toggle dropdown di mobile saat di-klik
     document.getElementById('dropdownToggle').addEventListener('click', function(e) {
         if (window.innerWidth <= 768) {
             e.preventDefault();
@@ -1437,30 +1340,22 @@ html {
         }
     });
 
-    // Tutup menu saat link diklik (kecuali dropdown toggle)
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', (e) => {
-            // PERBAIKAN: Cegah aksi default jika klik menu "Informasi Tiket" agar dropdown tidak hilang
-            if (link.id === 'dropdownToggle') {
-                e.preventDefault();
-                return;
-            }
-            
-            // Tutup menu jika klik selain tombol dropdown
+            if (link.id === 'dropdownToggle') { e.preventDefault(); return; }
             document.getElementById('mobileMenu').classList.remove('active');
             document.getElementById('dropdownToggle').parentElement.classList.remove('open');
         });
     });
 
-    // Menangani form login
+    // ===== LOGIN FORM HANDLER =====
     document.getElementById('formLoginBeranda').addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        const email    = this.querySelector('input[type="email"], input[name="email"]').value.trim();
-        const password = this.querySelector('input[type="password"], input[name="password"]').value;
+        const email    = this.querySelector('input[name="email"]').value.trim();
+        const password = this.querySelector('input[name="password"]').value;
         const CSRF     = document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}';
+        const btn      = this.querySelector('button[type="submit"]');
 
-        const btn = this.querySelector('button[type="submit"], input[type="submit"]');
         if (btn) { btn.disabled = true; btn.textContent = 'Memproses...'; }
 
         try {
@@ -1479,11 +1374,11 @@ html {
                 window.location.replace(data.redirect);
             } else {
                 alert('❌ ' + (data.message || 'Login gagal.'));
-                if (btn) { btn.disabled = false; btn.textContent = 'Login'; }
+                if (btn) { btn.disabled = false; btn.textContent = 'Masuk'; }
             }
         } catch(err) {
             alert('❌ Gagal menghubungi server.');
-            if (btn) { btn.disabled = false; btn.textContent = 'Login'; }
+            if (btn) { btn.disabled = false; btn.textContent = 'Masuk'; }
         }
     });
 
@@ -1492,8 +1387,7 @@ html {
     window.addEventListener('scroll', () => {
         let current = '';
         sections.forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            if (scrollY >= sectionTop) current = section.getAttribute('id');
+            if (scrollY >= section.offsetTop - 100) current = section.getAttribute('id');
         });
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.classList.remove('active');
@@ -1515,70 +1409,68 @@ html {
     });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 
+    // ===== TOGGLE PASSWORD =====
+    function togglePasswordVisibility() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eyeIcon');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.innerHTML = `
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line x1="1" y1="1" x2="23" y2="23"></line>
+            `;
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.innerHTML = `
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+            `;
+        }
+    }
+
     // ===== SCROLL TO TOP =====
     const scrollTopBtn = document.getElementById('scrollTop');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 500) scrollTopBtn.classList.add('visible');
-        else scrollTopBtn.classList.remove('visible');
+        scrollTopBtn.classList.toggle('visible', window.scrollY > 500);
     });
     function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
-    // ===== PAGINATION DOTS =====
-    
-
- // ===== SMOOTH SCROLL (TERMASUK UNTUK TOMBOL PANAH) =====
+    // ===== SMOOTH SCROLL =====
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
-            
-            // Abaikan jika href hanya berisi "#" saja (seperti tombol dropdown)
             if (targetId === '#') return;
-            
             const target = document.querySelector(targetId);
-            
             if (target) {
-    e.preventDefault();
-    const yOffset = target.getBoundingClientRect().top + window.pageYOffset - 80;
-    window.scrollTo({ 
-        top: yOffset, 
-        behavior: 'smooth' 
-    });
-}
+                e.preventDefault();
+                window.scrollTo({
+                    top: target.getBoundingClientRect().top + window.pageYOffset - 80,
+                    behavior: 'smooth'
+                });
+            }
         });
     });
+
+    // ===== ARROW BUTTON SCROLL =====
+    const arrowBtn = document.querySelector('.btn-arrow-down');
+    const sectionDownload = document.getElementById('download-section');
+    if (arrowBtn && sectionDownload) {
+        arrowBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.scrollTo({
+                top: sectionDownload.getBoundingClientRect().top + window.pageYOffset - 80,
+                behavior: 'smooth'
+            });
+        });
+    }
 
     // ===== PHP LOGIN MESSAGE =====
     <?php if (isset($login_message)): ?>
         alert('<?php echo $login_message; ?>');
     <?php endif; ?>
 
-   // ===== FUNGSI ALERT TOMBOL UNDUH SEKARANG =====
-    const btnDownload = document.querySelector('.btn-download-solid');
-    if (btnDownload) {
-        btnDownload.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Download APK Nganjuk Abirupa akan segera tersedia!');
-        });
-    }
-
-    // ===== FUNGSI SCROLL KHUSUS PANAH BAWAH (ANTI-BENTROK) =====
-    const arrowBtn = document.querySelector('.btn-arrow-down');
-    const sectionDownload = document.getElementById('download-section');
-
-    if (arrowBtn && sectionDownload) {
-    arrowBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const yOffset = sectionDownload.getBoundingClientRect().top + window.pageYOffset - 80;
-        window.scrollTo({
-            top: yOffset,
-            behavior: 'smooth'
-        });
-    });
-}
-
-    console.log('🌿 Nganjuk Abirupa Loaded with AOS Animations! ✨');
-    </script>
+    console.log('🌿 Nganjuk Abirupa Loaded! ✨');
+</script>
 </body>
 </html>
