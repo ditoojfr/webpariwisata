@@ -152,7 +152,7 @@ td { border-bottom: 1px solid #eee; }
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <div class="logo">
-            <img src="{{ asset('images/logo-abirupa.png') }}" alt="Logo">
+            <img src="{{ asset('images/logogedi.png') }}" alt="Logo">
         </div>
         <div class="menu">
             <a href="{{ route('admin.beranda') }}" class="active"><i class="fas fa-home"></i> Beranda</a>
@@ -276,7 +276,7 @@ td { border-bottom: 1px solid #eee; }
             <div class="card">
                 <div class="card-icon pendapatan"><i class="fas fa-wallet"></i></div>
                 <div class="card-content">
-                    <h4>Total Pendapatan</h4>
+                    <h4>Total Pendapatan Hari Ini</h4>
                     <p>Rp {{ number_format($totalPendapatan ?? 0, 0, ',', '.') }}</p>
                 </div>
             </div>
