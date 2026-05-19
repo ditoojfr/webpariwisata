@@ -127,7 +127,7 @@ textarea{ resize:vertical; min-height:80px; }
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
     <div class="logo">
-        <img src="{{ asset('images/logo-abirupa.png') }}" alt="Nganjuk Abirupa">
+        <img src="{{ asset('images/logogedi.png') }}" alt="Nganjuk Abirupa">
     </div>
 
     <div class="menu">
@@ -195,11 +195,16 @@ textarea{ resize:vertical; min-height:80px; }
             <!-- GAMBAR UTAMA WISATA -->
             <div class="form-group">
                 <label>Gambar Utama Wisata</label>
+                {{-- TAMBAHKAN INI --}}
+    <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 10px 14px; border-radius: 8px; margin-bottom: 10px; font-size: 12px; color: #78350f;">
+        <p style="margin: 0 0 4px 0;"><strong>📌 Apa ini?</strong> Foto utama yang tampil sebagai thumbnail wisata di halaman publik.</p>
+        <p style="margin: 0;"><strong>✅ Ketentuan:</strong> Format JPG / PNG, resolusi minimal 800×600px, foto landscape lebih disarankan.</p>
+    </div>
                 <div class="upload-container">
                     <div class="upload-box" id="uploadBox">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <p><span class="highlight">Klik atau drag</span> untuk upload gambar</p>
-                        <p style="font-size:11px;color:#999;">Format: JPG, PNG, Max 5MB</p>
+                        <p style="font-size:11px;color:#999;">Format: JPG, PNG.</p>
                         <input type="file" name="gambar_utama" id="gambarUtama" accept="image/*">
                     </div>
                     
@@ -269,8 +274,15 @@ textarea{ resize:vertical; min-height:80px; }
             <div id="dynamic-event-container">
                 <!-- Form Bawaan (Event Baru) -->
                 <div class="event-item" style="background: #f0fdf4; border: 1px dashed #52C396; padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                    
+    {{-- TAMBAHKAN INI DI PALING ATAS DALAM event-item --}}
+    <div style="background: #ecfdf5; border-left: 4px solid #10b981; padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 12px; color: #065f46;">
+        <p style="margin: 0 0 4px 0;"><strong>🎉 Poster Event Wisata</strong></p>
+        <p style="margin: 0 0 4px 0;">Upload poster untuk event / aktivitas yang sedang atau akan berlangsung di wisata ini.</p>
+        <p style="margin: 0;"><strong>📋 Cara mengisi:</strong> Pilih file poster → isi Tanggal Mulai → isi Tanggal Selesai → klik Simpan.</p>
+    </div>
                     <div class="preview-group" style="margin-bottom: 10px;">
-                        <label style="font-size: 12px; font-weight: 600; color: #166534;">Upload Poster Baru</label>
+        <label style="font-size: 12px; font-weight: 600; color: #166534;">📁 Upload File Poster Event</label>
                         <input type="file" name="gambar_event[]" accept="image/*" onchange="previewDynamicImage(this)" style="width: 100%; padding: 8px; border: 1px solid #bbf7d0; border-radius: 8px; background: white; margin-top: 5px;">
                         <img src="" class="img-preview-dynamic" style="display: none; max-width: 200px; height: auto; border-radius: 8px; border: 2px solid #52C396; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-top: 10px;">
                     </div>
@@ -326,7 +338,6 @@ if(gambarUtama) {
 }
 
 function previewImage(file){
-    if(file.size > 5 * 1024 * 1024){ alert('File maksimal 5MB bre!'); return; }
     const reader = new FileReader();
     reader.onload = function(e){
         imgPreview.src = e.target.result;
